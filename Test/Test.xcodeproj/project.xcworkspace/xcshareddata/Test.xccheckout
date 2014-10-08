@@ -5,39 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>2348BA8C-E112-47A1-A8D7-2E999A9814F0</string>
+	<string>9DB5C0C8-AEF6-44D0-9706-DB425E44D446</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Test</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>D167D579-61F5-4CFE-8593-AC2750F77EF7</key>
-		<string>svn://www.oksvn.com/Format</string>
+		<key>EAF8BB2B-B8FB-44CD-89B5-15243937C9F4</key>
+		<string>https://github.com/sczybt/CPPFormatLibrary.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Test/Test.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>D167D579-61F5-4CFE-8593-AC2750F77EF7</key>
+		<key>EAF8BB2B-B8FB-44CD-89B5-15243937C9F4</key>
 		<string>../../..</string>
 	</dict>
-	<key>IDESourceControlProjectRepositoryRootDictionary</key>
-	<dict>
-		<key>D167D579-61F5-4CFE-8593-AC2750F77EF7</key>
-		<string>svn://www.oksvn.com/Format</string>
-	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>svn://www.oksvn.com/Format/Test/Test.xcodeproj</string>
+	<string>https://github.com/sczybt/CPPFormatLibrary.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>D167D579-61F5-4CFE-8593-AC2750F77EF7</string>
+	<string>EAF8BB2B-B8FB-44CD-89B5-15243937C9F4</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
+			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>D167D579-61F5-4CFE-8593-AC2750F77EF7</string>
+			<string>EAF8BB2B-B8FB-44CD-89B5-15243937C9F4</string>
 			<key>IDESourceControlWCCName</key>
 			<string>FormatLibrary</string>
 		</dict>

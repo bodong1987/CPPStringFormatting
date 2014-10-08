@@ -46,7 +46,7 @@ void TestProfile()
     }
 }
 
-#if FL_PLATFORM_HAS_CPP11 && FL_COMPILER_MSVC
+#if FL_PLATFORM_HAS_CPP11 && (FL_COMPILER_MSVC||FL_PLATFORM_MACOS)
 #include <thread>
 
 void TestProfileMultiThread()
@@ -86,7 +86,7 @@ int main()
 
     TestProfile();
     
-#if FL_PLATFORM_HAS_CPP11 && FL_COMPILER_MSVC
+#if FL_PLATFORM_HAS_CPP11 && (FL_COMPILER_MSVC||FL_PLATFORM_MACOS)
     TestProfileMultiThread();
 #endif
 
