@@ -73,8 +73,23 @@
 #define FL_MOVE_SEMANTIC( exp ) exp
 #endif
 
-#if !FL_COMPILER_MSVC
+#ifndef _countof
 #define _countof( Array ) (sizeof(Array)/sizeof(Array[0]))
 #endif
+
+#ifndef FL_PLATFORM_SUPPORT_THREAD_LOCAL
+#define FL_PLATFORM_SUPPORT_THREAD_LOCAL 0
+#endif
+
+#ifndef FL_WITH_MULTITHREAD
+#define FL_WITH_MULTITHREAD 1
+#endif
+
+#if FL_PLATFORM_SUPPORT_THREAD_LOCAL && FL_WITH_MULTITHREAD
+#define FL_THREAD_LOCAL thread_local
+#else
+#define FL_THREAD_LOCAL 
+#endif
+
 
 #include <cassert>

@@ -162,11 +162,17 @@ namespace FormatLibrary
                 Patterns.AddItem(Pattern);
             }
         };
+        
+#if FL_PLATFORM_SUPPORT_THREAD_LOCAL || !FL_WITH_MULTITHREAD
+        typedef Utility::CriticalSectionNone                    DefaultCritialSectionType;
+#else
+        typedef System::CriticalSection                         DefaultCritialSectionType;
+#endif
 
-        typedef Algorithm::TPatternStorage< TStandardPolicy<char, System::CriticalSection> > STLPatternStorageA;
-        typedef Algorithm::TPatternStorage< TStandardPolicy<wchar_t, System::CriticalSection> > STLPatternStorageW;
-        typedef Algorithm::TGlobalPatternStorage< TStandardPolicy<char, System::CriticalSection> > STLGlobalPatternStorageA;
-        typedef Algorithm::TGlobalPatternStorage< TStandardPolicy<wchar_t, System::CriticalSection> > STLGlobalPatternStorageW;
+        typedef Algorithm::TPatternStorage< TStandardPolicy<char, DefaultCritialSectionType> > STLPatternStorageA;
+        typedef Algorithm::TPatternStorage< TStandardPolicy<wchar_t, DefaultCritialSectionType> > STLPatternStorageW;
+        typedef Algorithm::TGlobalPatternStorage< TStandardPolicy<char, DefaultCritialSectionType> > STLGlobalPatternStorageA;
+        typedef Algorithm::TGlobalPatternStorage< TStandardPolicy<wchar_t, DefaultCritialSectionType> > STLGlobalPatternStorageW;
     }
 }
 

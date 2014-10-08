@@ -82,7 +82,7 @@ namespace FormatLibrary
         public:
             static TGlobalPatternStorage* GetStorage()
             {
-                static TGlobalPatternStorage StaticStorage;
+                static FL_THREAD_LOCAL TGlobalPatternStorage StaticStorage;
                 return &StaticStorage;
             }
         };
