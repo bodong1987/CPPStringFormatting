@@ -23,13 +23,19 @@ namespace FormatLibrary
             typedef TFormatPattern<CharType>                        FormatPattern;
             typedef Utility::TScopedLocker<CriticalSectionType>     ScopedLockerType;      
             typedef TPatternParser<TPolicy>                         PatternParser;
-
+            
             TPatternStorage()
             {
+#if FL_DEBUG
+                printf("created storage\n");
+#endif
             }
-
+            
             ~TPatternStorage()
             {
+#if FL_DEBUG
+                printf("destroy storage\n");
+#endif
             }
 
             const PatternListType* LookupPatterns(const CharType* const FormatStart, const SizeType Length, SizeType HashKey = 0)
@@ -82,8 +88,50 @@ namespace FormatLibrary
         public:
             static TGlobalPatternStorage* GetStorage()
             {
-                static FL_THREAD_LOCAL TGlobalPatternStorage StaticStorage;
+#if FL_WITH_THREAD_LOCAL
+                struct ManagedStorage
+                {
+                    typedef Utility::TScopedLocker<System::CriticalSection>  LockerType;
+                    
+                    System::CriticalSection                                  ManagedCS;
+                    Utility::TAutoArray<TGlobalPatternStorage*>              Storages;
+                    
+                    ~ManagedStorage()
+                    {
+                        LockerType Locker(ManagedCS);
+                        
+                        for( SIZE_T i=0; i<Storages.GetLength(); ++i )
+                        {
+                            delete Storages[i];
+                        }
+                    }
+                    
+                    void AddStorage( TGlobalPatternStorage* Storage )
+                    {
+                        assert(Storage);
+                        
+                        LockerType Locker(ManagedCS);
+                        
+                        Storages.AddItem(Storage);
+                    }
+                };
+                
+                static ManagedStorage StaticManager;
+                
+                static FL_THREAD_LOCAL TGlobalPatternStorage* StaticStorage = NULL;
+                
+                if( !StaticStorage )
+                {
+                    StaticStorage = new TGlobalPatternStorage();
+                    
+                    StaticManager.AddStorage(StaticStorage);
+                }
+                
+                return StaticStorage;
+#else
+                static TGlobalPatternStorage StaticStorage;
                 return &StaticStorage;
+#endif
             }
         };
     }

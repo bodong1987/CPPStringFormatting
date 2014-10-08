@@ -78,7 +78,13 @@
 #endif
 
 #ifndef FL_PLATFORM_SUPPORT_THREAD_LOCAL
+
+#if FL_PLATFORM_MACOS
+#define FL_PLATFORM_SUPPORT_THREAD_LOCAL 1
+#else
 #define FL_PLATFORM_SUPPORT_THREAD_LOCAL 0
+#endif
+
 #endif
 
 #ifndef FL_WITH_MULTITHREAD
@@ -86,9 +92,20 @@
 #endif
 
 #if FL_PLATFORM_SUPPORT_THREAD_LOCAL && FL_WITH_MULTITHREAD
-#define FL_THREAD_LOCAL thread_local
+
+#define FL_WITH_THREAD_LOCAL 1
+
+#if FL_PLATFORM_MACOS
+#define FL_THREAD_LOCAL __thread
 #else
-#define FL_THREAD_LOCAL 
+#define FL_THREAD_LOCAL thread_local
+#endif
+
+#else
+
+#define FL_THREAD_LOCAL
+#define FL_WITH_THREAD_LOCAL 0
+
 #endif
 
 

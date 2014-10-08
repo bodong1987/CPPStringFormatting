@@ -53,11 +53,11 @@ void TestProfileMultiThread()
 {
     std::thread t0( TestProfile );
     std::thread t1( TestProfile );
-   // std::thread t2( TestProfile );
+    std::thread t2( TestProfile );
 
     t0.join();
     t1.join();
-  //  t2.join();
+    t2.join();
 }
 #endif
 

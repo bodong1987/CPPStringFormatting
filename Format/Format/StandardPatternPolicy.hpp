@@ -163,7 +163,7 @@ namespace FormatLibrary
             }
         };
         
-#if FL_PLATFORM_SUPPORT_THREAD_LOCAL || !FL_WITH_MULTITHREAD
+#if FL_WITH_THREAD_LOCAL || !FL_WITH_MULTITHREAD
         typedef Utility::CriticalSectionNone                    DefaultCritialSectionType;
 #else
         typedef System::CriticalSection                         DefaultCritialSectionType;

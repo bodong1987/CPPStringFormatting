@@ -106,6 +106,8 @@ namespace FormatLibrary
             Noncopyable
         {
         public:
+            typedef TReferenceType        ReferenceType;
+            
             TScopedLocker(TReferenceType& ReferenceVal) :
                 Reference(&ReferenceVal)
             {
@@ -378,6 +380,20 @@ namespace FormatLibrary
                 return IsDataOnStack() ?
                     DEFAULT_LENGTH - Count :
                     AllocatedCount - Count;
+            }
+            
+            T& operator []( SIZE_T Index )
+            {
+                assert( Index < GetLength() );
+                
+                return GetDataPtr()[Index];
+            }
+            
+            const T& operator []( SIZE_T Index ) const
+            {
+                assert( Index < GetLength() );
+                
+                return GetDataPtr()[Index];
             }
 
         protected:
