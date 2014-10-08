@@ -79,7 +79,7 @@
 
 #ifndef FL_PLATFORM_SUPPORT_THREAD_LOCAL
 
-#if FL_PLATFORM_MACOS
+#if FL_PLATFORM_MACOS || FL_COMPILER_MSVC
 #define FL_PLATFORM_SUPPORT_THREAD_LOCAL 1
 #else
 #define FL_PLATFORM_SUPPORT_THREAD_LOCAL 0
@@ -97,6 +97,8 @@
 
 #if FL_PLATFORM_MACOS
 #define FL_THREAD_LOCAL __thread
+#elif FL_COMPILER_MSVC
+#define FL_THREAD_LOCAL __declspec(thread)
 #else
 #define FL_THREAD_LOCAL thread_local
 #endif
