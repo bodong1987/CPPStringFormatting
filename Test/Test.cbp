@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Test" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Test" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Test" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add directory="../Format/" />
+		</Compiler>
+		<Unit filename="../Format/Format.hpp" />
+		<Unit filename="../Format/Format/Algorithm.hpp" />
+		<Unit filename="../Format/Format/Build.hpp" />
+		<Unit filename="../Format/Format/FormatTo.hpp" />
+		<Unit filename="../Format/Format/FormatToInner.hpp" />
+		<Unit filename="../Format/Format/FormatToSTL.hpp" />
+		<Unit filename="../Format/Format/LookupPattern.hpp" />
+		<Unit filename="../Format/Format/Pattern.hpp" />
+		<Unit filename="../Format/Format/PatternParser.hpp" />
+		<Unit filename="../Format/Format/Preprocessor.hpp" />
+		<Unit filename="../Format/Format/ProgressTimer.hpp" />
+		<Unit filename="../Format/Format/StandardPatternPolicy.hpp" />
+		<Unit filename="../Format/Format/System.hpp" />
+		<Unit filename="../Format/Format/Traits.hpp" />
+		<Unit filename="../Format/Format/Translator.hpp" />
+		<Unit filename="../Format/Format/Types.hpp" />
+		<Unit filename="../Format/Format/Utility.hpp" />
+		<Unit filename="Test.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
