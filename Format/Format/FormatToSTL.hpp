@@ -51,4 +51,20 @@ namespace FormatLibrary
 #undef _FL_EXPORT_FOR_STRING
 #undef _FL_FORMAL_AGUMENTS_
     }
+
+    // make a specialization of std::basic_string
+    template < typename TCharType >
+    class TTranslator< TCharType, std::basic_string<TCharType> >
+        : public TTranslatorBase< TCharType, std::basic_string<TCharType> >
+    {
+    public:
+        typedef TTranslatorBase< TCharType, std::basic_string<TCharType> >      Super;
+
+        static bool Transfer(typename Super::StringType& S, const typename Super::FormatPattern& /*Pattern*/, const std::basic_string<TCharType>& Arg)
+        {
+            S.AddStr(Arg.c_str(), Arg.c_str() + Arg.size());
+
+            return true;
+        }
+    };
 }

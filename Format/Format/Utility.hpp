@@ -363,6 +363,23 @@ namespace FormatLibrary
                 return IsDataOnStack() ? StackVal : HeapValPtr;
             }
 
+            T* GetUnusedPtr()
+            {
+                return IsDataOnStack() ? StackVal + Count : HeapValPtr + Count;
+            }
+
+            const T* GetUnusedPtr() const
+            {
+                return IsDataOnStack() ? StackVal + Count : HeapValPtr + Count;
+            }
+
+            SIZE_T GetCapacity() const
+            {                
+                return IsDataOnStack() ?
+                    DEFAULT_LENGTH - Count :
+                    AllocatedCount - Count;
+            }
+
         protected:
             void  InitialMoveDataToHeap()
             {

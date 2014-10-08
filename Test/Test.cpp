@@ -21,7 +21,7 @@ void TestProfile()
             string str;
             StandardLibrary::FormatTo(str, "{0}--#--{1,8}--#--{2}", 100, -40.2f, " String ");
             StandardLibrary::FormatTo(str, "{0}--#--{1,8}--#--{1}", 100, -40.2f);
-            StandardLibrary::FormatTo(str, "{0}--#--{1,8}--#--{3}", 100, -40.2f);
+            StandardLibrary::FormatTo(str, "{0}--#--{1,8}--#--{3}", 100, -40.2f, std::string("xxx"));
         }
     }
 

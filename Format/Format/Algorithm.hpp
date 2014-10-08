@@ -31,58 +31,7 @@ namespace FormatLibrary
                 '7', '8', '9', 'A', 'B', 'C', 'D',
                 'E', 'F'
             };
-        }
-
-        // Convert Int To String
-        template < typename TCharType >
-        inline SIZE_T IntToString(INT Value, TCharType* Buf, INT Base )
-        {
-            assert(Base > 0 && static_cast<SIZE_T>(Base) <= _countof(Detail::DigitMap));
-
-            TCharType* Str = Buf;
-
-            // Take care of sign
-            UINT UValue = (Value < 0) ? -Value : Value;
-
-            // Conversion. Number is reversed.
-            do
-            {
-                *Str++ = Detail::DigitMap[UValue%Base];
-            } while (UValue /= Base);
-
-            if (Value < 0)
-            {
-                *Str++ = TCharType('-');
-            }
-
-            *Str = TCharType('\0');
-
-            // Reverse string
-            StringReverse<TCharType>(Buf, Str - 1);
-
-            return Str - Buf;
-        }
-
-        template < typename TCharType >
-        inline SIZE_T UIntToString(UINT Value, TCharType* Buf, INT Base)
-        {
-            assert(Base > 0 && static_cast<SIZE_T>(Base) <= _countof(Detail::DigitMap));
-
-            TCharType* Str = Buf;
-
-            // Conversion. Number is reversed.
-            do
-            {
-                *Str++ = Detail::DigitMap[Value%Base];
-            } while (Value /= Base);
-
-            *Str = '\0';
-
-            // Reverse string
-            StringReverse<TCharType>(Buf, Str - 1);
-
-            return Str - Buf;
-        }
+        }       
 
         template < typename TCharType >
         inline SIZE_T Int64ToString(INT64 Value, TCharType* Buf, INT Base)

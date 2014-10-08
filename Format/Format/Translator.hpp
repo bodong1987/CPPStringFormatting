@@ -169,90 +169,6 @@ namespace FormatLibrary
     };    
 
     template < typename TCharType >
-    class TTranslator< TCharType, INT > : 
-        public TTranslatorBase< TCharType, INT >
-    {
-    public:
-        typedef TTranslatorBase< TCharType, INT >                   Super;
-        typedef TCharType                                           CharType;
-        typedef Algorithm::TFormatPattern<TCharType>                FormatPattern;
-        typedef typename FormatPattern::ByteType                    ByteType;
-        typedef typename FormatPattern::SizeType                    SizeType;
-        typedef Utility::TAutoString<CharType>                      StringType;
-        typedef Mpl::TCharTraits<CharType>                          CharTraits;
-        
-        static bool Transfer(StringType& S, const FormatPattern& Pattern, INT Arg)
-        {
-            CharType TempBuf[0xFF];
-
-            if (Pattern.Flag == FormatPattern::FF_None ||
-                Pattern.Flag == FormatPattern::FF_Decimal ||                
-                Pattern.Flag == FormatPattern::FF_General ||
-                Pattern.Flag == FormatPattern::FF_Hex
-                )
-            {
-                const bool bHex = Pattern.Flag == FormatPattern::FF_Hex;
-
-                SIZE_T Length = Algorithm::IntToString<CharType>(Arg, TempBuf, bHex?16:10);
-
-                Length = Super::AdjustString(TempBuf, Length, _countof(TempBuf), Pattern);
-
-                S.AddStr(TempBuf, TempBuf + Length);
-
-                return true;
-            }      
-            else if (Pattern.Flag == FormatPattern::FF_FixedPoint)
-            {
-                return TTranslator<TCharType, FLOAT>::Transfer(S, Pattern, static_cast<FLOAT>(Arg));
-            }
-
-            return false;
-        }
-    };
-
-    template < typename TCharType >
-    class TTranslator< TCharType, UINT > : 
-        public TTranslatorBase< TCharType, UINT >
-    {
-    public:
-        typedef TTranslatorBase< TCharType, UINT >                  Super;
-        typedef TCharType                                           CharType;
-        typedef Algorithm::TFormatPattern<TCharType>                FormatPattern;
-        typedef typename FormatPattern::ByteType                    ByteType;
-        typedef typename FormatPattern::SizeType                    SizeType;
-        typedef Utility::TAutoString<CharType>                      StringType;
-        typedef Mpl::TCharTraits<CharType>                          CharTraits;
-        
-        static bool Transfer(StringType& S, const FormatPattern& Pattern, UINT Arg)
-        {
-            CharType TempBuf[0xFF];
-
-            if (Pattern.Flag == FormatPattern::FF_None ||
-                Pattern.Flag == FormatPattern::FF_Decimal ||                
-                Pattern.Flag == FormatPattern::FF_General ||
-                Pattern.Flag == FormatPattern::FF_Hex
-                )
-            {
-                const bool bHex = Pattern.Flag == FormatPattern::FF_Hex;
-
-                SIZE_T Length = Algorithm::UIntToString<CharType>(Arg, TempBuf, bHex?16:10);
-
-                Length = Super::AdjustString(TempBuf, Length, _countof(TempBuf), Pattern);
-
-                S.AddStr(TempBuf, TempBuf + Length);
-
-                return true;
-            }      
-            else if (Pattern.Flag == FormatPattern::FF_FixedPoint)
-            {
-                return TTranslator<TCharType, FLOAT>::Transfer(S, Pattern, static_cast<FLOAT>(Arg));
-            }
-
-            return false;
-        }
-    };
-
-    template < typename TCharType >
     class TTranslator< TCharType, INT64 > : 
         public TTranslatorBase< TCharType, INT64 >
     {
@@ -360,71 +276,33 @@ namespace FormatLibrary
         }
     };
 
-    template < typename TCharType >
-    class TTranslator< TCharType, char > :
-        public TTranslator< TCharType, INT >
-    {
-    public:
-        typedef TTranslator< TCharType, INT >  Super;
+#define FL_CONVERT_TRNALSTOR( Type, BaseType ) \
+    template < typename TCharType > \
+    class TTranslator< TCharType, Type > : \
+        public TTranslator< TCharType, BaseType > \
+    { \
+    public: \
+        typedef TTranslator< TCharType, BaseType >  Super; \
+        \
+        static bool Transfer(typename Super::StringType& S, const typename Super::FormatPattern& Pattern, Type Arg) \
+        { \
+            return Super::Transfer(S, Pattern, static_cast<BaseType>(Arg)); \
+        } \
+    }
 
-        static bool Transfer( typename Super::StringType& S, const typename Super::FormatPattern& Pattern, char Arg)
-        {
-            return Super::Transfer(S, Pattern, static_cast<INT>(Arg));
-        }
-    };
-
-    template < typename TCharType >
-    class TTranslator< TCharType, unsigned char > :
-    public TTranslator< TCharType, INT >
-    {
-    public:
-        typedef TTranslator< TCharType, INT >  Super;
-
-        static bool Transfer( typename Super::StringType& S, const typename Super::FormatPattern& Pattern, unsigned char Arg)
-        {
-            return Super::Transfer(S, Pattern, static_cast<INT>(Arg));
-        }
-    };
-
-    template < typename TCharType >
-    class TTranslator< TCharType, short > :
-    public TTranslator< TCharType, INT >
-    {
-    public:
-        typedef TTranslator< TCharType, INT >  Super;
-
-        static bool Transfer( typename Super::StringType& S, const typename Super::FormatPattern& Pattern, short Arg)
-        {
-            return Super::Transfer(S, Pattern, static_cast<INT>(Arg));
-        }
-    };
-
-    template < typename TCharType >
-    class TTranslator< TCharType, unsigned short > :
-    public TTranslator< TCharType, INT >
-    {
-    public:
-        typedef TTranslator< TCharType, INT >  Super;
-
-        static bool Transfer( typename Super::StringType& S, const typename Super::FormatPattern& Pattern, unsigned short Arg)
-        {
-            return Super::Transfer(S, Pattern, static_cast<INT>(Arg));
-        }
-    };
+    FL_CONVERT_TRNALSTOR(INT, INT64);
+    FL_CONVERT_TRNALSTOR(UINT, UINT64);
+    FL_CONVERT_TRNALSTOR(char, INT);
+    FL_CONVERT_TRNALSTOR(unsigned char, UINT);
+    FL_CONVERT_TRNALSTOR(short, INT);
+    FL_CONVERT_TRNALSTOR(unsigned short, UINT);
 
 #if FL_COMPILER_MSVC
-    template < typename TCharType >
-    class TTranslator< TCharType, DWORD > :
-    public TTranslator< TCharType, UINT64 >
-    {
-    public:
-        typedef TTranslator< TCharType, UINT64 >  Super;
-
-        static bool Transfer( typename Super::StringType& S, const typename Super::FormatPattern& Pattern, DWORD Arg)
-        {
-            return Super::Transfer(S, Pattern, static_cast<UINT64>(Arg));
-        }
-    };
+    FL_CONVERT_TRNALSTOR(DWORD, UINT64);
+#elif FL_COMPILER_GCC
+    FL_CONVERT_TRNALSTOR(unsigned long, UINT64);
 #endif
 
+#undef FL_CONVERT_TRNALSTOR
 }
+
