@@ -593,6 +593,15 @@ namespace FormatLibrary
                 return GetDataPtr();
             }
 
+            // is is a internal function
+            // 
+            void InjectAdd(SIZE_T InCount)
+            {
+                Count += InCount;
+
+                assert(IsDataOnStack() ? (Count <= DEFAULT_LENGTH) : (Count < AllocatedCount));
+            }
+
         protected:
             void  AddItem(const TCharType& InValue)
             {

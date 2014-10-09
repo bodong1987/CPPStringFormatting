@@ -27,14 +27,14 @@ namespace FormatLibrary
             TPatternStorage()
             {
 #if FL_DEBUG
-                printf("created storage\n");
+                //printf("created storage\n");
 #endif
             }
             
             ~TPatternStorage()
             {
 #if FL_DEBUG
-                printf("destroy storage\n");
+                //printf("destroy storage\n");
 #endif
             }
 

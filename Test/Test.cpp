@@ -3,6 +3,8 @@
 
 #include "Format/ProgressTimer.hpp"
 
+#define TEST_PERFORMANCE_IN_TOOLS 0
+
 using namespace FormatLibrary;
 
 #include <iostream>
@@ -29,6 +31,7 @@ void TestProfile()
 #define sprintf_s sprintf
 #endif
 
+#if !TEST_PERFORMANCE_IN_TOOLS
     {
         Profile::ProgressTimer Timer("CL");
 
@@ -44,6 +47,7 @@ void TestProfile()
             str = szBuf;
         }
     }
+#endif
 }
 
 #if FL_PLATFORM_HAS_CPP11 && (FL_COMPILER_MSVC||FL_PLATFORM_MACOS)

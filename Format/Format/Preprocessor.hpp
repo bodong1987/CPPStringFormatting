@@ -24,6 +24,13 @@
 #define _FL_PP_NOT(Expr) FL_PP_CAT(FL_PP_COMPL_, FL_PP_BOOL(Expr))
 #define FL_PP_NOT(Expr) _FL_PP_NOT(Expr)
 
+// unused parameter
+#if FL_COMPILER_MSVC
+#define FL_UNREFERENCED_PARAMETER(P)   (P) 
+#else
+#define FL_UNREFERENCED_PARAMETER(p) (void)(p)
+#endif
+
 // Bool
 #define FL_PP_BOOL(x) FL_PP_BOOL_I(x)
 
