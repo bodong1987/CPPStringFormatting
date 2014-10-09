@@ -86,3 +86,97 @@
 	<iostream>
 	<mach/mach_time.h>
 
+1412839988 source:g:\cppformatlibrary\test\test.cpp
+	"Format.hpp"
+	"Format/ProgressTimer.hpp"
+	<iostream>
+	<vector>
+	<thread>
+
+1412755967 g:\cppformatlibrary\format\\format.hpp
+	"Format/Build.hpp"
+	"Format/Preprocessor.hpp"
+	"Format/Types.hpp"
+	"Format/Traits.hpp"
+	"Format/Utility.hpp"
+	"Format/System.hpp"
+	"Format/Pattern.hpp"
+	"Format/PatternParser.hpp"
+	"Format/LookupPattern.hpp"
+	"Format/StandardPatternPolicy.hpp"
+	"Format/Algorithm.hpp"
+	"Format/Translator.hpp"
+	"Format/FormatTo.hpp"
+	"Format/FormatToSTL.hpp"
+
+1412835961 g:\cppformatlibrary\format\\format\build.hpp
+	<cassert>
+
+1412839865 g:\cppformatlibrary\format\\format\preprocessor.hpp
+
+1412755967 g:\cppformatlibrary\format\\format\types.hpp
+	<cstdlib>
+
+1412755967 g:\cppformatlibrary\format\\format\traits.hpp
+	<cstdio>
+	<memory>
+	<string.h>
+	<cwchar>
+	<type_traits>
+	<utility>
+	<cstdarg>
+	<string>
+
+1412838128 g:\cppformatlibrary\format\\format\utility.hpp
+	<algorithm>
+
+1412755967 g:\cppformatlibrary\format\\format\system.hpp
+	<windows.h>
+	<pthread.h>
+	<unistd.h>
+	<sys/types.h>
+	<sys/syscall.h>
+
+1412755967 g:\cppformatlibrary\format\\format\pattern.hpp
+
+1412755967 g:\cppformatlibrary\format\\format\patternparser.hpp
+
+1412838686 g:\cppformatlibrary\format\\format\lookuppattern.hpp
+
+1412835961 g:\cppformatlibrary\format\\format\standardpatternpolicy.hpp
+	<unordered_map>
+	<map>
+	<stdexcept>
+
+1412760603 g:\cppformatlibrary\format\\format\algorithm.hpp
+
+1412840229 g:\cppformatlibrary\format\\format\translator.hpp
+	<intsafe.h>
+	<limits.h>
+
+1412755967 g:\cppformatlibrary\format\\format\formatto.hpp
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+	"Format/FormatToInner.hpp"
+
+1412755967 g:\cppformatlibrary\format\\format\formattoinner.hpp
+
+1412761768 g:\cppformatlibrary\format\\format\formattostl.hpp
+
+1412755967 g:\cppformatlibrary\format\\format\progresstimer.hpp
+	<iostream>
+	<ctime>
+	<mach/mach_time.h>
+
