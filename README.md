@@ -1,2 +1,2 @@
 see this page for more information
-https://github.com/sczybt/CPPFormatLibrary/wiki/Start-Tutorial
+https://github.com/sczybt/CPPFormatLibrary/wiki
