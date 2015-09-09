@@ -147,7 +147,7 @@ namespace FormatLibrary
         class TAutoArray
         {
         public:
-            typedef TAutoArray<T, DefaultLength>   SelfType;
+            typedef TAutoArray<T, DefaultLength, ExtraLength>   SelfType;
 
             enum
             {
