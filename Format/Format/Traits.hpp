@@ -185,7 +185,12 @@ namespace FormatLibrary
             {
                 Value =
 #if FL_COMPILER_MSVC
+#if _MSC_VER >= 1900  // after visual studio 2015
+                std::is_trivially_copyable<T>::value
+#else
                 std::has_trivial_assign<T>::value
+#endif
+
 #elif FL_COMPILER_GCC                
 #if (__GUNC__ >= 4 ) && (__GNUC_MINOR__ >= 3 )
                 __has_trivial_assign(T)
