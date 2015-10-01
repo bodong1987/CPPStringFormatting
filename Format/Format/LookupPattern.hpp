@@ -106,13 +106,13 @@ namespace FormatLibrary
                         }
                     }
                     
-                    void AddStorage( TGlobalPatternStorage* Storage )
+                    void AddStorage( TGlobalPatternStorage* InputStorage )
                     {
-                        assert(Storage);
+                        assert(InputStorage);
                         
                         LockerType Locker(ManagedCS);
                         
-                        Storages.AddItem(Storage);
+                        Storages.AddItem(InputStorage);
                     }
                 };
                 
