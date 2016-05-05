@@ -93,6 +93,9 @@ namespace FormatLibrary
             {
 #if FL_PLATFORM_WINDOWS
                 return ::GetCurrentThreadId();
+
+#elif FL_PLATFORM_ANDROID
+                return (SIZE_T)pthread_self();
 #else
                 pid_t tid = (pid_t)syscall(SYS_gettid);
 

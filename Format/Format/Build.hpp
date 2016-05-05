@@ -27,6 +27,12 @@
 #define FL_PLATFORM_MACOS     0
 #endif
 
+#if defined(ANDROID) || defined(__ANDROID__)
+#define FL_PLATFORM_ANDROID   1
+#else
+#define FL_PLATFORM_ANDROID   0
+#endif
+
 
 #if defined(_WIN64) || defined(_X64) || defined(WIN64) || defined( __LP64__ )
 #define FL_PLATFORM_X64       1
