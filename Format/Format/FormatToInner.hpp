@@ -10,7 +10,7 @@
     FL_PP_COMMA_IF(i) typename FL_PP_CAT( T, i )
 
 #define _FL_REAL_AGUMENTS_( d, i ) \
-    FL_PP_COMMA_IF(i) const FL_PP_CAT(T,i)& FL_PP_CAT(Arg,i)
+    FL_PP_COMMA_IF(i) const FL_PP_CAT(T,i)& FL_PP_CAT(arg,i)
 
 #define _FL_TRANSFER_BODY_( d, i ) \
     case i: \
@@ -20,9 +20,9 @@
                 Mpl::IsArray<Type>::Value, \
                 const typename Mpl::RemoveArray<Type>::Type*, \
                 Type >::Type TransferType; \
-                if (!TTranslator< TCharType, TransferType >::Transfer(Sink, Pattern, FL_PP_CAT(Arg, i))) \
+                if (!TTranslator< TCharType, TransferType >::Transfer(sink, Pattern, FL_PP_CAT(arg, i))) \
             { \
-                TRawTranslator< TCharType >::Transfer(Sink, Pattern, Format); \
+                TRawTranslator< TCharType >::Transfer(sink, Pattern, format); \
             } \
         } \
         break;
@@ -35,8 +35,8 @@ template <
     FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TEMPLATE_PARAMETERS_, )
 >
 inline Utility::TAutoString<TCharType>& FormatTo(
-    Utility::TAutoString<TCharType>& Sink,
-    const TCharType* Format,
+    Utility::TAutoString<TCharType>& sink,
+    const TCharType* format,
     FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_REAL_AGUMENTS_, )
 )
 {
@@ -49,7 +49,7 @@ inline Utility::TAutoString<TCharType>& FormatTo(
     assert(Storage);
 
     const PatternListType* Patterns =
-        Storage->LookupPatterns(Utility::PtrOf(Format), Utility::LengthOf(Format));
+        Storage->LookupPatterns(Utility::PtrOf(format), Utility::LengthOf(format));
 
     assert(Patterns);
 
@@ -61,7 +61,7 @@ inline Utility::TAutoString<TCharType>& FormatTo(
 
         if (Pattern.Flag == FormatPatternType::FF_Raw)
         {
-            TRawTranslator<TCharType>::Transfer(Sink, Pattern, Format);
+            TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
         }
         else
         {
@@ -69,7 +69,7 @@ inline Utility::TAutoString<TCharType>& FormatTo(
             {
                 FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TRANSFER_BODY_,);
             default:
-                TRawTranslator<TCharType>::Transfer(Sink, Pattern, Format);
+                TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
                 break;
             }
         }
@@ -77,7 +77,7 @@ inline Utility::TAutoString<TCharType>& FormatTo(
         Iter.Next();
     }
 
-    return Sink;
+    return sink;
 }
         
 

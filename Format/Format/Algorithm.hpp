@@ -11,15 +11,15 @@ namespace FormatLibrary
     namespace Algorithm
     {
         template < typename TCharType >
-        inline void StringReverse(TCharType* Start, TCharType* End)
+        inline void StringReverse(TCharType* start, TCharType* end)
         {
             TCharType Aux;
 
-            while (Start < End)
+            while (start < end)
             {
-                Aux = *End;
-                *End-- = *Start;
-                *Start++ = Aux;
+                Aux = *end;
+                *end-- = *start;
+                *start++ = Aux;
             }
         }
 
@@ -34,21 +34,21 @@ namespace FormatLibrary
         }       
 
         template < typename TCharType >
-        inline SIZE_T Int64ToString(INT64 Value, TCharType* Buf, INT Base)
+        inline SIZE_T Int64ToString(INT64 value, TCharType* buffer, INT base)
         {
-            assert(Base > 0 && static_cast<SIZE_T>(Base) <= _countof(Detail::DigitMap));
+            assert(base > 0 && static_cast<SIZE_T>(base) <= _countof(Detail::DigitMap));
 
-            TCharType* Str = Buf;
+            TCharType* Str = buffer;
 
-            UINT64 UValue = (Value < 0) ? -Value : Value;
+            UINT64 UValue = (value < 0) ? -value : value;
 
             // Conversion. Number is reversed.
             do
             {
-                *Str++ = Detail::DigitMap[UValue%Base];
-            } while (UValue /= Base);
+                *Str++ = Detail::DigitMap[UValue%base];
+            } while (UValue /= base);
 
-            if (Value < 0)
+            if (value < 0)
             {
                 *Str++ = '-';
             }
@@ -56,34 +56,34 @@ namespace FormatLibrary
             *Str = '\0';
 
             // Reverse string
-            StringReverse<TCharType>(Buf, Str - 1);
+            StringReverse<TCharType>(buffer, Str - 1);
 
-            return Str - Buf;
+            return Str - buffer;
         }
 
         template < typename TCharType >
-        inline SIZE_T UInt64ToString(UINT64 Value, TCharType* Buf, INT Base)
+        inline SIZE_T UInt64ToString(UINT64 value, TCharType* buffer, INT base)
         {
-            assert(Base > 0 && static_cast<SIZE_T>(Base) <= _countof(Detail::DigitMap));
+            assert(base > 0 && static_cast<SIZE_T>(base) <= _countof(Detail::DigitMap));
 
-            TCharType* Str = Buf;
+            TCharType* Str = buffer;
 
             // Conversion. Number is reversed.
             do
             {
-                *Str++ = Detail::DigitMap[Value%Base];
-            } while (Value /= Base);
+                *Str++ = Detail::DigitMap[value%base];
+            } while (value /= base);
 
             *Str = '\0';
 
             // Reverse string
-            StringReverse<TCharType>(Buf, Str - 1);
+            StringReverse<TCharType>(buffer, Str - 1);
 
-            return Str - Buf;
+            return Str - buffer;
         }
 
         template < typename TCharType >
-        inline SIZE_T DoubleToString(DOUBLE Value, TCharType* Buf, SIZE_T Size, INT Precision)
+        inline SIZE_T DoubleToString(DOUBLE value, TCharType* buffer, SIZE_T size, INT precision)
         {
             static const DOUBLE pow10[] =
             { 
@@ -96,9 +96,9 @@ namespace FormatLibrary
             * have correct nan values anyways.  The alternative is
             * to link with libmath (bad) or hack IEEE DOUBLE bits (bad)
             */
-            if (!(Value == Value))
+            if (!(value == value))
             {
-                Buf[0] = 'n'; Buf[1] = 'a'; Buf[2] = 'n'; Buf[3] = '\0';
+                buffer[0] = 'n'; buffer[1] = 'a'; buffer[2] = 'n'; buffer[3] = '\0';
 
                 return 3;
             }
@@ -107,29 +107,29 @@ namespace FormatLibrary
             const DOUBLE ThresMax = (DOUBLE)(0x7FFFFFFF);
 
             DOUBLE Diff = 0.0;
-            TCharType* Str = Buf;
+            TCharType* Str = buffer;
 
-            if (Precision < 0)
+            if (precision < 0)
             {
-                Precision = 0;
+                precision = 0;
             }
-            else if (Precision > 9)
+            else if (precision > 9)
             {
-                /* Precision of >= 10 can lead to overflow errors */
-                Precision = 9;
+                /* precision of >= 10 can lead to overflow errors */
+                precision = 9;
             }
 
             /* we'll work in positive values and deal with the
             negative sign issue later */
             INT Neg = 0;
-            if (Value < 0)
+            if (value < 0)
             {
                 Neg = 1;
-                Value = -Value;
+                value = -value;
             }
 
-            INT Whole = (INT)Value;
-            DOUBLE tmp = (Value - Whole) * pow10[Precision];
+            INT Whole = (INT)value;
+            DOUBLE tmp = (value - Whole) * pow10[precision];
             unsigned Frace = (unsigned)(tmp);
 
             Diff = tmp - Frace;
@@ -137,8 +137,8 @@ namespace FormatLibrary
             if (Diff > 0.5)
             {
                 ++Frace;
-                /* handle rollover, e.g.  case 0.99 with Precision 1 is 1.0  */
-                if (Frace >= pow10[Precision])
+                /* handle rollover, e.g.  case 0.99 with precision 1 is 1.0  */
+                if (Frace >= pow10[precision])
                 {
                     Frace = 0;
                     ++Whole;
@@ -158,20 +158,20 @@ namespace FormatLibrary
             which can be 100s of characters overflowing your buffers == bad
             */
 
-            if (Value > ThresMax)
+            if (value > ThresMax)
             {
                 INT Result = Mpl::TCharTraits<TCharType>::StaticSprintf(
-                    Buf,
-                    Size,
+                    buffer,
+                    size,
                     Mpl::TCharTraits<TCharType>::StaticEFormat(),
-                    Neg ? -Value : Value);
+                    Neg ? -value : value);
 
                 return Result;
             }
 
-            if (Precision == 0)
+            if (precision == 0)
             {
-                Diff = Value - Whole;
+                Diff = value - Whole;
                 if (Diff > 0.5)
                 {
                     /* greater than 0.5, round up, e.g. 1.6 -> 2 */
@@ -186,7 +186,7 @@ namespace FormatLibrary
             }
             else
             {
-                INT Count = Precision;
+                INT Count = precision;
                 // now do fractional part, as an unsigned number
                 do
                 {
@@ -214,9 +214,9 @@ namespace FormatLibrary
 
             *Str = '\0';
 
-            StringReverse<TCharType>(Buf, Str - 1);
+            StringReverse<TCharType>(buffer, Str - 1);
 
-            return Str - Buf;
+            return Str - buffer;
         }
     }
 }

@@ -57,48 +57,48 @@ namespace FormatLibrary
 
         static SIZE_T AdjustString(
             CharType* pszStr,
-            SIZE_T Length,
-            const SIZE_T BufLength,
-            const FormatPattern& Pattern
+            SIZE_T length,
+            const SIZE_T bufferLength,
+            const FormatPattern& pattern
             )
         {
-            SIZE_T UsedLength = Length;
+            SIZE_T UsedLength = length;
 
-            if (Pattern.HasWidth() && Pattern.Width > Length)
+            if (pattern.HasWidth() && pattern.Width > length)
             {
-                const SIZE_T PadCount = Min(BufLength - Length, Pattern.Width - Length);
+                const SIZE_T PadCount = Min(bufferLength - length, pattern.Width - length);
 
                 assert(PadCount < 0xFF);
 
-                if (Pattern.Align == FormatPattern::AF_Left)
+                if (pattern.Align == FormatPattern::AF_Left)
                 {
                     // Fill at the end
-                    CharTraits::Fill(pszStr + Length, ' ', PadCount);
+                    CharTraits::Fill(pszStr + length, ' ', PadCount);
 
-                    pszStr[Length + PadCount] = 0;
+                    pszStr[length + PadCount] = 0;
                 }
                 else
                 {
                     // fill at the start
-                    CharTraits::copy(pszStr + PadCount, pszStr, Length);
+                    CharTraits::copy(pszStr + PadCount, pszStr, length);
                     CharTraits::Fill(pszStr, ' ', PadCount);
-                    pszStr[Length + PadCount] = 0;
+                    pszStr[length + PadCount] = 0;
                 }
 
-                UsedLength = Length + PadCount;
+                UsedLength = length + PadCount;
             }
 
             return UsedLength;
         }
 
-        static SIZE_T EstimateLength(const FormatPattern& Pattern, SIZE_T MaxLength)
+        static SIZE_T EstimateLength(const FormatPattern& pattern, SIZE_T maxLength)
         {
-            if (Pattern.HasWidth())
+            if (pattern.HasWidth())
             {
-                return Max(static_cast<SIZE_T>(Pattern.Width), MaxLength);
+                return Max(static_cast<SIZE_T>(pattern.Width), maxLength);
             }
 
-            return MaxLength;
+            return maxLength;
         }
     };
 
@@ -111,11 +111,11 @@ namespace FormatLibrary
         typedef Utility::TAutoString<CharType>                      StringType;
 
         // Raw Translator always success
-        static bool Transfer(StringType& S, const FormatPattern& Pattern, const CharType* Format)
+        static bool Transfer(StringType& strRef, const FormatPattern& pattern, const CharType* format)
         {
-            assert(Pattern.Len > 0 && "invalid parameters!!!");
+            assert(pattern.Len > 0 && "invalid parameters!!!");
 
-            S.AddStr(&Format[Pattern.Start], &Format[Pattern.Start] + Pattern.Len);
+            strRef.AddStr(&format[pattern.Start], &format[pattern.Start] + pattern.Len);
 
             return true;
         }
@@ -128,11 +128,11 @@ namespace FormatLibrary
         typedef TTranslatorBase< TCharType, T > Super;
 
         // if you get a compile error with this function can't visit
-        // it means that you have transfer an unsupported parameter to Format pipeline
+        // it means that you have transfer an unsupported parameter to format pipeline
         // you can do them to fix this error:
         //    1. change your code, convert it to the support type
         //    2. make a specialization of TTranslator for your type.
-        static bool Transfer(typename Super::StringType& S, const typename Super::FormatPattern& Pattern, const T& Arg);
+        static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg);
     };
 
     template < typename TCharType >
@@ -148,15 +148,15 @@ namespace FormatLibrary
         typedef Utility::TAutoString<CharType>                      StringType;
         typedef Mpl::TCharTraits<CharType>                          CharTraits;
 
-        static bool Transfer(StringType& S, const FormatPattern& Pattern, bool Arg)
+        static bool Transfer(StringType& strRef, const FormatPattern& pattern, bool arg)
         {
             TCharType TrueStr[] = { 'T', 'r', 'u', 'e' };
             TCharType FalseStr[] = { 'F', 'a', 'l', 's', 'e' };
 
-            const TCharType* Selection = Arg ? TrueStr : FalseStr;
-            const SIZE_T Length = Arg ? _countof(TrueStr) : _countof(FalseStr);
+            const TCharType* Selection = arg ? TrueStr : FalseStr;
+            const SIZE_T length = arg ? _countof(TrueStr) : _countof(FalseStr);
 
-            S.AddStr(Selection, Selection + Length);
+            strRef.AddStr(Selection, Selection + length);
 
             return true;
         }
@@ -180,55 +180,55 @@ namespace FormatLibrary
         typedef Utility::TAutoString<CharType>                      StringType;
         typedef Mpl::TCharTraits<CharType>                          CharTraits;
 
-        static bool Transfer(StringType& S, const FormatPattern& Pattern, DOUBLE Arg, SIZE_T UnusedParam = 0 )
+        static bool Transfer(StringType& strRef, const FormatPattern& pattern, DOUBLE arg, SIZE_T unusedParam = 0 )
         {
-            FL_UNREFERENCED_PARAMETER(UnusedParam);
+            FL_UNREFERENCED_PARAMETER(unusedParam);
 
-            if (Pattern.Flag == FormatPattern::FF_None ||
-                Pattern.Flag == FormatPattern::FF_FixedPoint ||
-                Pattern.Flag == FormatPattern::FF_General
+            if (pattern.Flag == FormatPattern::FF_None ||
+                pattern.Flag == FormatPattern::FF_FixedPoint ||
+                pattern.Flag == FormatPattern::FF_General
                 )
             {
                 // assume Double value will less than 32
-                const SIZE_T EstimatedLength = Super::EstimateLength(Pattern, 32);
-                const SIZE_T Capacity = S.GetCapacity();
+                const SIZE_T EstimatedLength = Super::EstimateLength(pattern, 32);
+                const SIZE_T Capacity = strRef.GetCapacity();
 
                 if (Capacity >= EstimatedLength)
                 {
-                    SIZE_T Length = Algorithm::DoubleToString<CharType>(
-                        Arg,
-                        S.GetUnusedPtr(),
+                    SIZE_T length = Algorithm::DoubleToString<CharType>(
+                        arg,
+                        strRef.GetUnusedPtr(),
                         Capacity,
-                        Pattern.HasPrecision() ? Pattern.Precision : DEFAULT_FLOAT_PERCISION
+                        pattern.HasPrecision() ? pattern.Precision : DEFAULT_FLOAT_PERCISION
                         );
 
-                    Length = Super::AdjustString(S.GetUnusedPtr(), Length, Capacity, Pattern);
+                    length = Super::AdjustString(strRef.GetUnusedPtr(), length, Capacity, pattern);
 
-                    assert(Length <= Capacity);
+                    assert(length <= Capacity);
 
-                    S.InjectAdd(Length);
+                    strRef.InjectAdd(length);
                 }
                 else
                 {
                     CharType TempBuf[0xFF];
 
-                    SIZE_T Length = Algorithm::DoubleToString<CharType>(
-                        Arg,
+                    SIZE_T length = Algorithm::DoubleToString<CharType>(
+                        arg,
                         TempBuf,
                         _countof(TempBuf),
-                        Pattern.HasPrecision() ? Pattern.Precision : DEFAULT_FLOAT_PERCISION
+                        pattern.HasPrecision() ? pattern.Precision : DEFAULT_FLOAT_PERCISION
                         );
 
-                    Length = Super::AdjustString(TempBuf, Length, _countof(TempBuf), Pattern);
+                    length = Super::AdjustString(TempBuf, length, _countof(TempBuf), pattern);
 
-                    S.AddStr(TempBuf, TempBuf + Length);
+                    strRef.AddStr(TempBuf, TempBuf + length);
                 }
 
                 return true;
             }
-            else if (Pattern.Flag == FormatPattern::FF_Decimal)
+            else if (pattern.Flag == FormatPattern::FF_Decimal)
             {
-                return TTranslator<TCharType, INT64>::Transfer(S, Pattern, static_cast<INT64>(Arg));
+                return TTranslator<TCharType, INT64>::Transfer(strRef, pattern, static_cast<INT64>(arg));
             }
 
             return false;
@@ -253,45 +253,45 @@ namespace FormatLibrary
             MAX_LENGTH = Detail::TMaxLength<LLONG_MAX>::Value
         };
 
-        static bool Transfer(StringType& S, const FormatPattern& Pattern, INT64 Arg, SIZE_T MaxLength = MAX_LENGTH )
+        static bool Transfer(StringType& strRef, const FormatPattern& pattern, INT64 arg, SIZE_T maxLength = MAX_LENGTH )
         {
-            if (Pattern.Flag == FormatPattern::FF_None ||
-                Pattern.Flag == FormatPattern::FF_Decimal ||
-                Pattern.Flag == FormatPattern::FF_General ||
-                Pattern.Flag == FormatPattern::FF_Hex
+            if (pattern.Flag == FormatPattern::FF_None ||
+                pattern.Flag == FormatPattern::FF_Decimal ||
+                pattern.Flag == FormatPattern::FF_General ||
+                pattern.Flag == FormatPattern::FF_Hex
                 )
             {
-                const SIZE_T EstimatedLength = Super::EstimateLength(Pattern, MaxLength);
-                const SIZE_T Capacity = S.GetCapacity();
+                const SIZE_T EstimatedLength = Super::EstimateLength(pattern, maxLength);
+                const SIZE_T Capacity = strRef.GetCapacity();
 
-                const bool bHex = Pattern.Flag == FormatPattern::FF_Hex;
+                const bool bHex = pattern.Flag == FormatPattern::FF_Hex;
 
                 if (Capacity >= EstimatedLength)
                 {
-                    SIZE_T Length = Algorithm::Int64ToString<CharType>(Arg, S.GetUnusedPtr(), bHex ? 16 : 10);
+                    SIZE_T length = Algorithm::Int64ToString<CharType>(arg, strRef.GetUnusedPtr(), bHex ? 16 : 10);
 
-                    Length = Super::AdjustString(S.GetUnusedPtr(), Length, Capacity, Pattern);
+                    length = Super::AdjustString(strRef.GetUnusedPtr(), length, Capacity, pattern);
 
-                    assert(Length <= Capacity);
+                    assert(length <= Capacity);
 
-                    S.InjectAdd(Length);
+                    strRef.InjectAdd(length);
                 }
                 else
                 {
                     CharType TempBuf[0xFF];
 
-                    SIZE_T Length = Algorithm::Int64ToString<CharType>(Arg, TempBuf, bHex ? 16 : 10);
+                    SIZE_T length = Algorithm::Int64ToString<CharType>(arg, TempBuf, bHex ? 16 : 10);
 
-                    Length = Super::AdjustString(TempBuf, Length, _countof(TempBuf), Pattern);
+                    length = Super::AdjustString(TempBuf, length, _countof(TempBuf), pattern);
 
-                    S.AddStr(TempBuf, TempBuf + Length);
+                    strRef.AddStr(TempBuf, TempBuf + length);
                 }
 
                 return true;
             }
-            else if (Pattern.Flag == FormatPattern::FF_FixedPoint)
+            else if (pattern.Flag == FormatPattern::FF_FixedPoint)
             {
-                return TTranslator<TCharType, FLOAT>::Transfer(S, Pattern, static_cast<FLOAT>(Arg));
+                return TTranslator<TCharType, FLOAT>::Transfer(strRef, pattern, static_cast<FLOAT>(arg));
             }
 
             return false;
@@ -316,45 +316,45 @@ namespace FormatLibrary
             MAX_LENGTH = Detail::TMaxLength<ULLONG_MAX>::Value
         };
 
-        static bool Transfer(StringType& S, const FormatPattern& Pattern, UINT64 Arg, SIZE_T MaxLength = MAX_LENGTH)
+        static bool Transfer(StringType& strRef, const FormatPattern& pattern, UINT64 arg, SIZE_T maxLength = MAX_LENGTH)
         {
-            if (Pattern.Flag == FormatPattern::FF_None ||
-                Pattern.Flag == FormatPattern::FF_Decimal ||
-                Pattern.Flag == FormatPattern::FF_General ||
-                Pattern.Flag == FormatPattern::FF_Hex
+            if (pattern.Flag == FormatPattern::FF_None ||
+                pattern.Flag == FormatPattern::FF_Decimal ||
+                pattern.Flag == FormatPattern::FF_General ||
+                pattern.Flag == FormatPattern::FF_Hex
                 )
             {
-                const SIZE_T EstimatedLength = Super::EstimateLength(Pattern, MaxLength);
-                const SIZE_T Capacity = S.GetCapacity();
+                const SIZE_T EstimatedLength = Super::EstimateLength(pattern, maxLength);
+                const SIZE_T Capacity = strRef.GetCapacity();
 
-                const bool bHex = Pattern.Flag == FormatPattern::FF_Hex;
+                const bool bHex = pattern.Flag == FormatPattern::FF_Hex;
 
                 if (Capacity >= EstimatedLength)
                 {
-                    SIZE_T Length = Algorithm::UInt64ToString<CharType>(Arg, S.GetUnusedPtr(), bHex ? 16 : 10);
+                    SIZE_T length = Algorithm::UInt64ToString<CharType>(arg, strRef.GetUnusedPtr(), bHex ? 16 : 10);
 
-                    Length = Super::AdjustString(S.GetUnusedPtr(), Length, Capacity, Pattern);
+                    length = Super::AdjustString(strRef.GetUnusedPtr(), length, Capacity, pattern);
 
-                    assert(Length <= Capacity);
+                    assert(length <= Capacity);
 
-                    S.InjectAdd(Length);
+                    strRef.InjectAdd(length);
                 }
                 else
                 {
                     CharType TempBuf[0xFF];
 
-                    SIZE_T Length = Algorithm::Int64ToString<CharType>(Arg, TempBuf, bHex ? 16 : 10);
+                    SIZE_T length = Algorithm::Int64ToString<CharType>(arg, TempBuf, bHex ? 16 : 10);
 
-                    Length = Super::AdjustString(TempBuf, Length, _countof(TempBuf), Pattern);
+                    length = Super::AdjustString(TempBuf, length, _countof(TempBuf), pattern);
 
-                    S.AddStr(TempBuf, TempBuf + Length);
+                    strRef.AddStr(TempBuf, TempBuf + length);
                 }
 
                 return true;
             }
-            else if (Pattern.Flag == FormatPattern::FF_FixedPoint)
+            else if (pattern.Flag == FormatPattern::FF_FixedPoint)
             {
-                return TTranslator<TCharType, FLOAT>::Transfer(S, Pattern, static_cast<FLOAT>(Arg));
+                return TTranslator<TCharType, FLOAT>::Transfer(strRef, pattern, static_cast<FLOAT>(arg));
             }
 
             return false;
@@ -374,11 +374,11 @@ namespace FormatLibrary
         typedef Utility::TAutoString<CharType>                      StringType;
         typedef Mpl::TCharTraits<CharType>                          CharTraits;
 
-        static bool Transfer(StringType& S, const FormatPattern& /*Pattern*/, const TCharType* Str)
+        static bool Transfer(StringType& strRef, const FormatPattern& /*pattern*/, const TCharType* str)
         {
-            if (Str)
+            if (str)
             {
-                S.AddStr(Str);
+                strRef.AddStr(str);
             }
 
             return true;
@@ -393,9 +393,9 @@ namespace FormatLibrary
     public: \
         typedef TTranslator< TCharType, BaseType >  Super; \
         \
-        static bool Transfer(typename Super::StringType& S, const typename Super::FormatPattern& Pattern, Type Arg) \
+        static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, Type arg) \
         { \
-            return Super::Transfer(S, Pattern, static_cast<BaseType>(Arg), Detail::TMaxLength<MaxValue>::Value); \
+            return Super::Transfer(strRef, pattern, static_cast<BaseType>(arg), Detail::TMaxLength<MaxValue>::Value); \
         } \
     }
 

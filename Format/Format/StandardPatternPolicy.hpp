@@ -23,11 +23,11 @@ namespace FormatLibrary
             typedef Algorithm::TFormatPattern<CharType>     FormatPattern;
             typedef typename FormatPattern::SizeType        SizeType;
 
-            SizeType operator ()(const CharType* const Start, SizeType Length)
+            SizeType operator ()(const CharType* const start, SizeType length)
             {
-                const unsigned char* const StartTest = (const unsigned char* const)Start;
+                const unsigned char* const StartTest = (const unsigned char* const)start;
 
-                SizeType Count = Length*sizeof(CharType);
+                SizeType Count = length*sizeof(CharType);
 
 #if FL_PLATFORM_X64
                 FL_STATIC_ASSERT(sizeof(SizeType) == 8, "This code is for 64-bit SizeType.");
@@ -125,11 +125,11 @@ namespace FormatLibrary
             typedef TDefaultStringHasher<CharType>                         HasherType;
             typedef std::runtime_error                                     ExceptionType;
 
-            static const PatternListType* FindByHashKey(const PatternMapType& Storage, SizeType HashKey)
+            static const PatternListType* FindByHashKey(const PatternMapType& storageReference, SizeType hashKey)
             {
-                typename PatternMapType::const_iterator itPos = Storage.find(HashKey);
+                typename PatternMapType::const_iterator itPos = storageReference.find(hashKey);
 
-                return itPos != Storage.end() ? &itPos->second : NULL;
+                return itPos != storageReference.end() ? &itPos->second : NULL;
             }
 
             static void ReserveList(PatternListType& /*ListRef*/, int /*Len*/ )
@@ -138,28 +138,28 @@ namespace FormatLibrary
             }
 
             static const PatternListType* Emplace(
-                PatternMapType& Storage,
-                SizeType HashKey,
+                PatternMapType& storageReference,
+                SizeType hashKey,
 #if FL_PLATFORM_HAS_RIGHT_VALUE_REFERENCE
-                PatternListType&& Patterns
+                PatternListType&& patterns
 #else
-                const PatternListType& Patterns
+                const PatternListType& patterns
 #endif
                 )
             {
                 std::pair< typename PatternMapType::iterator, bool> Results =
 #if FL_PLATFORM_HAS_RIGHT_VALUE_REFERENCE
-                    Storage.emplace(std::make_pair(HashKey, std::move(Patterns)));
+                    storageReference.emplace(std::make_pair(hashKey, std::move(patterns)));
 #else
-                    Storage.insert(std::make_pair(HashKey, Patterns));
+                    storageReference.insert(std::make_pair(hashKey, patterns));
 #endif
 
                 return Results.second ? &Results.first->second : NULL;
             }
 
-            static void AppendPattern(PatternListType& Patterns, const FormatPattern& Pattern )
+            static void AppendPattern(PatternListType& patterns, const FormatPattern& pattern )
             {
-                Patterns.AddItem(Pattern);
+                patterns.AddItem(pattern);
             }
         };
         

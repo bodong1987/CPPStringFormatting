@@ -13,54 +13,54 @@ namespace FormatLibrary
         namespace Detail
         {
             template <typename InputType, typename OutputType >
-            inline OutputType MoveArrayImpl(InputType Start, InputType End, OutputType Dest, Mpl::FalseType)
+            inline OutputType MoveArrayImpl(InputType start, InputType end, OutputType dest, Mpl::FalseType)
             {
-                while (Start != End)
+                while (start != end)
                 {
-                    *Dest = FL_MOVE_SEMANTIC(*Start);
-                    ++Dest;
-                    ++Start;
+                    *dest = FL_MOVE_SEMANTIC(*start);
+                    ++dest;
+                    ++start;
                 }
 
-                return Dest;
+                return dest;
             }
 
             template <typename T >
-            inline T* MoveArrayImpl(T* Start, T* End, T* Dest, Mpl::TrueType)
+            inline T* MoveArrayImpl(T* start, T* end, T* dest, Mpl::TrueType)
             {
-                const size_t Size = (End - Start)*sizeof(T);
+                const size_t Size = (end - start)*sizeof(T);
 
-                memcpy(Dest, Start, Size);
+                memcpy(dest, start, Size);
 
-                return Dest + (End - Start);
+                return dest + (end - start);
             }
 
             template <typename InputType, typename OutputType >
-            inline OutputType CopyArrayImpl(InputType Start, InputType End, OutputType Dest, Mpl::FalseType)
+            inline OutputType CopyArrayImpl(InputType start, InputType end, OutputType dest, Mpl::FalseType)
             {
-                while (Start != End)
+                while (start != end)
                 {
-                    *Dest = *Start;
-                    ++Dest;
-                    ++Start;
+                    *dest = *start;
+                    ++dest;
+                    ++start;
                 }
 
-                return Dest;
+                return dest;
             }
 
             template <typename T >
-            inline T* CopyArrayImpl(T* Start, T* End, T* Dest, Mpl::TrueType)
+            inline T* CopyArrayImpl(T* start, T* end, T* dest, Mpl::TrueType)
             {
-                const size_t Size = (End - Start)*sizeof(T);
+                const size_t Size = (end - start)*sizeof(T);
 
-                memcpy(Dest, Start, Size);
+                memcpy(dest, start, Size);
 
-                return Dest + (End - Start);
+                return dest + (end - start);
             }
         }
 
         template<typename InputType, typename OutputType>
-        inline OutputType MoveArray(InputType Start, InputType End, OutputType Dest)
+        inline OutputType MoveArray(InputType start, InputType end, OutputType dest)
         {
             typedef typename Mpl::TIfElse<
                 Mpl::IsSimple<InputType>::Value &&
@@ -68,11 +68,11 @@ namespace FormatLibrary
                 Mpl::TrueType,
                 Mpl::FalseType >::Type  Type;
 
-            return Detail::MoveArrayImpl(Start, End, Dest, Type());
+            return Detail::MoveArrayImpl(start, end, dest, Type());
         }
 
         template<typename InputType, typename OutputType>
-        inline OutputType CopyArray(InputType Start, InputType End, OutputType Dest)
+        inline OutputType CopyArray(InputType start, InputType end, OutputType dest)
         {
             typedef typename Mpl::TIfElse<
                 Mpl::IsSimple<InputType>::Value &&
@@ -80,12 +80,12 @@ namespace FormatLibrary
                 Mpl::TrueType,
                 Mpl::FalseType >::Type  Type;
 
-            return Detail::CopyArrayImpl(Start, End, Dest, Type());
+            return Detail::CopyArrayImpl(start, end, dest, Type());
         }
 
-        template< class T > inline T Clamp(const T X, const T Min, const T Max)
+        template< class T > inline T Clamp(const T x, const T minValue, const T maxValue)
         {
-            return X < Min ? Min : X < Max ? X : Max;
+            return x < minValue ? minValue : x < maxValue ? x : maxValue;
         }
     }
 
@@ -108,15 +108,15 @@ namespace FormatLibrary
         public:
             typedef TReferenceType        ReferenceType;
             
-            TScopedLocker(TReferenceType& ReferenceVal) :
-                Reference(&ReferenceVal)
+            TScopedLocker(TReferenceType& referenceTarget) :
+                Reference(&referenceTarget)
             {
                 assert(Reference);
                 Reference->Lock();
             }
 
-            TScopedLocker(TReferenceType* pInReference) :
-                Reference(pInReference)
+            TScopedLocker(TReferenceType* referencePointer) :
+                Reference(referencePointer)
             {
                 assert(Reference);
                 Reference->Lock();
@@ -157,20 +157,20 @@ namespace FormatLibrary
             class ConstIterator : Noncopyable
             {
             public:
-                ConstIterator(const SelfType& InRef) :
-                    Ref(InRef),
-                    Index( InRef.GetLength()>0?0:-1 )
+                ConstIterator(const SelfType& referenceTarget) :
+                    Ref(referenceTarget),
+                    index( referenceTarget.GetLength()>0?0:-1 )
                 {
                 }
 
                 bool IsValid() const
                 {
-                    return Index < Ref.GetLength();
+                    return index < Ref.GetLength();
                 }
 
                 bool Next()
                 {
-                    ++Index;
+                    ++index;
 
                     return IsValid();
                 }
@@ -179,14 +179,14 @@ namespace FormatLibrary
                 {
                     const T* Ptr = Ref.GetDataPtr();
 
-                    return Ptr[Index];
+                    return Ptr[index];
                 }
             private:
                 ConstIterator& operator = (const ConstIterator&);
                 ConstIterator(ConstIterator&);
             protected:
                 const SelfType&   Ref;
-                SIZE_T            Index;
+                SIZE_T            index;
             };
 
             TAutoArray() :
@@ -203,99 +203,99 @@ namespace FormatLibrary
                 Count = 0;
             }
 
-            TAutoArray(const SelfType& Other) :
-                Count(Other.Count),
-                AllocatedCount(Other.AllocatedCount),
+            TAutoArray(const SelfType& other) :
+                Count(other.Count),
+                AllocatedCount(other.AllocatedCount),
                 HeapValPtr(NULL)
             {
                 if (Count > 0)
                 {
-                    if (Other.IsDataOnStack())
+                    if (other.IsDataOnStack())
                     {
-                        Algorithm::CopyArray(Other.StackVal, Other.StackVal + Count, StackVal);
+                        Algorithm::CopyArray(other.StackVal, other.StackVal + Count, StackVal);
                     }
                     else
                     {
                         HeapValPtr = Allocate(AllocatedCount);
-                        Algorithm::CopyArray(Other.HeapValPtr, Other.HeapValPtr + Count, HeapValPtr);
+                        Algorithm::CopyArray(other.HeapValPtr, other.HeapValPtr + Count, HeapValPtr);
                     }
                 }
             }
 
-            SelfType& operator = (const SelfType& Other)
+            SelfType& operator = (const SelfType& other)
             {
-                if (this == &Other)
+                if (this == &other)
                 {
                     return *this;
                 }
 
                 ReleaseHeapData();
 
-                Count = Other.Count;
-                AllocatedCount = Other.AllocatedCount;
+                Count = other.Count;
+                AllocatedCount = other.AllocatedCount;
                 HeapValPtr = NULL;
 
                 if (Count > 0)
                 {
-                    if (Other.IsDataOnStack())
+                    if (other.IsDataOnStack())
                     {
-                        Algorithm::CopyArray(Other.StackVal, Other.StackVal + Count, StackVal);
+                        Algorithm::CopyArray(other.StackVal, other.StackVal + Count, StackVal);
                     }
                     else
                     {
                         HeapValPtr = Allocate(AllocatedCount);
-                        Algorithm::CopyArray(Other.HeapValPtr, Other.HeapValPtr + Count, HeapValPtr);
+                        Algorithm::CopyArray(other.HeapValPtr, other.HeapValPtr + Count, HeapValPtr);
                     }
                 }
 
                 return *this;
             }
 
-            SelfType& TakeFrom(SelfType& Other)
+            SelfType& TakeFrom(SelfType& other)
             {
-                if (this == &Other)
+                if (this == &other)
                 {
                     return *this;
                 }
 
-                Count = Other.Count;
-                AllocatedCount = Other.AllocatedCount;
-                HeapValPtr = Other.HeapValPtr;
+                Count = other.Count;
+                AllocatedCount = other.AllocatedCount;
+                HeapValPtr = other.HeapValPtr;
 
-                if (Count > 0 && Other.IsDataOnStack())
+                if (Count > 0 && other.IsDataOnStack())
                 {
-                    Algorithm::MoveArray(Other.StackVal, Other.StackVal + Count, StackVal);
+                    Algorithm::MoveArray(other.StackVal, other.StackVal + Count, StackVal);
                 }
 
-                Other.Count = 0;
-                Other.AllocatedCount = 0;
-                Other.HeapValPtr = NULL;
+                other.Count = 0;
+                other.AllocatedCount = 0;
+                other.HeapValPtr = NULL;
             }
 
-            void TakeTo(SelfType& Other)
+            void TakeTo(SelfType& other)
             {
-                Other.TakeFrom(*this);
+                other.TakeFrom(*this);
             }
 
 #if FL_PLATFORM_HAS_RIGHT_VALUE_REFERENCE
-            TAutoArray( SelfType && Other ) :
-                Count(Other.Count),
-                AllocatedCount(Other.AllocatedCount),
-                HeapValPtr(Other.HeapValPtr)
+            TAutoArray( SelfType && other ) :
+                Count(other.Count),
+                AllocatedCount(other.AllocatedCount),
+                HeapValPtr(other.HeapValPtr)
             {
-                if (Count > 0 && Other.IsDataOnStack())
+                if (Count > 0 && other.IsDataOnStack())
                 {
-                    Algorithm::MoveArray(Other.StackVal, Other.StackVal + Count, StackVal);
+                    Algorithm::MoveArray(other.StackVal, other.StackVal + Count, StackVal);
                 }
 
-                Other.Count = 0;
-                Other.AllocatedCount = 0;
-                Other.HeapValPtr = NULL;
+                other.Count = 0;
+                other.AllocatedCount = 0;
+                other.HeapValPtr = NULL;
             }
 
-            SelfType& operator = (SelfType&& Other )
+            SelfType& operator = (SelfType&& other )
             {
-                return TakeFrom(Other);
+                return TakeFrom(other);
             }
 #endif
 
@@ -304,13 +304,13 @@ namespace FormatLibrary
                 return HeapValPtr == NULL;
             }
 
-            void  AddItem(const T& InValue)
+            void  AddItem(const T& value)
             {
                 if (IsDataOnStack())
                 {
                     if (Count < DEFAULT_LENGTH)
                     {
-                        StackVal[Count] = InValue;
+                        StackVal[Count] = value;
                         ++Count;
                     }
                     else if (Count == DEFAULT_LENGTH)
@@ -319,7 +319,7 @@ namespace FormatLibrary
 
                         assert(Count < AllocatedCount);
 
-                        HeapValPtr[Count] = InValue;
+                        HeapValPtr[Count] = value;
                         ++Count;
                     }
                     else
@@ -331,7 +331,7 @@ namespace FormatLibrary
                 {
                     if (Count < AllocatedCount)
                     {
-                        HeapValPtr[Count] = InValue;
+                        HeapValPtr[Count] = value;
                         ++Count;
                     }
                     else
@@ -339,7 +339,7 @@ namespace FormatLibrary
                         ExpandHeapSpace();
 
                         assert(Count < AllocatedCount);
-                        HeapValPtr[Count] = InValue;
+                        HeapValPtr[Count] = value;
                         ++Count;
                     }
                 }
@@ -382,18 +382,18 @@ namespace FormatLibrary
                     AllocatedCount - Count;
             }
             
-            T& operator []( SIZE_T Index )
+            T& operator []( SIZE_T index )
             {
-                assert( Index < GetLength() );
+                assert( index < GetLength() );
                 
-                return GetDataPtr()[Index];
+                return GetDataPtr()[index];
             }
             
-            const T& operator []( SIZE_T Index ) const
+            const T& operator []( SIZE_T index ) const
             {
-                assert( Index < GetLength() );
+                assert( index < GetLength() );
                 
-                return GetDataPtr()[Index];
+                return GetDataPtr()[index];
             }
 
         protected:
@@ -485,31 +485,31 @@ namespace FormatLibrary
             {
             }
 
-            TAutoString(const CharType* pszStr)
+            TAutoString(const CharType* str)
             {
-                if (pszStr)
+                if (str)
                 {
-                    const SIZE_T Length = CharTraits::length(pszStr);
+                    const SIZE_T Length = CharTraits::length(str);
 
                     Count = Length;
 
                     if (Length <= DEFAULT_LENGTH)
                     {
-                        CharTraits::copy(pszStr, pszStr + Length, StackVal);
+                        CharTraits::copy(str, str + Length, StackVal);
                         StackVal[Count] = 0;
                     }
                     else
                     {
                         HeapValPtr = Allocate(Length);
-                        CharTraits::copy(pszStr, pszStr + Length, HeapValPtr);
+                        CharTraits::copy(str, str + Length, HeapValPtr);
                         HeapValPtr[Count] = 0;
                     }
                 }
             }
 
-            void  AddChar(CharType InValue)
+            void  AddChar(CharType value)
             {
-                AddItem(InValue);
+                AddItem(value);
 
                 if (IsDataOnStack())
                 {
@@ -521,15 +521,15 @@ namespace FormatLibrary
                 }
             }
 
-            void AddStr(const CharType* pszStart, const CharType* pszEnd = NULL)
+            void AddStr(const CharType* start, const CharType* end = NULL)
             {
-                const SIZE_T Length = pszEnd ? pszEnd - pszStart : CharTraits::length(pszStart);
+                const SIZE_T Length = end ? end - start : CharTraits::length(start);
 
                 if (IsDataOnStack())
                 {
                     if (Count + Length <= DEFAULT_LENGTH)
                     {
-                        CharTraits::copy(StackVal+Count, pszStart, Length);
+                        CharTraits::copy(StackVal+Count, start, Length);
                         Count += Length;
 
                         StackVal[Count] = 0;
@@ -547,7 +547,7 @@ namespace FormatLibrary
                             CharTraits::copy(HeapValPtr, StackVal, Count);
                         }
 
-                        CharTraits::copy(HeapValPtr+Count, pszStart, Length);
+                        CharTraits::copy(HeapValPtr+Count, start, Length);
 
                         Count += Length;
 
@@ -558,7 +558,7 @@ namespace FormatLibrary
                 {
                     if (Count + Length <= AllocatedCount)
                     {
-                        CharTraits::copy(HeapValPtr+Count, pszStart, Length);
+                        CharTraits::copy(HeapValPtr+Count, start, Length);
                         Count += Length;
 
                         HeapValPtr[Count] = 0;
@@ -576,7 +576,7 @@ namespace FormatLibrary
 
                         ReleaseHeapData();
 
-                        CharTraits::copy(DataPtr, pszStart, Length);
+                        CharTraits::copy(DataPtr, start, Length);
 
                         Count += Length;
 
@@ -595,17 +595,17 @@ namespace FormatLibrary
 
             // is is a internal function
             // 
-            void InjectAdd(SIZE_T InCount)
+            void InjectAdd(SIZE_T count)
             {
-                Count += InCount;
+                Count += count;
 
                 assert(IsDataOnStack() ? (Count <= DEFAULT_LENGTH) : (Count < AllocatedCount));
             }
 
         protected:
-            void  AddItem(const TCharType& InValue)
+            void  AddItem(const TCharType& value)
             {
-                Super::AddItem(InValue);
+                Super::AddItem(value);
             }
         };
 

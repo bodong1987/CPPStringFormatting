@@ -38,18 +38,18 @@ namespace FormatLibrary
 #endif
             }
 
-            const PatternListType* LookupPatterns(const CharType* const FormatStart, const SizeType Length, SizeType HashKey = 0)
+            const PatternListType* LookupPatterns(const CharType* const formatStart, const SizeType length, SizeType hashKey = 0)
             {
-                if (0 == HashKey)
+                if (0 == hashKey)
                 {
-                    HashKey = Hasher(FormatStart, Length);
+                    hashKey = Hasher(formatStart, length);
                 }
 
                 // First, Find in the cache
                 {
                     ScopedLockerType Locker(CriticalSectionValue);
 
-                    const PatternListType* PatternList = TPolicy::FindByHashKey(Storage, HashKey);
+                    const PatternListType* PatternList = TPolicy::FindByHashKey(Storage, hashKey);
 
                     if (NULL != PatternList)
                     {
@@ -60,11 +60,11 @@ namespace FormatLibrary
                 PatternListType Patterns;
                 TPolicy::ReserveList(Patterns, 8);
 
-                if (Parser(FormatStart, Length, Patterns))
+                if (Parser(formatStart, length, Patterns))
                 {
                     ScopedLockerType Locker(CriticalSectionValue);
 
-                    return TPolicy::Emplace(Storage, HashKey, FL_MOVE_SEMANTIC(Patterns));
+                    return TPolicy::Emplace(Storage, hashKey, FL_MOVE_SEMANTIC(Patterns));
                 }
 
                 assert(false && "invalid format expression!");

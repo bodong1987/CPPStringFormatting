@@ -1,6 +1,6 @@
 // FormatLibrary 
 // @author bodong 
-// Parse Pattern
+// Parse pattern
 #pragma once
 
 namespace FormatLibrary
@@ -17,9 +17,9 @@ namespace FormatLibrary
             typedef typename TPolicy::PatternListType               PatternListType;                           
             typedef TFormatPattern<CharType>                        FormatPattern;
 
-            bool operator ()(const CharType* const FormatStart, const SizeType Length, PatternListType& Patterns)
+            bool operator ()(const CharType* const fomatStart, const SizeType length, PatternListType& patterns)
             {
-                return ParsePatterns(FormatStart, Length, Patterns);
+                return ParsePatterns(fomatStart, length, patterns);
             }
 
         protected:
@@ -32,63 +32,63 @@ namespace FormatLibrary
                 EPS_Precision = 0x000f0000
             };
 
-            static INT  CastToSmallNumber(const CharType* const Start, const CharType* const End)
+            static INT  CastToSmallNumber(const CharType* const start, const CharType* const end)
             {
-                assert(Start && End && Start < End && "invalid parameters!");
-                assert(End - Start < 3 && "too large interger!!!");
+                assert(start && end && start < end && "invalid parameters!");
+                assert(end - start < 3 && "too large integer!!!");
 
-                if (!Start || !End || Start >= End)
+                if (!start || !end || start >= end)
                 {
                     return -1;
                 }
 
                 INT Value = 0;
 
-                const CharType* TestPtr = Start;
+                const CharType* TestPtr = start;
 
-                while (TestPtr < End)
+                while (TestPtr < end)
                 {
-                    Value = Value * 10 + *Start - '0';
+                    Value = Value * 10 + *start - '0';
 
                     ++TestPtr;
                 }
 
-                assert(Value < 256 && "paramter index is too large!");
+                assert(Value < 256 && "parameter index is too large!");
 
                 return Value;
             }
 
             // only positive number
-            static INT FindNextNumber(const CharType* const Start, const CharType* const End, const CharType* & EndPoint)
+            static INT FindNextNumber(const CharType* const start, const CharType* const end, const CharType* & endPoint)
             {
-                const CharType* TestPtr = Start;
+                const CharType* TestPtr = start;
 
-                while (TestPtr < End && isdigit(*TestPtr))
+                while (TestPtr < end && isdigit(*TestPtr))
                 {
                     ++TestPtr;
                 }
 
-                if (Start == TestPtr)
+                if (start == TestPtr)
                 {
                     return -1;
                 }
 
-                INT val = CastToSmallNumber(Start, TestPtr);
+                INT val = CastToSmallNumber(start, TestPtr);
 
-                EndPoint = TestPtr;
+                endPoint = TestPtr;
 
                 return val;
             }
 
-            static bool ParseAlignMode(const CharType* const Start, const CharType* const End, FormatPattern& Pattern)
+            static bool ParseAlignMode(const CharType* const start, const CharType* const end, FormatPattern& pattern)
             {
-                assert(Start && End && Start < End && "invalid parameters!");
+                assert(start && end && start < end && "invalid parameters!");
 
-                const CharType* TestPtr = Start;
+                const CharType* TestPtr = start;
 
                 ++TestPtr;
 
-                if (TestPtr >= End ||
+                if (TestPtr >= end ||
                     (!isdigit(*TestPtr) && *TestPtr != '-')
                     )
                 {
@@ -97,29 +97,29 @@ namespace FormatLibrary
 
                 if (*TestPtr == '-')
                 {
-                    Pattern.Align = FormatPattern::AF_Left;
+                    pattern.Align = FormatPattern::AF_Left;
 
                     ++TestPtr;
                 }
 
-                if (TestPtr >= End)
+                if (TestPtr >= end)
                 {
                     return true;
                 }
 
-                INT val = FindNextNumber(TestPtr, End, TestPtr);
+                INT val = FindNextNumber(TestPtr, end, TestPtr);
 
                 if (val == -1)
                 {
                     return false;
                 }
 
-                Pattern.Width = (ByteType)val;
+                pattern.Width = (ByteType)val;
 
                 // find if it is a ':' here
-                if (TestPtr < End && *TestPtr == ':')
+                if (TestPtr < end && *TestPtr == ':')
                 {
-                    if (!ParseFormatMode(TestPtr, End, Pattern))
+                    if (!ParseFormatMode(TestPtr, end, pattern))
                     {
                         return false;
                     }
@@ -128,15 +128,15 @@ namespace FormatLibrary
                 return true;
             }
 
-            static bool ParseFormatMode(const CharType* const Start, const CharType* const End, FormatPattern& Pattern)
+            static bool ParseFormatMode(const CharType* const start, const CharType* const end, FormatPattern& pattern)
             {
-                assert(Start && End && Start < End && "invalid parameters!");
+                assert(start && end && start < end && "invalid parameters!");
 
-                const CharType* TestPtr = Start;
+                const CharType* TestPtr = start;
 
                 ++TestPtr;
 
-                if (TestPtr >= End)
+                if (TestPtr >= end)
                 {
                     return false;
                 }
@@ -144,19 +144,19 @@ namespace FormatLibrary
                 switch (toupper(*TestPtr))
                 {
                 case 'D':
-                    Pattern.Flag = FormatPattern::FF_Decimal;
+                    pattern.Flag = FormatPattern::FF_Decimal;
                     break;
                 case 'E':
-                    Pattern.Flag = FormatPattern::FF_Exponent;
+                    pattern.Flag = FormatPattern::FF_Exponent;
                     break;
                 case 'F':
-                    Pattern.Flag = FormatPattern::FF_FixedPoint;
+                    pattern.Flag = FormatPattern::FF_FixedPoint;
                     break;
                 case 'P':
-                    Pattern.Flag = FormatPattern::FF_Percentage;
+                    pattern.Flag = FormatPattern::FF_Percentage;
                     break;
                 case 'X':
-                    Pattern.Flag = FormatPattern::FF_Hex;
+                    pattern.Flag = FormatPattern::FF_Hex;
                     break;
                 case 'C':
                 case 'R':
@@ -170,7 +170,7 @@ namespace FormatLibrary
 
                 ++TestPtr;
 
-                if (TestPtr >= End)
+                if (TestPtr >= end)
                 {
                     return true;
                 }
@@ -178,32 +178,32 @@ namespace FormatLibrary
                 if (isdigit(*TestPtr))
                 {
                     // try get Precision
-                    INT val = FindNextNumber(TestPtr, End, TestPtr);
+                    INT val = FindNextNumber(TestPtr, end, TestPtr);
 
                     if (val != (ByteType)-1)
                     {
-                        Pattern.Precision = (ByteType)val;
+                        pattern.Precision = (ByteType)val;
                     }
                 }
 
                 return true;
             }
 
-            static bool ParseParameter(const CharType* const Start, const CharType* const End, FormatPattern& Parttern)
+            static bool ParseParameter(const CharType* const start, const CharType* const end, FormatPattern& pattern)
             {
                 // 1. find the parameter index
-                assert(Start && End && "invalid parameters!!!");
+                assert(start && end && "invalid parameters!!!");
 
-                const CharType* TestPtr = Start;
+                const CharType* TestPtr = start;
 
-                while (TestPtr < End && !isdigit(*TestPtr))
+                while (TestPtr < end && !isdigit(*TestPtr))
                 {
                     ++TestPtr;
                 }
 
                 const CharType* TestPtr2 = TestPtr;
 
-                while (TestPtr2 < End && isdigit(*TestPtr2))
+                while (TestPtr2 < end && isdigit(*TestPtr2))
                 {
                     ++TestPtr2;
                 }
@@ -222,12 +222,12 @@ namespace FormatLibrary
                 }
 
                 // cast this string to parameter.
-                Parttern.Index = static_cast<ByteType>(idx);
-                Parttern.Flag = FormatPattern::FF_None;
+                pattern.Index = static_cast<ByteType>(idx);
+                pattern.Flag = FormatPattern::FF_None;
 
                 TestPtr = TestPtr2;
 
-                if (TestPtr >= End)
+                if (TestPtr >= end)
                 {
                     return true;
                 }
@@ -235,7 +235,7 @@ namespace FormatLibrary
                 if (*TestPtr == ',')
                 {
                     // let's find a align mode and width
-                    if (!ParseAlignMode(TestPtr, End, Parttern))
+                    if (!ParseAlignMode(TestPtr, end, pattern))
                     {
                         return false;
                     }
@@ -243,7 +243,7 @@ namespace FormatLibrary
                 else if (*TestPtr == ':')
                 {
                     // let's find a format string
-                    if (!ParseFormatMode(TestPtr, End, Parttern))
+                    if (!ParseFormatMode(TestPtr, end, pattern))
                     {
                         return false;
                     }
@@ -255,16 +255,16 @@ namespace FormatLibrary
             void OnLiteral(
                 const CharType*& /*p0*/,
                 const CharType*& p1,
-                const CharType* const /*Start*/,
-                const CharType* const /*End*/,
-                EParseState& State,
-                PatternListType& /*Patterns*/
+                const CharType* const /*start*/,
+                const CharType* const /*end*/,
+                EParseState& state,
+                PatternListType& /*patterns*/
                 )
             {
                 switch (*p1)
                 {
                 case '{':
-                    State = EPS_OpenCurly;
+                    state = EPS_OpenCurly;
                     break;
 
                 default:
@@ -275,33 +275,33 @@ namespace FormatLibrary
             void OnOpenCurly(
                 const CharType*& p0,
                 const CharType*& p1,
-                const CharType* const Start,
-                const CharType* const /*End*/,
-                EParseState& State,
-                PatternListType& Patterns
+                const CharType* const start,
+                const CharType* const /*end*/,
+                EParseState& state,
+                PatternListType& patterns
                 )
             {
                 if (p1 != p0 + 1)
                 {
                     // create a pattern if this is the first slice
-                    FormatPattern Pattern;
+                    FormatPattern pattern;
 
-                    if (p0 == Start)
+                    if (p0 == start)
                     {
-                        Pattern.Flag = FormatPattern::FF_Raw;
-                        Pattern.Start = 0;
-                        Pattern.Len = (SizeType)(p1 - p0) - 1;
-                        Pattern.Index = (ByteType)-1;
+                        pattern.Flag = FormatPattern::FF_Raw;
+                        pattern.Start = 0;
+                        pattern.Len = (SizeType)(p1 - p0) - 1;
+                        pattern.Index = (ByteType)-1;
                     }
                     else
                     {
-                        Pattern.Flag = FormatPattern::FF_Raw;
-                        Pattern.Start = p0 - Start;
-                        Pattern.Len = (SizeType)(p1 - p0) - 1;
-                        Pattern.Index = (ByteType)-1;
+                        pattern.Flag = FormatPattern::FF_Raw;
+                        pattern.Start = p0 - start;
+                        pattern.Len = (SizeType)(p1 - p0) - 1;
+                        pattern.Index = (ByteType)-1;
                     }
 
-                    TPolicy::AppendPattern(Patterns, Pattern);
+                    TPolicy::AppendPattern(patterns, pattern);
 
                     p0 = p1 - 1;
                 }
@@ -310,21 +310,21 @@ namespace FormatLibrary
                 {
                 case '{':
                     {
-                        FormatPattern Pattern;
+                        FormatPattern pattern;
 
-                        Pattern.Flag = FormatPattern::FF_Raw;
-                        Pattern.Start = p1 - Start;
-                        Pattern.Len = 1;
+                        pattern.Flag = FormatPattern::FF_Raw;
+                        pattern.Start = p1 - start;
+                        pattern.Len = 1;
 
-                        TPolicy::AppendPattern(Patterns, Pattern);
+                        TPolicy::AppendPattern(patterns, pattern);
 
                         p0 = p1 + 1;
 
-                        State = EPS_Literal;
+                        state = EPS_Literal;
                         break;
                     }
                 default:
-                    State = EPS_Parameter;
+                    state = EPS_Parameter;
                     break;
                 }
             }
@@ -332,10 +332,10 @@ namespace FormatLibrary
             void OnParameter(
                 const CharType*& p0,
                 const CharType*& p1,
-                const CharType* const Start,
-                const CharType* const /*End*/,
-                EParseState& State,
-                PatternListType& Patterns
+                const CharType* const start,
+                const CharType* const /*end*/,
+                EParseState& state,
+                PatternListType& patterns
                 )
             {
                 switch (*p1)
@@ -355,26 +355,26 @@ namespace FormatLibrary
                     break;
                 case    '}':
                     {
-                        State = EPS_Literal;
+                        state = EPS_Literal;
 
-                        FormatPattern Pattern;
+                        FormatPattern pattern;
 
-                        if (ParseParameter(p0, p1, Pattern))
+                        if (ParseParameter(p0, p1, pattern))
                         {
-                            Pattern.Start = p0 - Start;
-                            Pattern.Len = p1 - p0 + 1;
+                            pattern.Start = p0 - start;
+                            pattern.Len = p1 - p0 + 1;
 
-                            TPolicy::AppendPattern(Patterns, Pattern);
+                            TPolicy::AppendPattern(patterns, pattern);
                         }
                         else
                         {
                             FormatPattern rawpatt;
 
                             rawpatt.Flag = FormatPattern::FF_Raw;
-                            rawpatt.Start = p0 - Start;
+                            rawpatt.Start = p0 - start;
                             rawpatt.Len = p1 - p0 + 1;
 
-                            TPolicy::AppendPattern(Patterns, Pattern);
+                            TPolicy::AppendPattern(patterns, pattern);
                         }
 
                         p0 = p1 + 1;
@@ -384,29 +384,29 @@ namespace FormatLibrary
             }
 
             bool ParsePatterns(
-                const CharType* const FormatStart, 
-                const SizeType Length, 
-                PatternListType& Patterns
+                const CharType* const fomatStart, 
+                const SizeType length, 
+                PatternListType& patterns
                 )
             {
-                const CharType* p0                  = FormatStart;
+                const CharType* p0                  = fomatStart;
                 const CharType* p1                  = p0;
-                const CharType* const Start         = p0;
-                const CharType* const End           = FormatStart + Length;
-                EParseState     State               = EPS_Literal;
+                const CharType* const start         = p0;
+                const CharType* const end           = fomatStart + length;
+                EParseState     state               = EPS_Literal;
 
-                for( ; p1 != End; ++p1 )
+                for( ; p1 != end; ++p1 )
                 {
-                    switch (State)
+                    switch (state)
                     {
                     case EPS_Literal:
-                        OnLiteral(p0, p1, Start, End, State, Patterns);
+                        OnLiteral(p0, p1, start, end, state, patterns);
                         break;
                     case EPS_OpenCurly:
-                        OnOpenCurly(p0, p1, Start, End, State, Patterns);
+                        OnOpenCurly(p0, p1, start, end, state, patterns);
                         break;
                     case EPS_Parameter:
-                        OnParameter(p0, p1, Start, End, State, Patterns);
+                        OnParameter(p0, p1, start, end, state, patterns);
                         break;
                     default:
                         assert( false && "unsupported state!" );
@@ -419,10 +419,10 @@ namespace FormatLibrary
                     FormatPattern RawPattern;
 
                     RawPattern.Flag  = FormatPattern::FF_Raw;
-                    RawPattern.Start = p0-Start;
+                    RawPattern.Start = p0-start;
                     RawPattern.Len   = p1-p0;
 
-                    TPolicy::AppendPattern(Patterns, RawPattern);
+                    TPolicy::AppendPattern(patterns, RawPattern);
                 }
 
                 return true;
