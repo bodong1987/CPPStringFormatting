@@ -11,6 +11,7 @@ using namespace FormatLibrary;
 #include <vector>
 using namespace std;
 
+// simple test...
 void TestProfile()
 {
     const int TEST_COUNT = 100000;
@@ -23,7 +24,7 @@ void TestProfile()
             string str;
             StandardLibrary::FormatTo(str, "{0}--#--{1,8}--#--{2}", 100, -40.2f, " String ");
             StandardLibrary::FormatTo(str, "{0}--#--{1,8}--#--{1}", 100, -40.2f);
-            StandardLibrary::FormatTo(str, "{0}--#--{1,8}--#--{3}", 100, -40.2f, std::string("xxx"));
+            StandardLibrary::FormatTo(str, "{0}--#--{1,8}--#--{3}", 100, -40.2f, std::string("xxx"));            
         }
     }
 
@@ -53,6 +54,7 @@ void TestProfile()
 #if FL_PLATFORM_HAS_CPP11 && (FL_COMPILER_MSVC||FL_PLATFORM_MACOS)
 #include <thread>
 
+// simple test...
 void TestProfileMultiThread()
 {
     std::thread t0( TestProfile );
@@ -84,6 +86,11 @@ int main()
 
     std::wstring wstr;
     StandardLibrary::FormatTo(wstr, L"Test{1}, {2:f4}, {0}, {0,4}", L" X ", 20, -10.005f);
+    StandardLibrary::FormatTo(wstr, L"Test{1}, {2:f4}, {0}, {0,4}");
+
+#if FL_PLATFORM_HAS_VARIADIC_TEMPLATE
+    wstr = StandardLibrary::Format(L"MyTest {0}", 1024);
+#endif
 
     cout << str << endl;
     wcout << wstr << endl;
@@ -96,3 +103,4 @@ int main()
 
     return 0;
 }
+
