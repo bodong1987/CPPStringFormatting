@@ -63,7 +63,7 @@ namespace FormatLibrary
             {
                 const CharType* TestPtr = start;
 
-                while (TestPtr < end && isdigit(*TestPtr))
+                while (TestPtr < end && Mpl::TCharTraits<CharType>::IsDigit(*TestPtr))
                 {
                     ++TestPtr;
                 }
@@ -89,7 +89,7 @@ namespace FormatLibrary
                 ++TestPtr;
 
                 if (TestPtr >= end ||
-                    (!isdigit(*TestPtr) && *TestPtr != '-')
+                    (!Mpl::TCharTraits<CharType>::IsDigit(*TestPtr) && *TestPtr != '-')
                     )
                 {
                     return false;
@@ -175,7 +175,7 @@ namespace FormatLibrary
                     return true;
                 }
 
-                if (isdigit(*TestPtr))
+                if (Mpl::TCharTraits<CharType>::IsDigit(*TestPtr))
                 {
                     // try get Precision
                     INT val = FindNextNumber(TestPtr, end, TestPtr);
@@ -196,14 +196,14 @@ namespace FormatLibrary
 
                 const CharType* TestPtr = start;
 
-                while (TestPtr < end && !isdigit(*TestPtr))
+                while (TestPtr < end && !Mpl::TCharTraits<CharType>::IsDigit(*TestPtr))
                 {
                     ++TestPtr;
                 }
 
                 const CharType* TestPtr2 = TestPtr;
 
-                while (TestPtr2 < end && isdigit(*TestPtr2))
+                while (TestPtr2 < end && Mpl::TCharTraits<CharType>::IsDigit(*TestPtr2))
                 {
                     ++TestPtr2;
                 }

@@ -60,6 +60,71 @@ namespace FormatLibrary
             {
                 return (char*)memset(Dest, Val, Length);
             }
+
+			static int IsAlnum(char ch)
+			{
+				return isalnum(ch);
+			}
+
+			static int IsAlpha(char ch)
+			{
+				return isalpha(ch);
+			}
+
+			static int IsLower(char ch)
+			{
+				return islower(ch);
+			}
+
+			static int IsUpper(char ch)
+			{
+				return isupper(ch);
+			}
+
+			static int IsDigit(char ch)
+			{
+				return isdigit(ch);
+			}
+
+			static int IsXDigit(char ch)
+			{
+				return isxdigit(ch);
+			}
+
+			static int IsCntrl(char ch)
+			{
+				return iscntrl(ch);
+			}
+
+			static int IsGraph(char ch)
+			{
+				return isgraph(ch);
+			}
+
+			static int IsPrint(char ch)
+			{
+				return isprint(ch);
+			}
+
+			static int IsPunct(char ch)
+			{
+				return ispunct(ch);
+			}
+
+			static int IsSpace(char ch)
+			{
+				return isspace(ch);
+			}
+
+			static int ToLower(char ch)
+			{
+				return tolower(ch);
+			}
+
+			static int ToUpper(char ch)
+			{
+				return toupper(ch);
+			}
         };
 
         template <>
@@ -96,6 +161,71 @@ namespace FormatLibrary
             {
                 return (wchar_t*)wmemset(Dest, Val, Length);
             }
+
+			static int IsAlnum(wchar_t ch)
+			{
+				return iswalnum(ch);
+			}
+
+			static int IsAlpha(wchar_t ch)
+			{
+				return iswalpha(ch);
+			}
+
+			static int IsLower(wchar_t ch)
+			{
+				return iswlower(ch);
+			}
+
+			static int IsUpper(wchar_t ch)
+			{
+				return iswupper(ch);
+			}
+
+			static int IsDigit(wchar_t ch)
+			{
+				return iswdigit(ch);
+			}
+
+			static int IsXDigit(wchar_t ch)
+			{
+				return iswxdigit(ch);
+			}
+
+			static int IsCntrl(wchar_t ch)
+			{
+				return iswcntrl(ch);
+			}
+
+			static int IsGraph(wchar_t ch)
+			{
+				return iswgraph(ch);
+			}
+
+			static int IsPrint(wchar_t ch)
+			{
+				return iswprint(ch);
+			}
+
+			static int IsPunct(wchar_t ch)
+			{
+				return iswpunct(ch);
+			}
+
+			static int IsSpace(wchar_t ch)
+			{
+				return iswspace(ch);
+			}
+
+			static wchar_t ToLower(wchar_t ch)
+			{
+				return towlower(ch);
+			}
+
+			static wchar_t ToUpper(wchar_t ch)
+			{
+				return towupper(ch);
+			}
         };
 
         template <typename T>
