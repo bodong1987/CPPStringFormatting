@@ -3,7 +3,7 @@
 // system dependencies
 #pragma once
 
-#if FL_PLATFORM_WINDOWS
+#if FL_COMPILER_WINDOWS
 
 #ifndef _WINDOWS_
 #include <windows.h>
@@ -27,7 +27,7 @@ namespace FormatLibrary
     /// </summary>
     namespace System
     {
-#if FL_PLATFORM_WINDOWS
+#if FL_COMPILER_WINDOWS
         /// <summary>
         /// Class CriticalSection.
         /// simple mutex
@@ -144,10 +144,10 @@ namespace FormatLibrary
             /// <returns>SIZE_T.</returns>
             inline SIZE_T GetThreadID()
             {
-#if FL_PLATFORM_WINDOWS
+#if FL_COMPILER_WINDOWS
                 return ::GetCurrentThreadId();
 
-#elif FL_PLATFORM_ANDROID
+#elif FL_COMPILER_ANDROID
                 return (SIZE_T)pthread_self();
 #else
                 pid_t tid = (pid_t)syscall(SYS_gettid);

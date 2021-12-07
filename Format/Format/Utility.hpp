@@ -159,7 +159,7 @@ namespace FormatLibrary
             /// </summary>
             ~Noncopyable() {}
         protected:
-#if FL_PLATFORM_HAS_CPP11
+#if FL_COMPILER_WITH_CXX11
             Noncopyable(const Noncopyable&) = delete;
             Noncopyable& operator = (const Noncopyable&) = delete;
 #else
@@ -449,7 +449,7 @@ namespace FormatLibrary
                 other.TakeFrom(*this);
             }
 
-#if FL_PLATFORM_HAS_RIGHT_VALUE_REFERENCE
+#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
             /// <summary>
             /// Initializes a new instance of the <see cref="TAutoArray"/> class.
             /// </summary>
@@ -635,7 +635,7 @@ namespace FormatLibrary
 
                 HeapValPtr = Allocate(AllocatedCount);
 
-#if FL_PLATFORM_HAS_RIGHT_VALUE_REFERENCE
+#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
                 Algorithm::MoveArray(StackVal, StackVal + Count, HeapValPtr);
 #else
                 Algorithm::CopyArray(StackVal, StackVal + Count, HeapValPtr);
@@ -654,7 +654,7 @@ namespace FormatLibrary
 
                 assert(DataPtr);
 
-#if FL_PLATFORM_HAS_RIGHT_VALUE_REFERENCE
+#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
                 Algorithm::MoveArray(HeapValPtr, HeapValPtr + Count, DataPtr);
 #else
                 Algorithm::CopyArray(HeapValPtr, HeapValPtr + Count, DataPtr);

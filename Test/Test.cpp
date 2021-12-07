@@ -51,7 +51,7 @@ void TestProfile()
 #endif
 }
 
-#if FL_PLATFORM_HAS_CPP11 && (FL_COMPILER_MSVC||FL_PLATFORM_MACOS)
+#if FL_COMPILER_WITH_CXX11 && (FL_COMPILER_MSVC||FL_COMPILER_MACOS)
 #include <thread>
 
 // simple test...
@@ -88,7 +88,10 @@ int main()
     StandardLibrary::FormatTo(wstr, L"Test{1}, {2:f4}, {0}, {0,4}", L" X ", 20, -10.005f);
     StandardLibrary::FormatTo(wstr, L"Test{1}, {2:f4}, {0}, {0,4}");
 
-#if FL_PLATFORM_HAS_VARIADIC_TEMPLATE
+    // make an compile error
+    // StandardLibrary::FormatTo(wstr, L"Test{1}, {2:f4}, {0}, {0,4}", std::make_shared<int>(new int(100)));
+
+#if FL_COMPILER_HAS_VARIADIC_TEMPLATE
     wstr = StandardLibrary::Format(L"MyTest {0}", 1024);
 #endif
 
@@ -97,7 +100,7 @@ int main()
 
     TestProfile();
     
-#if FL_PLATFORM_HAS_CPP11 && (FL_COMPILER_MSVC||FL_PLATFORM_MACOS)
+#if FL_COMPILER_WITH_CXX11 && (FL_COMPILER_MSVC||FL_COMPILER_MACOS)
     TestProfileMultiThread();
 #endif
 

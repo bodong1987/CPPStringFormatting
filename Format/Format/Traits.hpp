@@ -9,7 +9,7 @@
 #include <memory>
 #include <string.h>
 #include <cwchar>
-#if FL_PLATFORM_HAS_CPP11
+#if FL_COMPILER_WITH_CXX11
 #include <type_traits>
 #endif
 
@@ -150,7 +150,7 @@ namespace FormatLibrary
 
 #if FL_COMPILER_MSVC
                 return _vswprintf_s_l(string, sizeInWords, Format, NULL, arglist);
-#elif FL_COMPILER_GCC && FL_PLATFORM_WINDOWS
+#elif FL_COMPILER_GCC && FL_COMPILER_WINDOWS
                 return vswprintf(string, Format, arglist);
 #else
                 return vswprintf(string, sizeInWords, Format, arglist);

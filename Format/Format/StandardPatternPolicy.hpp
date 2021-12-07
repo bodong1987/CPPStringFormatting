@@ -45,7 +45,7 @@ namespace FormatLibrary
 
                 SizeType Count = length*sizeof(CharType);
 
-#if FL_PLATFORM_X64
+#if FL_COMPILER_X64
                 FL_STATIC_ASSERT(sizeof(SizeType) == 8, "This code is for 64-bit SizeType.");
 
                 const SizeType FNVOffsetBasis = 14695981039346656037ULL;
@@ -66,7 +66,7 @@ namespace FormatLibrary
                     Value *= FNVPrime;
                 }
 
-#if FL_PLATFORM_X64
+#if FL_COMPILER_X64
                 FL_STATIC_ASSERT(sizeof(SizeType) == 8, "This code is for 64-bit SizeType.");
                 Value ^= Value >> 32;
 
@@ -202,7 +202,7 @@ namespace FormatLibrary
             static const PatternListType* Emplace(
                 PatternMapType& storageReference,
                 SizeType hashKey,
-#if FL_PLATFORM_HAS_RIGHT_VALUE_REFERENCE
+#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
                 PatternListType&& patterns
 #else
                 const PatternListType& patterns
@@ -210,7 +210,7 @@ namespace FormatLibrary
                 )
             {
                 std::pair< typename PatternMapType::iterator, bool> Results =
-#if FL_PLATFORM_HAS_RIGHT_VALUE_REFERENCE
+#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
                     storageReference.emplace(std::make_pair(hashKey, std::move(patterns)));
 #else
                     storageReference.insert(std::make_pair(hashKey, patterns));

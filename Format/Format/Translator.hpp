@@ -186,7 +186,11 @@ namespace FormatLibrary
     template < typename TCharType, typename T >
     class TTranslator : public TTranslatorBase< TCharType, T >
     {
+#if FL_COMPILER_WITH_CXX11
+    public:
+#else
     protected:
+#endif
         typedef TTranslatorBase< TCharType, T > Super;
 
         /// <summary>
@@ -201,7 +205,11 @@ namespace FormatLibrary
         /// <param name="pattern">The pattern.</param>
         /// <param name="arg">The argument.</param>
         /// <returns>bool.</returns>
-        static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg);
+        static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg)
+#if FL_COMPILER_WITH_CXX11
+            = delete
+#endif
+            ;
     };
 
     /// <summary>
