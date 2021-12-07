@@ -6,7 +6,7 @@
 #include <iostream>
 #include <ctime>
 
-#if FL_COMPILER_MACOS
+#if FL_PLATFORM_MACOS
 #include <mach/mach_time.h>
 #endif
 
@@ -33,11 +33,11 @@ namespace FormatLibrary
                 CycleSeconds(0),
                 StartTime(0)
             {
-#if FL_COMPILER_WINDOWS
+#if FL_PLATFORM_WINDOWS
                 LARGE_INTEGER Frequency;
                 ::QueryPerformanceFrequency(&Frequency);
                 CycleSeconds = 1.0f / Frequency.QuadPart;
-#elif FL_COMPILER_MACOS
+#elif FL_PLATFORM_MACOS
                 mach_timebase_info_data_t Info;
                 mach_timebase_info(&Info);
 
@@ -83,13 +83,13 @@ namespace FormatLibrary
             /// <returns>DOUBLE.</returns>
             DOUBLE           CurrentTimeInternal() const
             {
-#if FL_COMPILER_WINDOWS
+#if FL_PLATFORM_WINDOWS
                 LARGE_INTEGER Cycles;
                 QueryPerformanceCounter(&Cycles);
                 // Add big number to make bugs apparent where return value is being passed to FLOAT
                 return Cycles.QuadPart * CycleSeconds/* + 16777216.0*/;
 
-#elif FL_COMPILER_MACOS
+#elif FL_PLATFORM_MACOS
                 UINT64 Cycles = mach_absolute_time();
                 // Add big number to make bugs apparent where return value is being passed to FLOAT
                 return Cycles * CycleSeconds/* + 16777216.0*/;

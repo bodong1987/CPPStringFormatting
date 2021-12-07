@@ -19,7 +19,7 @@ namespace FormatLibrary
     typedef size_t              SIZE_T;
 #endif // FL_COMPILER_GCC
 
-#if FL_COMPILER_WINDOWS
+#if FL_PLATFORM_WINDOWS
     typedef __int64             INT64;
     typedef unsigned __int64    UINT64;
 #else

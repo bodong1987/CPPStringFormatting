@@ -5,9 +5,9 @@
 #pragma once
 
 #if (defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WINDOWS) || defined(_WIN64))
-#define FL_COMPILER_WINDOWS   1
+#define FL_PLATFORM_WINDOWS   1
 #else
-#define FL_COMPILER_WINDOWS   0
+#define FL_PLATFORM_WINDOWS   0
 #endif
 
 #ifdef _MSC_VER
@@ -23,22 +23,22 @@
 #endif // __GNUC__
 
 #if defined(__APPLE__) || defined(APPLE) || defined(_APPLE_)
-#define FL_COMPILER_MACOS     1
+#define FL_PLATFORM_MACOS     1
 #else
-#define FL_COMPILER_MACOS     0
+#define FL_PLATFORM_MACOS     0
 #endif
 
 #if defined(ANDROID) || defined(__ANDROID__)
-#define FL_COMPILER_ANDROID   1
+#define FL_PLATFORM_ANDROID   1
 #else
-#define FL_COMPILER_ANDROID   0
+#define FL_PLATFORM_ANDROID   0
 #endif
 
 
 #if defined(_WIN64) || defined(_X64) || defined(WIN64) || defined( __LP64__ )
-#define FL_COMPILER_X64       1
+#define FL_PLATFORM_X64       1
 #elif defined(WIN32) || defined(_WIN32)
-#define FL_COMPILER_X64       0
+#define FL_PLATFORM_X64       0
 #endif
 
 #if defined(DEBUG)||defined(_DEBUG)
@@ -47,9 +47,9 @@
 #define FL_DEBUG     0
 #endif
 
-#if ( FL_COMPILER_WINDOWS && defined(_MSC_VER) && _MSC_VER>=1600 ) || \
+#if ( FL_PLATFORM_WINDOWS && defined(_MSC_VER) && _MSC_VER>=1600 ) || \
     ( FL_COMPILER_GCC && defined(__GXX_EXPERIMENTAL_CXX0X__) ) || \
-    FL_COMPILER_MACOS 
+    FL_PLATFORM_MACOS 
 #define FL_COMPILER_WITH_CXX11 1
 #else
 #define FL_COMPILER_WITH_CXX11 0
@@ -93,7 +93,7 @@
 
 #ifndef FL_COMPILER_SUPPORT_THREAD_LOCAL
 
-#if FL_COMPILER_MACOS || FL_COMPILER_MSVC
+#if FL_PLATFORM_MACOS || FL_COMPILER_MSVC
 #define FL_COMPILER_SUPPORT_THREAD_LOCAL 1
 #else
 #define FL_COMPILER_SUPPORT_THREAD_LOCAL 0
@@ -101,15 +101,15 @@
 
 #endif
 
-#ifndef FL_WITH_MULTITHREAD
-#define FL_WITH_MULTITHREAD 1
+#ifndef FL_WITH_MULTITHREAD_SUPPORT
+#define FL_WITH_MULTITHREAD_SUPPORT 1
 #endif
 
-#if FL_COMPILER_SUPPORT_THREAD_LOCAL && FL_WITH_MULTITHREAD
+#if FL_COMPILER_SUPPORT_THREAD_LOCAL && FL_WITH_MULTITHREAD_SUPPORT
 
 #define FL_WITH_THREAD_LOCAL 1
 
-#if FL_COMPILER_MACOS
+#if FL_PLATFORM_MACOS
 #define FL_THREAD_LOCAL __thread
 #elif FL_COMPILER_MSVC
 #define FL_THREAD_LOCAL __declspec(thread)

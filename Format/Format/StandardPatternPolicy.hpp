@@ -45,7 +45,7 @@ namespace FormatLibrary
 
                 SizeType Count = length*sizeof(CharType);
 
-#if FL_COMPILER_X64
+#if FL_PLATFORM_X64
                 FL_STATIC_ASSERT(sizeof(SizeType) == 8, "This code is for 64-bit SizeType.");
 
                 const SizeType FNVOffsetBasis = 14695981039346656037ULL;
@@ -66,7 +66,7 @@ namespace FormatLibrary
                     Value *= FNVPrime;
                 }
 
-#if FL_COMPILER_X64
+#if FL_PLATFORM_X64
                 FL_STATIC_ASSERT(sizeof(SizeType) == 8, "This code is for 64-bit SizeType.");
                 Value ^= Value >> 32;
 
@@ -230,7 +230,7 @@ namespace FormatLibrary
             }
         };
         
-#if FL_WITH_THREAD_LOCAL || !FL_WITH_MULTITHREAD
+#if FL_WITH_THREAD_LOCAL || !FL_WITH_MULTITHREAD_SUPPORT
         typedef Utility::CriticalSectionNone                    DefaultCritialSectionType;
 #else
         typedef System::CriticalSection                         DefaultCritialSectionType;
