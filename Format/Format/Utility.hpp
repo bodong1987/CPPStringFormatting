@@ -12,6 +12,14 @@ namespace FormatLibrary
     {
         namespace Detail
         {
+            /// <summary>
+            /// Moves the array implementation.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <param name="dest">The dest.</param>
+            /// <param name="">The .</param>
+            /// <returns>OutputType.</returns>
             template <typename InputType, typename OutputType >
             inline OutputType MoveArrayImpl(InputType start, InputType end, OutputType dest, Mpl::FalseType)
             {
@@ -25,6 +33,14 @@ namespace FormatLibrary
                 return dest;
             }
 
+            /// <summary>
+            /// Moves the array implementation.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <param name="dest">The dest.</param>
+            /// <param name="">The .</param>
+            /// <returns>T *.</returns>
             template <typename T >
             inline T* MoveArrayImpl(T* start, T* end, T* dest, Mpl::TrueType)
             {
@@ -35,6 +51,14 @@ namespace FormatLibrary
                 return dest + (end - start);
             }
 
+            /// <summary>
+            /// Copies the array implementation.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <param name="dest">The dest.</param>
+            /// <param name="">The .</param>
+            /// <returns>OutputType.</returns>
             template <typename InputType, typename OutputType >
             inline OutputType CopyArrayImpl(InputType start, InputType end, OutputType dest, Mpl::FalseType)
             {
@@ -48,6 +72,14 @@ namespace FormatLibrary
                 return dest;
             }
 
+            /// <summary>
+            /// Copies the array implementation.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <param name="dest">The dest.</param>
+            /// <param name="">The .</param>
+            /// <returns>T *.</returns>
             template <typename T >
             inline T* CopyArrayImpl(T* start, T* end, T* dest, Mpl::TrueType)
             {
@@ -59,6 +91,13 @@ namespace FormatLibrary
             }
         }
 
+        /// <summary>
+        /// Moves the array.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="dest">The dest.</param>
+        /// <returns>OutputType.</returns>
         template<typename InputType, typename OutputType>
         inline OutputType MoveArray(InputType start, InputType end, OutputType dest)
         {
@@ -71,6 +110,13 @@ namespace FormatLibrary
             return Detail::MoveArrayImpl(start, end, dest, Type());
         }
 
+        /// <summary>
+        /// Copies the array.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="dest">The dest.</param>
+        /// <returns>OutputType.</returns>
         template<typename InputType, typename OutputType>
         inline OutputType CopyArray(InputType start, InputType end, OutputType dest)
         {
@@ -83,6 +129,13 @@ namespace FormatLibrary
             return Detail::CopyArrayImpl(start, end, dest, Type());
         }
 
+        /// <summary>
+        /// Clamps the specified x.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="minValue">The minimum value.</param>
+        /// <param name="maxValue">The maximum value.</param>
+        /// <returns>T.</returns>
         template< class T > inline T Clamp(const T x, const T minValue, const T maxValue)
         {
             return x < minValue ? minValue : x < maxValue ? x : maxValue;
@@ -91,16 +144,44 @@ namespace FormatLibrary
 
     namespace Utility
     {
+        /// <summary>
+        /// Class Noncopyable.
+        /// </summary>
         class Noncopyable
         {
         public:
-            Noncopyable(){}
-            ~Noncopyable(){}
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Noncopyable"/> class.
+            /// </summary>
+            Noncopyable() {}
+            /// <summary>
+            /// Finalizes an instance of the <see cref="Noncopyable"/> class.
+            /// </summary>
+            ~Noncopyable() {}
         protected:
+#if FL_PLATFORM_HAS_CPP11
+            Noncopyable(const Noncopyable&) = delete;
+            Noncopyable& operator = (const Noncopyable&) = delete;
+#else
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Noncopyable"/> class.
+            /// </summary>
+            /// <param name="">The .</param>
             Noncopyable(const Noncopyable&);
+            /// <summary>
+            /// Operator=s the specified .
+            /// </summary>
+            /// <param name="">The .</param>
+            /// <returns>FormatLibrary.Utility.Noncopyable &.</returns>
             Noncopyable& operator = (const Noncopyable&);
+#endif
         };
 
+        /// <summary>
+        /// Class TScopedLocker.
+        /// Implements the <see cref="Noncopyable" />
+        /// </summary>
+        /// <seealso cref="Noncopyable" />
         template < typename TReferenceType >
         class TScopedLocker :
             Noncopyable
@@ -108,6 +189,10 @@ namespace FormatLibrary
         public:
             typedef TReferenceType        ReferenceType;
             
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TScopedLocker"/> class.
+            /// </summary>
+            /// <param name="referenceTarget">The reference target.</param>
             TScopedLocker(TReferenceType& referenceTarget) :
                 Reference(&referenceTarget)
             {
@@ -115,6 +200,10 @@ namespace FormatLibrary
                 Reference->Lock();
             }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TScopedLocker"/> class.
+            /// </summary>
+            /// <param name="referencePointer">The reference pointer.</param>
             TScopedLocker(TReferenceType* referencePointer) :
                 Reference(referencePointer)
             {
@@ -122,23 +211,43 @@ namespace FormatLibrary
                 Reference->Lock();
             }
 
+            /// <summary>
+            /// Finalizes an instance of the <see cref="TScopedLocker"/> class.
+            /// </summary>
             ~TScopedLocker()
             {
                 Reference->UnLock();
             }
 
         protected:
-            TReferenceType*   Reference;
+            /// <summary>
+            /// The reference
+            /// </summary>
+            TReferenceType* Reference;
         };
 
+        /// <summary>
+        /// Class CriticalSectionNone.
+        /// Implements the <see cref="Noncopyable" />
+        /// </summary>
+        /// <seealso cref="Noncopyable" />
         class CriticalSectionNone :
             Noncopyable
         {
         public:
-            void Lock(){}
-            void UnLock(){}
+            /// <summary>
+            /// Locks this instance.
+            /// </summary>
+            void Lock() {}
+            /// <summary>
+            /// Uns the lock.
+            /// </summary>
+            void UnLock() {}
         };
 
+        /// <summary>
+        /// Class TAutoArray.
+        /// </summary>
         template <
             typename T,
             INT DefaultLength = 0xFF,
@@ -151,23 +260,43 @@ namespace FormatLibrary
 
             enum
             {
+                /// <summary>
+                /// The default length
+                /// </summary>
                 DEFAULT_LENGTH = DefaultLength
             };
 
+            /// <summary>
+            /// Class ConstIterator.
+            /// Implements the <see cref="Noncopyable" />
+            /// </summary>
+            /// <seealso cref="Noncopyable" />
             class ConstIterator : Noncopyable
             {
             public:
+                /// <summary>
+                /// Initializes a new instance of the <see cref="TAutoArray"/> class.
+                /// </summary>
+                /// <param name="referenceTarget">The reference target.</param>
                 ConstIterator(const SelfType& referenceTarget) :
                     Ref(referenceTarget),
                     index( referenceTarget.GetLength()>0?0:-1 )
                 {
                 }
 
+                /// <summary>
+                /// Returns true if ... is valid.
+                /// </summary>
+                /// <returns>bool.</returns>
                 bool IsValid() const
                 {
                     return index < Ref.GetLength();
                 }
 
+                /// <summary>
+                /// Nexts this instance.
+                /// </summary>
+                /// <returns>bool.</returns>
                 bool Next()
                 {
                     ++index;
@@ -175,6 +304,10 @@ namespace FormatLibrary
                     return IsValid();
                 }
 
+                /// <summary>
+                /// Operator*s this instance.
+                /// </summary>
+                /// <returns>const T &.</returns>
                 const T& operator *() const
                 {
                     const T* Ptr = Ref.GetDataPtr();
@@ -182,13 +315,31 @@ namespace FormatLibrary
                     return Ptr[index];
                 }
             private:
+                /// <summary>
+                /// Operator=s the specified .
+                /// </summary>
+                /// <param name="">The .</param>
+                /// <returns>FormatLibrary.Utility.TAutoArray&lt;T, DefaultLength, ExtraLength&gt;.ConstIterator &.</returns>
                 ConstIterator& operator = (const ConstIterator&);
+                /// <summary>
+                /// Initializes a new instance of the <see cref="TAutoArray"/> class.
+                /// </summary>
+                /// <param name="">The .</param>
                 ConstIterator(ConstIterator&);
             protected:
-                const SelfType&   Ref;
+                /// <summary>
+                /// The reference
+                /// </summary>
+                const SelfType& Ref;
+                /// <summary>
+                /// The index
+                /// </summary>
                 SIZE_T            index;
             };
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TAutoArray"/> class.
+            /// </summary>
             TAutoArray() :
                 Count(0),
                 AllocatedCount(0),
@@ -196,6 +347,9 @@ namespace FormatLibrary
             {
             }
 
+            /// <summary>
+            /// Finalizes an instance of the <see cref="TAutoArray"/> class.
+            /// </summary>
             ~TAutoArray()
             {
                 ReleaseHeapData();
@@ -203,6 +357,10 @@ namespace FormatLibrary
                 Count = 0;
             }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TAutoArray"/> class.
+            /// </summary>
+            /// <param name="other">The other.</param>
             TAutoArray(const SelfType& other) :
                 Count(other.Count),
                 AllocatedCount(other.AllocatedCount),
@@ -222,6 +380,11 @@ namespace FormatLibrary
                 }
             }
 
+            /// <summary>
+            /// Operator=s the specified other.
+            /// </summary>
+            /// <param name="other">The other.</param>
+            /// <returns>SelfType &.</returns>
             SelfType& operator = (const SelfType& other)
             {
                 if (this == &other)
@@ -251,6 +414,11 @@ namespace FormatLibrary
                 return *this;
             }
 
+            /// <summary>
+            /// Takes from.
+            /// </summary>
+            /// <param name="other">The other.</param>
+            /// <returns>SelfType &.</returns>
             SelfType& TakeFrom(SelfType& other)
             {
                 if (this == &other)
@@ -272,13 +440,21 @@ namespace FormatLibrary
                 other.HeapValPtr = NULL;
             }
 
+            /// <summary>
+            /// Takes to.
+            /// </summary>
+            /// <param name="other">The other.</param>
             void TakeTo(SelfType& other)
             {
                 other.TakeFrom(*this);
             }
 
 #if FL_PLATFORM_HAS_RIGHT_VALUE_REFERENCE
-            TAutoArray( SelfType && other ) :
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TAutoArray"/> class.
+            /// </summary>
+            /// <param name="other">The other.</param>
+            TAutoArray(SelfType&& other) :
                 Count(other.Count),
                 AllocatedCount(other.AllocatedCount),
                 HeapValPtr(other.HeapValPtr)
@@ -293,17 +469,30 @@ namespace FormatLibrary
                 other.HeapValPtr = NULL;
             }
 
-            SelfType& operator = (SelfType&& other )
+            /// <summary>
+            /// Operator=s the specified other.
+            /// </summary>
+            /// <param name="other">The other.</param>
+            /// <returns>SelfType &.</returns>
+            SelfType& operator = (SelfType&& other)
             {
                 return TakeFrom(other);
             }
 #endif
 
+            /// <summary>
+            /// Determines whether [is data on stack].
+            /// </summary>
+            /// <returns>bool.</returns>
             bool  IsDataOnStack() const
             {
                 return HeapValPtr == NULL;
             }
 
+            /// <summary>
+            /// Adds the item.
+            /// </summary>
+            /// <param name="value">The value.</param>
             void  AddItem(const T& value)
             {
                 if (IsDataOnStack())
@@ -345,36 +534,64 @@ namespace FormatLibrary
                 }
             }
 
+            /// <summary>
+            /// Gets the length.
+            /// </summary>
+            /// <returns>SIZE_T.</returns>
             SIZE_T GetLength() const
             {
                 return Count;
             }
 
+            /// <summary>
+            /// Gets the allocated count.
+            /// </summary>
+            /// <returns>SIZE_T.</returns>
             SIZE_T GetAllocatedCount() const
             {
                 return AllocatedCount;
             }
 
+            /// <summary>
+            /// Gets the data PTR.
+            /// </summary>
+            /// <returns>T *.</returns>
             T* GetDataPtr()
             {
                 return IsDataOnStack() ? StackVal : HeapValPtr;
             }
 
+            /// <summary>
+            /// Gets the data PTR.
+            /// </summary>
+            /// <returns>const T *.</returns>
             const T* GetDataPtr() const
             {
                 return IsDataOnStack() ? StackVal : HeapValPtr;
             }
 
+            /// <summary>
+            /// Gets the unused PTR.
+            /// </summary>
+            /// <returns>T *.</returns>
             T* GetUnusedPtr()
             {
                 return IsDataOnStack() ? StackVal + Count : HeapValPtr + Count;
             }
 
+            /// <summary>
+            /// Gets the unused PTR.
+            /// </summary>
+            /// <returns>const T *.</returns>
             const T* GetUnusedPtr() const
             {
                 return IsDataOnStack() ? StackVal + Count : HeapValPtr + Count;
             }
 
+            /// <summary>
+            /// Gets the capacity.
+            /// </summary>
+            /// <returns>SIZE_T.</returns>
             SIZE_T GetCapacity() const
             {                
                 return IsDataOnStack() ?
@@ -382,14 +599,24 @@ namespace FormatLibrary
                     AllocatedCount - Count;
             }
             
-            T& operator []( SIZE_T index )
+            /// <summary>
+            /// Operator[]s the specified index.
+            /// </summary>
+            /// <param name="index">The index.</param>
+            /// <returns>T &.</returns>
+            T& operator [](SIZE_T index)
             {
                 assert( index < GetLength() );
                 
                 return GetDataPtr()[index];
             }
             
-            const T& operator []( SIZE_T index ) const
+            /// <summary>
+            /// Operator[]s the specified index.
+            /// </summary>
+            /// <param name="index">The index.</param>
+            /// <returns>const T &.</returns>
+            const T& operator [](SIZE_T index) const
             {
                 assert( index < GetLength() );
                 
@@ -397,6 +624,9 @@ namespace FormatLibrary
             }
 
         protected:
+            /// <summary>
+            /// Initials the move data to heap.
+            /// </summary>
             void  InitialMoveDataToHeap()
             {
                 assert(HeapValPtr == NULL);
@@ -412,6 +642,9 @@ namespace FormatLibrary
 #endif
             }
 
+            /// <summary>
+            /// Expands the heap space.
+            /// </summary>
             void  ExpandHeapSpace()
             {
                 SIZE_T NewCount = AllocatedCount * 2;
@@ -432,6 +665,9 @@ namespace FormatLibrary
                 AllocatedCount = NewCount;
             }
 
+            /// <summary>
+            /// Releases the heap data.
+            /// </summary>
             void  ReleaseHeapData()
             {
                 if (HeapValPtr)
@@ -443,23 +679,44 @@ namespace FormatLibrary
                 AllocatedCount = 0;
             }
 
-            static T*  Allocate(const SIZE_T InAllocatedCount)
+            /// <summary>
+            /// Allocates the specified in allocated count.
+            /// </summary>
+            /// <param name="InAllocatedCount">The in allocated count.</param>
+            /// <returns>T *.</returns>
+            static T* Allocate(const SIZE_T InAllocatedCount)
             {
                 // +ExtraLength this is a hack method for saving string on it.
                 return new T[InAllocatedCount + ExtraLength];
             }
 
         protected:
+            /// <summary>
+            /// The count
+            /// </summary>
             SIZE_T        Count;
+            /// <summary>
+            /// The allocated count
+            /// </summary>
             SIZE_T        AllocatedCount;
 
-            // +ExtraLength this is a hack method for saving string on it.
+            /// <summary>
+            /// +ExtraLength this is a hack method for saving string on it.
+            /// </summary>
             T             StackVal[DEFAULT_LENGTH + ExtraLength];
 
-            T*            HeapValPtr;
+            /// <summary>
+            /// The heap value PTR
+            /// </summary>
+            T* HeapValPtr;
         };
 
-        // String Wrapper
+        /// <summary>
+        /// Class TAutoString.
+        /// String Wrapper
+        /// Implements the <see cref="TAutoArray{TCharType, 0xFF, 2}" />
+        /// </summary>
+        /// <seealso cref="TAutoArray{TCharType, 0xFF, 2}" />
         template < typename TCharType >
         class TAutoString :
             public TAutoArray< TCharType, 0xFF, 2 >
@@ -481,10 +738,17 @@ namespace FormatLibrary
             using Super::ReleaseHeapData;
 #endif
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TAutoString"/> class.
+            /// </summary>
             TAutoString()
             {
             }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TAutoString"/> class.
+            /// </summary>
+            /// <param name="str">The string.</param>
             TAutoString(const CharType* str)
             {
                 if (str)
@@ -507,6 +771,10 @@ namespace FormatLibrary
                 }
             }
 
+            /// <summary>
+            /// Adds the character.
+            /// </summary>
+            /// <param name="value">The value.</param>
             void  AddChar(CharType value)
             {
                 AddItem(value);
@@ -521,6 +789,11 @@ namespace FormatLibrary
                 }
             }
 
+            /// <summary>
+            /// Adds the string.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
             void AddStr(const CharType* start, const CharType* end = NULL)
             {
                 const SIZE_T Length = end ? end - start : CharTraits::length(start);
@@ -588,13 +861,19 @@ namespace FormatLibrary
                 }
             }
 
+            /// <summary>
+            /// cs the string.
+            /// </summary>
+            /// <returns>const TCharType *.</returns>
             const TCharType* CStr() const
             {
                 return GetDataPtr();
             }
 
-            // is is a internal function
-            // 
+            /// <summary>
+            /// Injects the add. it is a internal function
+            /// </summary>
+            /// <param name="count">The count.</param>
             void InjectAdd(SIZE_T count)
             {
                 Count += count;
@@ -603,47 +882,91 @@ namespace FormatLibrary
             }
 
         protected:
+            /// <summary>
+            /// Adds the item.
+            /// </summary>
+            /// <param name="value">The value.</param>
             void  AddItem(const TCharType& value)
             {
                 Super::AddItem(value);
             }
         };
 
+        /// <summary>
+        /// Lengthes the of.
+        /// </summary>
+        /// <param name="pstr">The PSTR.</param>
+        /// <returns>size_t.</returns>
         inline size_t LengthOf(const wchar_t* pstr)
         {
             return wcslen(pstr);
         }
 
+        /// <summary>
+        /// Lengthes the of.
+        /// </summary>
+        /// <param name="pstr">The PSTR.</param>
+        /// <returns>size_t.</returns>
         inline size_t LengthOf(const char* pstr)
         {
             return strlen(pstr);
         }
 
+        /// <summary>
+        /// Lengthes the of.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <returns>size_t.</returns>
         inline size_t LengthOf(const std::basic_string<char>& str)
         {
             return str.length();
         }
 
+        /// <summary>
+        /// Lengthes the of.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <returns>size_t.</returns>
         inline size_t LengthOf(const std::basic_string<wchar_t>& str)
         {
             return str.length();
         }
 
+        /// <summary>
+        /// PTRs the of.
+        /// </summary>
+        /// <param name="pstr">The PSTR.</param>
+        /// <returns>const wchar_t *.</returns>
         inline const wchar_t* PtrOf(const wchar_t* pstr)
         {
             return pstr;
         }
 
+        /// <summary>
+        /// PTRs the of.
+        /// </summary>
+        /// <param name="pstr">The PSTR.</param>
+        /// <returns>const char *.</returns>
         inline const char* PtrOf(const char* pstr)
         {
             return pstr;
         }
 
+        /// <summary>
+        /// PTRs the of.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <returns>const char *.</returns>
         inline const char* PtrOf(const std::basic_string<char>& str)
         {
             return str.c_str();
         }
 
+        /// <summary>
+        /// PTRs the of.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <returns>const wchar_t *.</returns>
         inline const wchar_t* PtrOf(const std::basic_string<wchar_t>& str)
         {
             return str.c_str();

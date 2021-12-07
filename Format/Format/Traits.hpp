@@ -29,6 +29,11 @@ namespace FormatLibrary
         {
         };
 
+        /// <summary>
+        /// Class TCharTraits.
+        /// Implements the <see cref="std::char_traits{char}" />
+        /// </summary>
+        /// <seealso cref="std::char_traits{char}" />
         template <>
         class TCharTraits<char> :
         public std::char_traits<char>
@@ -248,14 +253,26 @@ namespace FormatLibrary
 
         struct TrueType
         {
+            /// <summary>
+            /// The value
+            /// </summary>
             enum { Value = 1 };
         };
 
+        /// <summary>
+        /// Struct FalseType
+        /// </summary>
         struct FalseType
         {
+            /// <summary>
+            /// The value
+            /// </summary>
             enum { Value = 0 };
         };
 
+        /// <summary>
+        /// Class TIfElse.
+        /// </summary>
         template < bool, typename T1, typename T2 >
         class TIfElse
         {
@@ -263,6 +280,9 @@ namespace FormatLibrary
             typedef T2  Type;
         };
 
+        /// <summary>
+        /// Class TIfElse.
+        /// </summary>
         template < typename T1, typename T2 >
         class TIfElse< true, T1, T2 >
         {
@@ -270,12 +290,21 @@ namespace FormatLibrary
             typedef T1  Type;
         };               
 
+        /// <summary>
+        /// Struct IsSame
+        /// </summary>
         template < typename T1, typename T2 >
         struct IsSame : FalseType{};
 
+        /// <summary>
+        /// Struct IsSame
+        /// </summary>
         template < typename T >
         struct IsSame<T, T> : TrueType{};
 
+        /// <summary>
+        /// Struct IsScalar
+        /// </summary>
         template < typename T >
         struct IsScalar : FalseType{};
 
@@ -296,23 +325,44 @@ namespace FormatLibrary
         FL_PP_SPECIALIZATION_IS_SCALAR_TRUE_TYPE(INT64);
         FL_PP_SPECIALIZATION_IS_SCALAR_TRUE_TYPE(UINT64);
 
+        /// <summary>
+        /// Struct IsPtr
+        /// </summary>
         template < typename T >
         struct IsPtr : FalseType{};
 
+        /// <summary>
+        /// Struct IsPtr
+        /// </summary>
         template < typename T >
         struct IsPtr<T*> : TrueType{};
 
+        /// <summary>
+        /// Struct IsArray
+        /// </summary>
         template < typename T >
         struct IsArray : FalseType{};
 
+        /// <summary>
+        /// Struct IsArray
+        /// </summary>
         template < typename T, INT Size >
         struct IsArray< T[Size] > : TrueType{};
 
+        /// <summary>
+        /// Struct IsSimple
+        /// </summary>
         template < typename T >
         struct IsSimple
         {
+            /// <summary>
+            /// Enum __unnamed_enum_000e_3
+            /// </summary>
             enum
             {
+                /// <summary>
+                /// The value
+                /// </summary>
                 Value =
 #if FL_COMPILER_MSVC
 #if _MSC_VER >= 1900  // after visual studio 2015

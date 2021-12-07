@@ -3,10 +3,20 @@
 // Parse and Manage Patterns
 #pragma once
 
+/// <summary>
+/// The FormatLibrary namespace.
+/// </summary>
 namespace FormatLibrary
 {
+    /// <summary>
+    /// The Algorithm namespace.
+    /// </summary>
     namespace Algorithm
     {
+        /// <summary>
+        /// Class TPatternStorage.
+        /// Simple PatternStorage, You can provide your custom storage.
+        /// </summary>
         template < typename TPolicy >
         class TPatternStorage
         {
@@ -24,6 +34,9 @@ namespace FormatLibrary
             typedef Utility::TScopedLocker<CriticalSectionType>     ScopedLockerType;      
             typedef TPatternParser<TPolicy>                         PatternParser;
             
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TPatternStorage"/> class.
+            /// </summary>
             TPatternStorage()
             {
 #if FL_DEBUG
@@ -31,6 +44,9 @@ namespace FormatLibrary
 #endif
             }
             
+            /// <summary>
+            /// Finalizes an instance of the <see cref="TPatternStorage"/> class.
+            /// </summary>
             ~TPatternStorage()
             {
 #if FL_DEBUG
@@ -38,6 +54,13 @@ namespace FormatLibrary
 #endif
             }
 
+            /// <summary>
+            /// Lookups the patterns.
+            /// </summary>
+            /// <param name="formatStart">The format start.</param>
+            /// <param name="length">The length.</param>
+            /// <param name="hashKey">The hash key.</param>
+            /// <returns>const PatternListType *.</returns>
             const PatternListType* LookupPatterns(const CharType* const formatStart, const SizeType length, SizeType hashKey = 0)
             {
                 if (0 == hashKey)
@@ -75,17 +98,39 @@ namespace FormatLibrary
             }
 
         protected:
+            /// <summary>
+            /// The hasher
+            /// </summary>
             HasherType                  Hasher;
+            /// <summary>
+            /// The critical section value
+            /// </summary>
             CriticalSectionType         CriticalSectionValue;
+            /// <summary>
+            /// The storage
+            /// </summary>
             PatternMapType              Storage;
+            /// <summary>
+            /// The parser
+            /// </summary>
             PatternParser               Parser;
         };
 
+        /// <summary>
+        /// Class TGlobalPatternStorage.
+        /// Default global storage
+        /// Implements the <see cref="TPatternStorage{TPolicy}" />
+        /// </summary>
+        /// <seealso cref="TPatternStorage{TPolicy}" />
         template < typename TPolicy >
         class TGlobalPatternStorage : 
             public TPatternStorage<TPolicy>
         {
         public:
+            /// <summary>
+            /// Gets the storage.
+            /// </summary>
+            /// <returns>FormatLibrary.Algorithm.TGlobalPatternStorage&lt;TPolicy&gt; *.</returns>
             static TGlobalPatternStorage* GetStorage()
             {
 #if FL_WITH_THREAD_LOCAL

@@ -17,45 +17,79 @@
 #include <sys/syscall.h>
 #endif
 
+/// <summary>
+/// The FormatLibrary namespace.
+/// </summary>
 namespace FormatLibrary
 {
+    /// <summary>
+    /// The System namespace.
+    /// </summary>
     namespace System
     {
 #if FL_PLATFORM_WINDOWS
-        class CriticalSection : 
+        /// <summary>
+        /// Class CriticalSection.
+        /// simple mutex
+        /// Implements the <see cref="Utility::Noncopyable" />
+        /// </summary>
+        /// <seealso cref="Utility::Noncopyable" />
+        class CriticalSection :
             Utility::Noncopyable
         {
         public:
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CriticalSection"/> class.
+            /// </summary>
             CriticalSection()
             {
                 ::InitializeCriticalSection(&CriticalSectionValue);
                 ::SetCriticalSectionSpinCount(&CriticalSectionValue, 4000);
             }
 
+            /// <summary>
+            /// Finalizes an instance of the <see cref="CriticalSection"/> class.
+            /// </summary>
             ~CriticalSection()
             {
                 ::DeleteCriticalSection(&CriticalSectionValue);
             }
 
+            /// <summary>
+            /// Locks this instance.
+            /// </summary>
             void Lock()
             {
                 ::EnterCriticalSection(&CriticalSectionValue);
             }
 
+            /// <summary>
+            /// Uns the lock.
+            /// </summary>
             void UnLock()
             {
                 ::LeaveCriticalSection(&CriticalSectionValue);
             }
         protected:
+            /// <summary>
+            /// The critical section value
+            /// </summary>
             CRITICAL_SECTION CriticalSectionValue;
         };
-#else
-        // assume your platform support pthread library
-
-        class CriticalSection : 
+#else        
+        /// <summary>
+        /// Class CriticalSection.
+        /// assume your platform support pthread library
+        /// Implements the <see cref="Utility::Noncopyable" />
+        /// </summary>
+        /// <seealso cref="Utility::Noncopyable" />
+        class CriticalSection :
             Utility::Noncopyable
         {
         public:
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CriticalSection"/> class.
+            /// </summary>
             CriticalSection()
             {
                 pthread_mutexattr_t MutexAtt;
@@ -65,30 +99,49 @@ namespace FormatLibrary
                 pthread_mutex_init(&Mutex, &MutexAtt);
             }
 
+            /// <summary>
+            /// Finalizes an instance of the <see cref="CriticalSection"/> class.
+            /// </summary>
             ~CriticalSection()
             {
                 pthread_mutex_destroy(&Mutex);
             }
 
+            /// <summary>
+            /// Locks this instance.
+            /// </summary>
             inline void Lock()
             {
                 pthread_mutex_lock(&Mutex);
             }
 
+            /// <summary>
+            /// Uns the lock.
+            /// </summary>
             inline void UnLock()
             {
                 pthread_mutex_unlock(&Mutex);
             }
 
         protected:
+            /// <summary>
+            /// The mutex
+            /// </summary>
             pthread_mutex_t Mutex;
         };
 #endif
 
         typedef Utility::TScopedLocker<CriticalSection>   ScopedLocker;
 
+        /// <summary>
+        /// The Api namespace.
+        /// </summary>
         namespace Api
         {
+            /// <summary>
+            /// Gets the current thread identifier.
+            /// </summary>
+            /// <returns>SIZE_T.</returns>
             inline SIZE_T GetThreadID()
             {
 #if FL_PLATFORM_WINDOWS

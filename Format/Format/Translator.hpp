@@ -9,29 +9,50 @@
 #include <limits.h>
 #endif
 
+/// <summary>
+/// The FormatLibrary namespace.
+/// </summary>
 namespace FormatLibrary
 {
+    /// <summary>
+    /// The Detail namespace.
+    /// </summary>
     namespace Detail
     {
+        /// <summary>
+        /// mpl data provider
+        /// </summary>
         template < UINT64 MaxValue >
         struct TMaxLength
         {
             enum
             {
-                Value = TMaxLength<MaxValue/10>::Value + 1
+                /// <summary>
+                /// The value
+                /// </summary>
+                Value = TMaxLength<MaxValue / 10>::Value + 1
             };
         };
 
+        /// <summary>
+        /// mpl data provider
+        /// </summary>
         template <>
         struct TMaxLength<0>
         {
             enum
             {
+                /// <summary>
+                /// The value
+                /// </summary>
                 Value = 1
             };
         };
     }
 
+    /// <summary>
+    /// base translater
+    /// </summary>
     template < typename TCharType, typename T >
     class TTranslatorBase
     {
@@ -43,18 +64,38 @@ namespace FormatLibrary
         typedef Utility::TAutoString<CharType>                      StringType;
         typedef Mpl::TCharTraits<CharType>                          CharTraits;
 
+        /// <summary>
+        /// Determines the minimum of the parameters.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns>TNumeric.</returns>
         template < typename TNumeric >
         static TNumeric Min( TNumeric x, TNumeric y )
         {
             return x < y?x:y;
         }
 
+        /// <summary>
+        /// Determines the maximum of the parameters.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns>TNumeric.</returns>
         template < typename TNumeric >
         static TNumeric Max(TNumeric x, TNumeric y)
         {
             return x < y ? y : x;
         }
 
+        /// <summary>
+        /// Adjusts the string.
+        /// </summary>
+        /// <param name="pszStr">The PSZ string.</param>
+        /// <param name="length">The length.</param>
+        /// <param name="bufferLength">Length of the buffer.</param>
+        /// <param name="pattern">The pattern.</param>
+        /// <returns>SIZE_T.</returns>
         static SIZE_T AdjustString(
             CharType* pszStr,
             SIZE_T length,
@@ -91,6 +132,12 @@ namespace FormatLibrary
             return UsedLength;
         }
 
+        /// <summary>
+        /// Estimates the length.
+        /// </summary>
+        /// <param name="pattern">The pattern.</param>
+        /// <param name="maxLength">The maximum length.</param>
+        /// <returns>SIZE_T.</returns>
         static SIZE_T EstimateLength(const FormatPattern& pattern, SIZE_T maxLength)
         {
             if (pattern.HasWidth())
@@ -102,6 +149,9 @@ namespace FormatLibrary
         }
     };
 
+    /// <summary>
+    /// Class TRawTranslator.
+    /// </summary>
     template < typename TCharType >
     class TRawTranslator
     {
@@ -110,7 +160,14 @@ namespace FormatLibrary
         typedef Algorithm::TFormatPattern<TCharType>                FormatPattern;
         typedef Utility::TAutoString<CharType>                      StringType;
 
-        // Raw Translator always success
+        /// <summary>
+        /// Raw Translator always success
+        /// Transfers the specified string reference.
+        /// </summary>
+        /// <param name="strRef">The string reference.</param>
+        /// <param name="pattern">The pattern.</param>
+        /// <param name="format">The format.</param>
+        /// <returns>bool.</returns>
         static bool Transfer(StringType& strRef, const FormatPattern& pattern, const CharType* format)
         {
             assert(pattern.Len > 0 && "invalid parameters!!!");
@@ -121,20 +178,37 @@ namespace FormatLibrary
         }
     };
 
+    /// <summary>
+    /// Class TTranslator.
+    /// Implements the <see cref="TTranslatorBase{TCharType, T}" />
+    /// </summary>
+    /// <seealso cref="TTranslatorBase{TCharType, T}" />
     template < typename TCharType, typename T >
     class TTranslator : public TTranslatorBase< TCharType, T >
     {
     protected:
         typedef TTranslatorBase< TCharType, T > Super;
 
-        // if you get a compile error with this function can't visit
-        // it means that you have transfer an unsupported parameter to format pipeline
-        // you can do them to fix this error:
-        //    1. change your code, convert it to the support type
-        //    2. make a specialization of TTranslator for your type.
+        /// <summary>
+        /// Transfers the specified string reference.
+        /// if you get a compile error with this function can't visit
+        /// it means that you have transfer an unsupported parameter to format pipeline
+        /// you can do them to fix this error:
+        ///    1. change your code, convert it to the support type
+        ///    2. make a specialization of TTranslator for your type.
+        /// </summary>
+        /// <param name="strRef">The string reference.</param>
+        /// <param name="pattern">The pattern.</param>
+        /// <param name="arg">The argument.</param>
+        /// <returns>bool.</returns>
         static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg);
     };
 
+    /// <summary>
+    /// bool to string
+    /// Implements the <see cref="TTranslatorBase{TCharType, bool}" />
+    /// </summary>
+    /// <seealso cref="TTranslatorBase{TCharType, bool}" />
     template < typename TCharType >
     class TTranslator< TCharType, bool > :
         public TTranslatorBase< TCharType, bool >
@@ -148,10 +222,17 @@ namespace FormatLibrary
         typedef Utility::TAutoString<CharType>                      StringType;
         typedef Mpl::TCharTraits<CharType>                          CharTraits;
 
+        /// <summary>
+        /// Transfers the specified string reference.
+        /// </summary>
+        /// <param name="strRef">The string reference.</param>
+        /// <param name="pattern">The pattern.</param>
+        /// <param name="arg">The argument.</param>
+        /// <returns>bool.</returns>
         static bool Transfer(StringType& strRef, const FormatPattern& pattern, bool arg)
         {
-            TCharType TrueStr[] = { 'T', 'r', 'u', 'e' };
-            TCharType FalseStr[] = { 'F', 'a', 'l', 's', 'e' };
+            static const TCharType TrueStr[] = { 'T', 'r', 'u', 'e' };
+            static const TCharType FalseStr[] = { 'F', 'a', 'l', 's', 'e' };
 
             const TCharType* Selection = arg ? TrueStr : FalseStr;
             const SIZE_T length = arg ? _countof(TrueStr) : _countof(FalseStr);
@@ -164,9 +245,17 @@ namespace FormatLibrary
 
     enum
     {
-        DEFAULT_FLOAT_PERCISION = 2
+        /// <summary>
+        /// The default float precision
+        /// </summary>
+        DEFAULT_FLOAT_PRECISION = 2
     };
 
+    /// <summary>
+    /// double to string
+    /// Implements the <see cref="TTranslatorBase{TCharType, DOUBLE}" />
+    /// </summary>
+    /// <seealso cref="TTranslatorBase{TCharType, DOUBLE}" />
     template < typename TCharType >
     class TTranslator< TCharType, DOUBLE > :
     public TTranslatorBase< TCharType, DOUBLE >
@@ -180,7 +269,15 @@ namespace FormatLibrary
         typedef Utility::TAutoString<CharType>                      StringType;
         typedef Mpl::TCharTraits<CharType>                          CharTraits;
 
-        static bool Transfer(StringType& strRef, const FormatPattern& pattern, DOUBLE arg, SIZE_T unusedParam = 0 )
+        /// <summary>
+        /// Transfers the specified string reference.
+        /// </summary>
+        /// <param name="strRef">The string reference.</param>
+        /// <param name="pattern">The pattern.</param>
+        /// <param name="arg">The argument.</param>
+        /// <param name="unusedParam">The unused parameter.</param>
+        /// <returns>bool.</returns>
+        static bool Transfer(StringType& strRef, const FormatPattern& pattern, DOUBLE arg, SIZE_T unusedParam = 0)
         {
             FL_UNREFERENCED_PARAMETER(unusedParam);
 
@@ -199,7 +296,7 @@ namespace FormatLibrary
                         arg,
                         strRef.GetUnusedPtr(),
                         Capacity,
-                        pattern.HasPrecision() ? pattern.Precision : DEFAULT_FLOAT_PERCISION
+                        pattern.HasPrecision() ? pattern.Precision : DEFAULT_FLOAT_PRECISION
                         );
 
                     length = Super::AdjustString(strRef.GetUnusedPtr(), length, Capacity, pattern);
@@ -216,7 +313,7 @@ namespace FormatLibrary
                         arg,
                         TempBuf,
                         _countof(TempBuf),
-                        pattern.HasPrecision() ? pattern.Precision : DEFAULT_FLOAT_PERCISION
+                        pattern.HasPrecision() ? pattern.Precision : DEFAULT_FLOAT_PRECISION
                         );
 
                     length = Super::AdjustString(TempBuf, length, _countof(TempBuf), pattern);
@@ -235,6 +332,11 @@ namespace FormatLibrary
         }
     };
 
+    /// <summary>
+    /// Int64 to string
+    /// Implements the <see cref="TTranslatorBase{TCharType, INT64}" />
+    /// </summary>
+    /// <seealso cref="TTranslatorBase{TCharType, INT64}" />
     template < typename TCharType >
     class TTranslator< TCharType, INT64 > :
         public TTranslatorBase< TCharType, INT64 >
@@ -250,10 +352,21 @@ namespace FormatLibrary
 
         enum
         {
+            /// <summary>
+            /// The maximum length
+            /// </summary>
             MAX_LENGTH = Detail::TMaxLength<LLONG_MAX>::Value
         };
 
-        static bool Transfer(StringType& strRef, const FormatPattern& pattern, INT64 arg, SIZE_T maxLength = MAX_LENGTH )
+        /// <summary>
+        /// Transfers the specified string reference.
+        /// </summary>
+        /// <param name="strRef">The string reference.</param>
+        /// <param name="pattern">The pattern.</param>
+        /// <param name="arg">The argument.</param>
+        /// <param name="maxLength">The maximum length.</param>
+        /// <returns>bool.</returns>
+        static bool Transfer(StringType& strRef, const FormatPattern& pattern, INT64 arg, SIZE_T maxLength = MAX_LENGTH)
         {
             if (pattern.Flag == FormatPattern::FF_None ||
                 pattern.Flag == FormatPattern::FF_Decimal ||
@@ -298,6 +411,11 @@ namespace FormatLibrary
         }
     };
 
+    /// <summary>
+    /// uint64 to string
+    /// Implements the <see cref="TTranslatorBase{TCharType, UINT64}" />
+    /// </summary>
+    /// <seealso cref="TTranslatorBase{TCharType, UINT64}" />
     template < typename TCharType >
     class TTranslator< TCharType, UINT64 > :
         public TTranslatorBase< TCharType, UINT64 >
@@ -313,9 +431,20 @@ namespace FormatLibrary
 
         enum
         {
+            /// <summary>
+            /// The maximum length
+            /// </summary>
             MAX_LENGTH = Detail::TMaxLength<ULLONG_MAX>::Value
         };
 
+        /// <summary>
+        /// Transfers the specified string reference.
+        /// </summary>
+        /// <param name="strRef">The string reference.</param>
+        /// <param name="pattern">The pattern.</param>
+        /// <param name="arg">The argument.</param>
+        /// <param name="maxLength">The maximum length.</param>
+        /// <returns>bool.</returns>
         static bool Transfer(StringType& strRef, const FormatPattern& pattern, UINT64 arg, SIZE_T maxLength = MAX_LENGTH)
         {
             if (pattern.Flag == FormatPattern::FF_None ||
@@ -361,6 +490,11 @@ namespace FormatLibrary
         }
     };
 
+    /// <summary>
+    /// const char* to string
+    /// Implements the <see cref="TTranslatorBase{TCharType, const TCharType*}" />
+    /// </summary>
+    /// <seealso cref="TTranslatorBase{TCharType, const TCharType*}" />
     template < typename TCharType >
     class TTranslator< TCharType, const TCharType* > :
         public TTranslatorBase< TCharType, const TCharType* >
@@ -374,6 +508,13 @@ namespace FormatLibrary
         typedef Utility::TAutoString<CharType>                      StringType;
         typedef Mpl::TCharTraits<CharType>                          CharTraits;
 
+        /// <summary>
+        /// Transfers the specified string reference.
+        /// </summary>
+        /// <param name="strRef">The string reference.</param>
+        /// <param name="">The .</param>
+        /// <param name="str">The string.</param>
+        /// <returns>bool.</returns>
         static bool Transfer(StringType& strRef, const FormatPattern& /*pattern*/, const TCharType* str)
         {
             if (str)
@@ -385,7 +526,9 @@ namespace FormatLibrary
         }
     };
 
-#define FL_CONVERT_TRNALSTOR( Type, BaseType, MaxValue ) \
+    // convert small numeric type to big numeric type 
+    // and convert them to string
+#define FL_CONVERT_TRANSLATOR( Type, BaseType, MaxValue ) \
     template < typename TCharType > \
     class TTranslator< TCharType, Type > : \
         public TTranslator< TCharType, BaseType > \
@@ -399,18 +542,18 @@ namespace FormatLibrary
         } \
     }
 
-    FL_CONVERT_TRNALSTOR(INT, INT64, INT_MAX);
-    FL_CONVERT_TRNALSTOR(UINT, UINT64, UINT_MAX);
-    FL_CONVERT_TRNALSTOR(char, INT64, CHAR_MAX);
-    FL_CONVERT_TRNALSTOR(unsigned char, UINT64, UCHAR_MAX);
-    FL_CONVERT_TRNALSTOR(short, INT64, SHRT_MAX);
-    FL_CONVERT_TRNALSTOR(unsigned short, UINT64, USHRT_MAX);
-    FL_CONVERT_TRNALSTOR(FLOAT, DOUBLE, 0);
+    FL_CONVERT_TRANSLATOR(INT, INT64, INT_MAX);
+    FL_CONVERT_TRANSLATOR(UINT, UINT64, UINT_MAX);
+    FL_CONVERT_TRANSLATOR(char, INT64, CHAR_MAX);
+    FL_CONVERT_TRANSLATOR(unsigned char, UINT64, UCHAR_MAX);
+    FL_CONVERT_TRANSLATOR(short, INT64, SHRT_MAX);
+    FL_CONVERT_TRANSLATOR(unsigned short, UINT64, USHRT_MAX);    
+    FL_CONVERT_TRANSLATOR(FLOAT, DOUBLE, 0);
 
 #if FL_COMPILER_MSVC
-    FL_CONVERT_TRNALSTOR(DWORD, UINT64, DWORD_MAX);
+    FL_CONVERT_TRANSLATOR(DWORD, UINT64, DWORD_MAX);
 #elif FL_COMPILER_GCC
-    FL_CONVERT_TRNALSTOR(unsigned long, UINT64, ULONG_MAX);
+    FL_CONVERT_TRANSLATOR(unsigned long, UINT64, ULONG_MAX);
 #endif
 
 #undef FL_CONVERT_TRNALSTOR

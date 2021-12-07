@@ -6,10 +6,21 @@
 // https://code.google.com/p/stringencoders/downloads/detail?name=stringencoders-v3.10.3.tar.gz&can=2&q=
 #pragma once
 
+/// <summary>
+/// The FormatLibrary namespace.
+/// </summary>
 namespace FormatLibrary
 {
+    /// <summary>
+    /// The Algorithm namespace.
+    /// </summary>
     namespace Algorithm
     {
+        /// <summary>
+        /// Strings the reverse.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
         template < typename TCharType >
         inline void StringReverse(TCharType* start, TCharType* end)
         {
@@ -23,9 +34,16 @@ namespace FormatLibrary
             }
         }
 
+        /// <summary>
+        /// The Detail namespace.
+        /// </summary>
         namespace Detail
         {
-            const char DigitMap[] = 
+            /// <summary>
+            /// The digit map
+            /// provide fast index to hex number map
+            /// </summary>
+            const char DigitMap[] =
             { 
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'A', 'B', 'C', 'D',
@@ -33,6 +51,13 @@ namespace FormatLibrary
             };
         }       
 
+        /// <summary>
+        /// fast Int64 to string.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="base">The base.</param>
+        /// <returns>SIZE_T.</returns>
         template < typename TCharType >
         inline SIZE_T Int64ToString(INT64 value, TCharType* buffer, INT base)
         {
@@ -61,6 +86,13 @@ namespace FormatLibrary
             return Str - buffer;
         }
 
+        /// <summary>
+        /// fast uint64 to string.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="base">The base.</param>
+        /// <returns>SIZE_T.</returns>
         template < typename TCharType >
         inline SIZE_T UInt64ToString(UINT64 value, TCharType* buffer, INT base)
         {
@@ -82,6 +114,14 @@ namespace FormatLibrary
             return Str - buffer;
         }
 
+        /// <summary>
+        /// fast Double to string.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="precision">The precision.</param>
+        /// <returns>SIZE_T.</returns>
         template < typename TCharType >
         inline SIZE_T DoubleToString(DOUBLE value, TCharType* buffer, SIZE_T size, INT precision)
         {

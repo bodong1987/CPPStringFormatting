@@ -65,6 +65,8 @@ namespace FormatLibrary
 		    return sink;
 	    }
 
+        // if you have variadic template support
+        // give you a Format function 
 #if FL_PLATFORM_HAS_VARIADIC_TEMPLATE
         template <typename TCharType>
         inline std::basic_string<TCharType> Format(const TCharType* format)

@@ -9,6 +9,8 @@
 
 namespace FormatLibrary
 {
+    // internal used simple typedefs
+
     typedef int                 INT;
     typedef unsigned int        UINT;
 #if FL_COMPILER_GCC

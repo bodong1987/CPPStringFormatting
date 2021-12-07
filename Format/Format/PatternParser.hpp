@@ -3,10 +3,19 @@
 // Parse pattern
 #pragma once
 
+/// <summary>
+/// The FormatLibrary namespace.
+/// </summary>
 namespace FormatLibrary
 {
+    /// <summary>
+    /// The Algorithm namespace.
+    /// </summary>
     namespace Algorithm
     {
+        /// <summary>
+        /// parse format patterns
+        /// </summary>
         template < typename TPolicy >
         class TPatternParser
         {
@@ -17,21 +26,52 @@ namespace FormatLibrary
             typedef typename TPolicy::PatternListType               PatternListType;                           
             typedef TFormatPattern<CharType>                        FormatPattern;
 
+            /// <summary>
+            /// start parse by operator ()
+            /// </summary>
+            /// <param name="fomatStart">The fomat start.</param>
+            /// <param name="length">The length.</param>
+            /// <param name="patterns">The patterns.</param>
+            /// <returns>bool.</returns>
             bool operator ()(const CharType* const fomatStart, const SizeType length, PatternListType& patterns)
             {
                 return ParsePatterns(fomatStart, length, patterns);
             }
 
         protected:
+            /// <summary>
+            /// Enum EParseState
+            /// </summary>
             enum EParseState
             {
-                EPS_Literal   = 0x0000000f,
+                /// <summary>
+                /// parse literal
+                /// </summary>
+                EPS_Literal = 0x0000000f,
+                /// <summary>
+                /// parse open curly
+                /// </summary>
                 EPS_OpenCurly = 0x000000f0,
+                /// <summary>
+                /// parse parameter
+                /// </summary>
                 EPS_Parameter = 0x00000f00,
-                EPS_Width     = 0x0000f000,
+                /// <summary>
+                /// parse width
+                /// </summary>
+                EPS_Width = 0x0000f000,
+                /// <summary>
+                /// parse precision
+                /// </summary>
                 EPS_Precision = 0x000f0000
             };
 
+            /// <summary>
+            /// Casts to small number.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <returns>INT.</returns>
             static INT  CastToSmallNumber(const CharType* const start, const CharType* const end)
             {
                 assert(start && end && start < end && "invalid parameters!");
@@ -58,8 +98,14 @@ namespace FormatLibrary
                 return Value;
             }
 
-            // only positive number
-            static INT FindNextNumber(const CharType* const start, const CharType* const end, const CharType* & endPoint)
+            /// <summary>
+            /// Finds the next number.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <param name="endPoint">The end point.</param>
+            /// <returns>INT.</returns>
+            static INT FindNextNumber(const CharType* const start, const CharType* const end, const CharType*& endPoint)
             {
                 const CharType* TestPtr = start;
 
@@ -80,6 +126,13 @@ namespace FormatLibrary
                 return val;
             }
 
+            /// <summary>
+            /// Parses the align mode.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <param name="pattern">The pattern.</param>
+            /// <returns>bool.</returns>
             static bool ParseAlignMode(const CharType* const start, const CharType* const end, FormatPattern& pattern)
             {
                 assert(start && end && start < end && "invalid parameters!");
@@ -128,6 +181,13 @@ namespace FormatLibrary
                 return true;
             }
 
+            /// <summary>
+            /// Parses the format mode.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <param name="pattern">The pattern.</param>
+            /// <returns>bool.</returns>
             static bool ParseFormatMode(const CharType* const start, const CharType* const end, FormatPattern& pattern)
             {
                 assert(start && end && start < end && "invalid parameters!");
@@ -189,6 +249,13 @@ namespace FormatLibrary
                 return true;
             }
 
+            /// <summary>
+            /// Parses the parameter.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <param name="pattern">The pattern.</param>
+            /// <returns>bool.</returns>
             static bool ParseParameter(const CharType* const start, const CharType* const end, FormatPattern& pattern)
             {
                 // 1. find the parameter index
@@ -252,6 +319,15 @@ namespace FormatLibrary
                 return true;
             }
 
+            /// <summary>
+            /// Called when get a [literal].
+            /// </summary>
+            /// <param name="">The .</param>
+            /// <param name="p1">The p1.</param>
+            /// <param name="">The .</param>
+            /// <param name="">The .</param>
+            /// <param name="state">The state.</param>
+            /// <param name="">The .</param>
             void OnLiteral(
                 const CharType*& /*p0*/,
                 const CharType*& p1,
@@ -272,6 +348,15 @@ namespace FormatLibrary
                 }
             }
 
+            /// <summary>
+            /// Called when get a [open curly].
+            /// </summary>
+            /// <param name="p0">The p0.</param>
+            /// <param name="p1">The p1.</param>
+            /// <param name="start">The start.</param>
+            /// <param name="">The .</param>
+            /// <param name="state">The state.</param>
+            /// <param name="patterns">The patterns.</param>
             void OnOpenCurly(
                 const CharType*& p0,
                 const CharType*& p1,
@@ -329,6 +414,15 @@ namespace FormatLibrary
                 }
             }
 
+            /// <summary>
+            /// Called when get a [parameter].
+            /// </summary>
+            /// <param name="p0">The p0.</param>
+            /// <param name="p1">The p1.</param>
+            /// <param name="start">The start.</param>
+            /// <param name="">The .</param>
+            /// <param name="state">The state.</param>
+            /// <param name="patterns">The patterns.</param>
             void OnParameter(
                 const CharType*& p0,
                 const CharType*& p1,
@@ -383,6 +477,13 @@ namespace FormatLibrary
                }
             }
 
+            /// <summary>
+            /// Parses the patterns.
+            /// </summary>
+            /// <param name="fomatStart">The fomat start.</param>
+            /// <param name="length">The length.</param>
+            /// <param name="patterns">The patterns.</param>
+            /// <returns>bool.</returns>
             bool ParsePatterns(
                 const CharType* const fomatStart, 
                 const SizeType length, 

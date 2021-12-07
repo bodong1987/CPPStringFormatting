@@ -29,6 +29,10 @@
 
 //#pragma message( FL_PP_TEXT(FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TEMPLATE_PARAMETERS_, )))
 
+/*
+* base iterate function 
+* used to generate the real function for Format...
+*/
 template < 
     typename TCharType,        
     typename TPatternStorageType,
@@ -53,29 +57,37 @@ inline Utility::TAutoString<TCharType>& FormatTo(
 
     assert(Patterns);
 
-    IteratorType Iter(*Patterns);
-
-    while (Iter.IsValid())
+    if (Patterns)
     {
-        const FormatPatternType& Pattern = *Iter;
+        // walk though all patterns, and use TTranslator::Transfer to convert target type to string
+		IteratorType Iter(*Patterns);
 
-        if (Pattern.Flag == FormatPatternType::FF_Raw)
-        {
-            TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
-        }
-        else
-        {
-            switch (Pattern.Index)
-            {
-                FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TRANSFER_BODY_,);
-            default:
-                TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
-                break;
-            }
-        }
+		while (Iter.IsValid())
+		{
+			const FormatPatternType& Pattern = *Iter;
 
-        Iter.Next();
+			if (Pattern.Flag == FormatPatternType::FF_Raw)
+			{
+				TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
+			}
+			else
+			{
+				switch (Pattern.Index)
+				{
+					FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TRANSFER_BODY_, );
+				default:
+					TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
+					break;
+				}
+			}
+
+			Iter.Next();
+		}
     }
+    else
+    {
+        sink.AddStr(format);
+    }    
 
     return sink;
 }
