@@ -1,4 +1,4 @@
-// FormatLibrary
+﻿// FormatLibrary
 // @author bodong
 // traits
 #pragma once
@@ -49,11 +49,15 @@ namespace FormatLibrary
                 va_list arglist;
                 va_start(arglist, Format);
 
+                int result = 0;
 #if FL_COMPILER_MSVC
-                return _vsprintf_s_l(string, sizeInBytes, Format, NULL, arglist);
+                result = _vsprintf_s_l(string, sizeInBytes, Format, NULL, arglist);
 #else
-                return vsprintf(string, Format, arglist);
+                result = vsprintf(string, Format, arglist);
 #endif
+                va_end(arglist);
+
+                return result;
             }
 
             static const char* StaticEFormat()
@@ -148,13 +152,18 @@ namespace FormatLibrary
 
                 va_start(arglist, Format);
 
+                int result = 0;
+
 #if FL_COMPILER_MSVC
-                return _vswprintf_s_l(string, sizeInWords, Format, NULL, arglist);
+                result = _vswprintf_s_l(string, sizeInWords, Format, NULL, arglist);
 #elif FL_COMPILER_GCC && FL_PLATFORM_WINDOWS
-                return vswprintf(string, Format, arglist);
+                result = vswprintf(string, Format, arglist);
 #else
-                return vswprintf(string, sizeInWords, Format, arglist);
+                result = vswprintf(string, sizeInWords, Format, arglist);
 #endif
+                va_end(arglist);
+
+                return result;
             }
 
             static const wchar_t* StaticEFormat()
