@@ -19,9 +19,11 @@
 #include <cstdarg>
 #include <string>
 
+#include <Format/Details/Types.hpp>
+
 namespace FormatLibrary
 {
-    namespace Mpl
+    namespace Details
     {
         template < typename TCharType >
         class TCharTraits :
@@ -36,15 +38,15 @@ namespace FormatLibrary
         /// <seealso cref="std::char_traits{char}" />
         template <>
         class TCharTraits<char> :
-        public std::char_traits<char>
+            public std::char_traits<char>
         {
         public:
             static INT StaticSprintf(
-                char *string,
+                char* string,
                 SIZE_T sizeInBytes,
-                const char *Format,
+                const char* Format,
                 ...
-                )
+            )
             {
                 va_list arglist;
                 va_start(arglist, Format);
@@ -70,83 +72,83 @@ namespace FormatLibrary
                 return (char*)memset(Dest, Val, Length);
             }
 
-			static int IsAlnum(char ch)
-			{
-				return isalnum(ch);
-			}
+            static int IsAlnum(char ch)
+            {
+                return isalnum(ch);
+            }
 
-			static int IsAlpha(char ch)
-			{
-				return isalpha(ch);
-			}
+            static int IsAlpha(char ch)
+            {
+                return isalpha(ch);
+            }
 
-			static int IsLower(char ch)
-			{
-				return islower(ch);
-			}
+            static int IsLower(char ch)
+            {
+                return islower(ch);
+            }
 
-			static int IsUpper(char ch)
-			{
-				return isupper(ch);
-			}
+            static int IsUpper(char ch)
+            {
+                return isupper(ch);
+            }
 
-			static int IsDigit(char ch)
-			{
-				return isdigit(ch);
-			}
+            static int IsDigit(char ch)
+            {
+                return isdigit(ch);
+            }
 
-			static int IsXDigit(char ch)
-			{
-				return isxdigit(ch);
-			}
+            static int IsXDigit(char ch)
+            {
+                return isxdigit(ch);
+            }
 
-			static int IsCntrl(char ch)
-			{
-				return iscntrl(ch);
-			}
+            static int IsCntrl(char ch)
+            {
+                return iscntrl(ch);
+            }
 
-			static int IsGraph(char ch)
-			{
-				return isgraph(ch);
-			}
+            static int IsGraph(char ch)
+            {
+                return isgraph(ch);
+            }
 
-			static int IsPrint(char ch)
-			{
-				return isprint(ch);
-			}
+            static int IsPrint(char ch)
+            {
+                return isprint(ch);
+            }
 
-			static int IsPunct(char ch)
-			{
-				return ispunct(ch);
-			}
+            static int IsPunct(char ch)
+            {
+                return ispunct(ch);
+            }
 
-			static int IsSpace(char ch)
-			{
-				return isspace(ch);
-			}
+            static int IsSpace(char ch)
+            {
+                return isspace(ch);
+            }
 
-			static int ToLower(char ch)
-			{
-				return tolower(ch);
-			}
+            static int ToLower(char ch)
+            {
+                return tolower(ch);
+            }
 
-			static int ToUpper(char ch)
-			{
-				return toupper(ch);
-			}
+            static int ToUpper(char ch)
+            {
+                return toupper(ch);
+            }
         };
 
         template <>
         class TCharTraits<wchar_t> :
-        public std::char_traits<wchar_t>
+            public std::char_traits<wchar_t>
         {
         public:
             static INT StaticSprintf(
-                wchar_t *string,
+                wchar_t* string,
                 SIZE_T sizeInWords,
-                const wchar_t *Format,
+                const wchar_t* Format,
                 ...
-                )
+            )
             {
                 va_list arglist;
 
@@ -176,70 +178,70 @@ namespace FormatLibrary
                 return (wchar_t*)wmemset(Dest, Val, Length);
             }
 
-			static int IsAlnum(wchar_t ch)
-			{
-				return iswalnum(ch);
-			}
+            static int IsAlnum(wchar_t ch)
+            {
+                return iswalnum(ch);
+            }
 
-			static int IsAlpha(wchar_t ch)
-			{
-				return iswalpha(ch);
-			}
+            static int IsAlpha(wchar_t ch)
+            {
+                return iswalpha(ch);
+            }
 
-			static int IsLower(wchar_t ch)
-			{
-				return iswlower(ch);
-			}
+            static int IsLower(wchar_t ch)
+            {
+                return iswlower(ch);
+            }
 
-			static int IsUpper(wchar_t ch)
-			{
-				return iswupper(ch);
-			}
+            static int IsUpper(wchar_t ch)
+            {
+                return iswupper(ch);
+            }
 
-			static int IsDigit(wchar_t ch)
-			{
-				return iswdigit(ch);
-			}
+            static int IsDigit(wchar_t ch)
+            {
+                return iswdigit(ch);
+            }
 
-			static int IsXDigit(wchar_t ch)
-			{
-				return iswxdigit(ch);
-			}
+            static int IsXDigit(wchar_t ch)
+            {
+                return iswxdigit(ch);
+            }
 
-			static int IsCntrl(wchar_t ch)
-			{
-				return iswcntrl(ch);
-			}
+            static int IsCntrl(wchar_t ch)
+            {
+                return iswcntrl(ch);
+            }
 
-			static int IsGraph(wchar_t ch)
-			{
-				return iswgraph(ch);
-			}
+            static int IsGraph(wchar_t ch)
+            {
+                return iswgraph(ch);
+            }
 
-			static int IsPrint(wchar_t ch)
-			{
-				return iswprint(ch);
-			}
+            static int IsPrint(wchar_t ch)
+            {
+                return iswprint(ch);
+            }
 
-			static int IsPunct(wchar_t ch)
-			{
-				return iswpunct(ch);
-			}
+            static int IsPunct(wchar_t ch)
+            {
+                return iswpunct(ch);
+            }
 
-			static int IsSpace(wchar_t ch)
-			{
-				return iswspace(ch);
-			}
+            static int IsSpace(wchar_t ch)
+            {
+                return iswspace(ch);
+            }
 
-			static wchar_t ToLower(wchar_t ch)
-			{
-				return towlower(ch);
-			}
+            static wchar_t ToLower(wchar_t ch)
+            {
+                return towlower(ch);
+            }
 
-			static wchar_t ToUpper(wchar_t ch)
-			{
-				return towupper(ch);
-			}
+            static wchar_t ToUpper(wchar_t ch)
+            {
+                return towupper(ch);
+            }
         };
 
         template <typename T>
@@ -297,30 +299,30 @@ namespace FormatLibrary
         {
         public:
             typedef T1  Type;
-        };               
+        };
 
         /// <summary>
         /// Struct IsSame
         /// </summary>
         template < typename T1, typename T2 >
-        struct IsSame : FalseType{};
+        struct IsSame : FalseType {};
 
         /// <summary>
         /// Struct IsSame
         /// </summary>
         template < typename T >
-        struct IsSame<T, T> : TrueType{};
+        struct IsSame<T, T> : TrueType {};
 
         /// <summary>
         /// Struct IsScalar
         /// </summary>
         template < typename T >
-        struct IsScalar : FalseType{};
+        struct IsScalar : FalseType {};
 
 #define FL_PP_SPECIALIZATION_IS_SCALAR_TRUE_TYPE( Type ) \
         template <> \
         struct IsScalar< Type > : TrueType{}
-        
+
         FL_PP_SPECIALIZATION_IS_SCALAR_TRUE_TYPE(bool);
         FL_PP_SPECIALIZATION_IS_SCALAR_TRUE_TYPE(char);
         FL_PP_SPECIALIZATION_IS_SCALAR_TRUE_TYPE(unsigned char);
@@ -338,25 +340,25 @@ namespace FormatLibrary
         /// Struct IsPtr
         /// </summary>
         template < typename T >
-        struct IsPtr : FalseType{};
+        struct IsPtr : FalseType {};
 
         /// <summary>
         /// Struct IsPtr
         /// </summary>
         template < typename T >
-        struct IsPtr<T*> : TrueType{};
+        struct IsPtr<T*> : TrueType {};
 
         /// <summary>
         /// Struct IsArray
         /// </summary>
         template < typename T >
-        struct IsArray : FalseType{};
+        struct IsArray : FalseType {};
 
         /// <summary>
         /// Struct IsArray
         /// </summary>
         template < typename T, INT Size >
-        struct IsArray< T[Size] > : TrueType{};
+        struct IsArray< T[Size] > : TrueType {};
 
         /// <summary>
         /// Struct IsSimple
@@ -393,3 +395,4 @@ namespace FormatLibrary
         };
     }
 }
+

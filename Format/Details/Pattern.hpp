@@ -3,6 +3,8 @@
 // Pattern
 #pragma once
 
+#include <Format/Details/Traits.hpp>
+
 /// <summary>
 /// The FormatLibrary namespace.
 /// </summary>
@@ -168,10 +170,7 @@ namespace FormatLibrary
         };
     }
 
-    /// <summary>
-    /// The Mpl namespace.
-    /// </summary>
-    namespace Mpl
+    namespace Details
     {
         /// <summary>
         /// make a partial specialization, so this TFormatPattern<TCharType> become a simple type

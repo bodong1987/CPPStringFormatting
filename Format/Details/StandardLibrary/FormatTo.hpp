@@ -3,10 +3,34 @@
 // format to stl string
 #pragma once
 
+#include <Format/Details/Translator.hpp>
+#include <Format/Details/StandardLibrary/StandardPatternPolicy.hpp>
+
 namespace FormatLibrary
 {
     namespace StandardLibrary
     {
+        // default FormatTo support Format with no arguments
+        inline std::string& FormatTo(std::string& sink, const char* format)
+        {
+            sink.append(format);
+            return sink;
+        }
+
+        // default FormatTo support Format with no arguments
+        inline std::wstring& FormatTo(std::wstring& sink, const wchar_t* format)
+        {
+            sink.append(format);
+            return sink;
+        }
+
+        template <typename TCharType>
+        inline std::basic_string<TCharType> Format(const TCharType* format)
+        {
+            return format;
+        }
+
+#if !FL_COMPILER_WITH_CXX11
 #define _FL_TEMPLATE_PARAMETERS_( d, i ) \
     FL_PP_COMMA_IF(i) typename FL_PP_CAT(T, i)
 
@@ -50,38 +74,31 @@ namespace FormatLibrary
 #undef _FL_REAL_AGUMENTS_
 #undef _FL_EXPORT_FOR_STRING
 #undef _FL_FORMAL_AGUMENTS_
-
-        // default FormatTo support Format with no arguments
-	    inline std::string& FormatTo(std::string& sink, const char* format)
-	    {
-		    sink.append(format);
-		    return sink;
-	    }
-
-        // default FormatTo support Format with no arguments
-	    inline std::wstring& FormatTo(std::wstring& sink, const wchar_t* format)
-	    {
-		    sink.append(format);
-		    return sink;
-	    }
-
-        // if you have variadic template support
-        // give you a Format function 
-#if FL_COMPILER_HAS_VARIADIC_TEMPLATE
-        template <typename TCharType>
-        inline std::basic_string<TCharType> Format(const TCharType* format)
+#else
+        template <typename TCharType, typename T0, typename... T>
+        inline std::basic_string<TCharType> Format(const TCharType* format, const T0& arg0, T... args)
         {
-            return format;
+            typedef TAutoString<TCharType> SinkType;
+            typedef Details::TGlobalPatternStorage<Details::StandardLibrary::TStandardPolicy<TCharType>> GlobalPatternStorageType;
+
+            SinkType Sink;
+            Details::FormatTo<TCharType, GlobalPatternStorageType, const TCharType*, T0, T...>(Sink, format, arg0, args...);
+
+            return Sink.CStr();
         }
 
-        template <typename TCharType, typename T0, typename... TArgumentTypes>
-        inline std::basic_string<TCharType> Format(const TCharType* format, const T0& arg0, TArgumentTypes... args)
+        template <typename TCharType, typename T0, typename... T>
+        inline std::basic_string<TCharType> Format(const std::basic_string<TCharType>& format, const T0& arg0, T... args)
         {
-            std::basic_string<TCHAR> target;
-            FormatTo<T0, TArgumentTypes...>(target, format, arg0, args...);
-            return target;
+            typedef TAutoString<TCharType> SinkType;
+            typedef Details::TGlobalPatternStorage<Details::StandardLibrary::TStandardPolicy<TCharType>> GlobalPatternStorageType;
+
+            SinkType Sink;
+            Details::FormatTo<TCharType, GlobalPatternStorageType, std::basic_string<TCharType>, T0, T...>(Sink, format, arg0, args...);
+
+            return Sink.CStr();
         }
-#endif
+#endif  
     }
 
     // make a specialization of std::basic_string

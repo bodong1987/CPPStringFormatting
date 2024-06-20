@@ -4,6 +4,13 @@
 // default policy, you can provide your custom policy
 #pragma once
 
+#include <Format/Details/Build.hpp>
+#include <Format/Details/Utility.hpp>
+#include <Format/Details/System.hpp>
+#include <Format/Details/Pattern.hpp>
+#include <Format/Details/LookupPattern.hpp>
+#include <Format/Details/AutoArray.hpp>
+
 #if FL_HAS_TR1_CONTAINERS
 #include <unordered_map>
 #else
@@ -236,10 +243,12 @@ namespace FormatLibrary
         typedef System::CriticalSection                         DefaultCritialSectionType;
 #endif
 
+#if !FL_COMPILER_WITH_CXX11
         typedef Algorithm::TPatternStorage< TStandardPolicy<char, DefaultCritialSectionType> > STLPatternStorageA;
         typedef Algorithm::TPatternStorage< TStandardPolicy<wchar_t, DefaultCritialSectionType> > STLPatternStorageW;
         typedef Algorithm::TGlobalPatternStorage< TStandardPolicy<char, DefaultCritialSectionType> > STLGlobalPatternStorageA;
         typedef Algorithm::TGlobalPatternStorage< TStandardPolicy<wchar_t, DefaultCritialSectionType> > STLGlobalPatternStorageW;
+#endif
     }
 }
 

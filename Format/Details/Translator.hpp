@@ -9,6 +9,9 @@
 #include <limits.h>
 #endif
 
+#include <Format/Details/AutoString.hpp>
+#include <Format/Details/Traits.hpp>
+
 /// <summary>
 /// The FormatLibrary namespace.
 /// </summary>
@@ -17,7 +20,7 @@ namespace FormatLibrary
     /// <summary>
     /// The Detail namespace.
     /// </summary>
-    namespace Detail
+    namespace Details
     {
         /// <summary>
         /// mpl data provider
@@ -62,7 +65,7 @@ namespace FormatLibrary
         typedef typename FormatPattern::ByteType                    ByteType;
         typedef typename FormatPattern::SizeType                    SizeType;
         typedef Utility::TAutoString<CharType>                      StringType;
-        typedef Mpl::TCharTraits<CharType>                          CharTraits;
+        typedef TCharTraits<CharType>                               CharTraits;
 
         /// <summary>
         /// Determines the minimum of the parameters.

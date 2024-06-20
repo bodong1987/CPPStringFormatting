@@ -5,7 +5,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/CMake/CMakeCommon.cmake)
 project(CppFormatLibrary)
 
 include_directories(		
-		${CMAKE_CURRENT_SOURCE_DIR}/Format
+		${CMAKE_CURRENT_SOURCE_DIR}/
 	)
 
 file( GLOB_RECURSE ROOT_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Format/*.h* ${CMAKE_CURRENT_SOURCE_DIR}/Format/*.inl )

@@ -3,6 +3,8 @@
 // Types
 #pragma once
 
+#include <Format/Details/Build.hpp>
+
 #if FL_COMPILER_GCC
 #include <cstdlib>
 #endif

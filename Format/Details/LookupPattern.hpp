@@ -3,14 +3,12 @@
 // Parse and Manage Patterns
 #pragma once
 
-/// <summary>
-/// The FormatLibrary namespace.
-/// </summary>
+#include <Format/Details/Utility.hpp>
+#include <Format/Details/Pattern.hpp>
+#include <Format/Details/PatternParser.hpp>
+
 namespace FormatLibrary
-{
-    /// <summary>
-    /// The Algorithm namespace.
-    /// </summary>
+{    
     namespace Algorithm
     {
         /// <summary>

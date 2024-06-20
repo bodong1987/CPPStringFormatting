@@ -3,6 +3,8 @@
 // Preprocessor macros
 #pragma once
 
+#include <Format/Details/Build.hpp>
+
 // Comma
 #define FL_PP_COMMA() ,
 
@@ -94,6 +96,9 @@
 // Expand
 #define FL_PP_EXPAND(X) X
 
+// if with C++ 11 support
+// we use variadic templates
+#if !FL_COMPILER_WITH_CXX11
 // enums
 #define FL_ENUM_SCALARS( Macro ) \
     Macro(1) \
@@ -112,6 +117,7 @@
     Macro(14) \
     Macro(15) \
     Macro(16)
+#endif
 
 // make some text here
 // it used disable warning for gcc

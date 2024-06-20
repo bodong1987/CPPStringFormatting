@@ -17,25 +17,20 @@
 #include <sys/syscall.h>
 #endif
 
-/// <summary>
-/// The FormatLibrary namespace.
-/// </summary>
+#include <Format/Details/Noncopyable.hpp>
+
 namespace FormatLibrary
-{
-    /// <summary>
-    /// The System namespace.
-    /// </summary>
+{    
     namespace System
     {
 #if FL_PLATFORM_WINDOWS
         /// <summary>
         /// Class CriticalSection.
         /// simple mutex
-        /// Implements the <see cref="Utility::Noncopyable" />
+        /// Implements the <see cref="Noncopyable" />
         /// </summary>
-        /// <seealso cref="Utility::Noncopyable" />
-        class CriticalSection :
-            Utility::Noncopyable
+        /// <seealso cref="Noncopyable" />
+        class CriticalSection : Noncopyable
         {
         public:
             /// <summary>
@@ -80,11 +75,10 @@ namespace FormatLibrary
         /// <summary>
         /// Class CriticalSection.
         /// assume your platform support pthread library
-        /// Implements the <see cref="Utility::Noncopyable" />
+        /// Implements the <see cref="Noncopyable" />
         /// </summary>
-        /// <seealso cref="Utility::Noncopyable" />
-        class CriticalSection :
-            Utility::Noncopyable
+        /// <seealso cref="Noncopyable" />
+        class CriticalSection : Noncopyable
         {
         public:
             /// <summary>
