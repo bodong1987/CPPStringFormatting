@@ -154,3 +154,39 @@ TEST(Format, TestMultipleFormats)
 {
     EXPECT_EQ(StandardLibrary::Format("{0} {1} {2}", 123, "hello", 1.23), "123 hello 1.23");
 }
+
+TEST(Format, TestRightAlign)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0,5}", 123), "  123");
+}
+
+TEST(Format, TestLeftAlign)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0,-5}", 123), "123  ");
+}
+
+TEST(Format, TestRightAlignString)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0,5}", "hi"), "   hi");
+}
+
+TEST(Format, TestLeftAlignString)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0,-5}", "hi"), "hi   ");
+}
+
+TEST(Format, TestRightAlignMultiple)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0,5} {1,5}", 123, "hi"), "  123    hi");
+}
+
+TEST(Format, TestLeftAlignMultiple)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0,-5} {1,-5}", 123, "hi"), "123   hi   ");
+}
+
+TEST(Format, TestMixedAlign)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0,5} {1,-5}", 123, "hi"), "  123 hi   ");
+}
+
