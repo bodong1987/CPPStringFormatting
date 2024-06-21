@@ -380,7 +380,7 @@ namespace FormatLibrary
                 const CharType*& p1,
                 const CharType* const start,
                 const CharType* const /*end*/,
-                EParseState& state,
+                ParseStateType& state,
                 PatternListType& patterns
             )
             {

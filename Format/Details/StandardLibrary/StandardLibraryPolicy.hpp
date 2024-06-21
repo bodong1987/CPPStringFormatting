@@ -23,13 +23,13 @@ namespace FormatLibrary
                     SizeType Count = length * sizeof(CharType);
 
 #if FL_PLATFORM_X64
-                    static_assert(sizeof(SizeType) == 8, "This code is for 64-bit SizeType.");
+                    FL_STATIC_ASSERT(sizeof(SizeType) == 8, "This code is for 64-bit SizeType.");
 
                     const SizeType FNVOffsetBasis = 14695981039346656037ULL;
                     const SizeType FNVPrime = 1099511628211ULL;
 
 #else
-                    static_assert(sizeof(SizeType) == 4, "This code is for 32-bit SizeType.");
+                    FL_STATIC_ASSERT(sizeof(SizeType) == 4, "This code is for 32-bit SizeType.");
 
                     const SizeType FNVOffsetBasis = 2166136261U;
                     const SizeType FNVPrime = 16777619U;
@@ -45,11 +45,11 @@ namespace FormatLibrary
                     }
 
 #if FL_PLATFORM_X64
-                    static_assert(sizeof(SizeType) == 8, "This code is for 64-bit SizeType.");
+                    FL_STATIC_ASSERT(sizeof(SizeType) == 8, "This code is for 64-bit SizeType.");
                     Value ^= Value >> 32;
 
 #else
-                    static_assert(sizeof(SizeType) == 4, "This code is for 32-bit SizeType.");
+                    FL_STATIC_ASSERT(sizeof(SizeType) == 4, "This code is for 32-bit SizeType.");
 #endif
                     return Value;
                 }
@@ -152,6 +152,17 @@ namespace FormatLibrary
                     patterns.AddItem(pattern);
                 }
             };
+
+#if FL_WITH_THREAD_LOCAL || !FL_WITH_MULTITHREAD_SUPPORT
+            typedef MutexNone                                       DefaultMutexType;
+#else
+            typedef Mutex                                           DefaultMutexType;
+#endif
+
+            typedef TPatternStorage< TStandardPolicy<char, DefaultMutexType> >          STLPatternStorageA;
+            typedef TPatternStorage< TStandardPolicy<wchar_t, DefaultMutexType> >       STLPatternStorageW;
+            typedef TGlobalPatternStorage< TStandardPolicy<char, DefaultMutexType> >    STLGlobalPatternStorageA;
+            typedef TGlobalPatternStorage< TStandardPolicy<wchar_t, DefaultMutexType> > STLGlobalPatternStorageW;
         }        
     }
 }

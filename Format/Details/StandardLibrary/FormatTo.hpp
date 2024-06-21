@@ -79,6 +79,78 @@ namespace FormatLibrary
 
             return Sink.CStr();
         }
+#else
+#define _FL_TEMPLATE_PARAMETERS_( d, i ) \
+    FL_PP_COMMA_IF(i) typename FL_PP_CAT(T, i)
+
+#define _FL_TEMPLATE_AGUMENTS_( d, i ) \
+    FL_PP_COMMA_IF(i) FL_PP_CAT(T, i)
+
+#define _FL_FORMAL_AGUMENTS_( d, i ) \
+    FL_PP_COMMA_IF(i) const FL_PP_CAT(T, i)& FL_PP_CAT(arg, i)
+
+#define _FL_REAL_AGUMENTS_( d, i ) \
+    FL_PP_COMMA_IF(i) FL_PP_CAT(arg, i)
+
+#define _FL_EXPORT_FOR_STRING( i ) \
+    template <FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
+    std::string Format(const char* format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
+    { \
+        TAutoString<char> Results; \
+        Details::FormatTo<char, const char*, Details::StandardLibrary::STLGlobalPatternStorageA, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format, FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
+        return std::string(Results.CStr(), Results.GetLength()); \
+    } \
+    template <FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
+    std::wstring Format(const wchar_t* format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
+    { \
+        TAutoString<wchar_t> Results; \
+        Details::FormatTo< wchar_t, const wchar_t*, Details::StandardLibrary::STLGlobalPatternStorageW, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format, FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
+        return std::wstring(Results.CStr(), Results.GetLength()); \
+    } \
+    template <FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
+    std::string Format(const std::string& format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
+    { \
+        TAutoString<char> Results; \
+        Details::FormatTo<char, std::string, Details::StandardLibrary::STLGlobalPatternStorageA, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format, FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
+        return std::string(Results.CStr(), Results.GetLength()); \
+    } \
+    template <FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
+    std::wstring Format(const std::wstring& format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
+    { \
+        TAutoString<wchar_t> Results; \
+        Details::FormatTo< wchar_t, std::wstring, Details::StandardLibrary::STLGlobalPatternStorageW, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format, FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
+        return std::wstring(Results.CStr(), Results.GetLength()); \
+    } \
+    template < typename TFormatType, FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
+    std::string& FormatTo(std::string& sink, const TFormatType& format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
+    { \
+        TAutoString<char> Results; \
+        Details::Format< char, Details::StandardLibrary::STLGlobalPatternStorageA, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format, FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
+        sink.clear(); \
+        sink.append(Results.CStr(), Results.GetLength()); \
+        return sink; \
+    } \
+    template < typename TFormatType, FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
+    std::wstring& Format(std::wstring& sink, const TFormatType& format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
+    { \
+        TAutoString<wchar_t> Results; \
+        Details::FormatTo< wchar_t, Details::StandardLibrary::STLGlobalPatternStorageW, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format, FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
+        sink.clear(); \
+        sink.append(Results.CStr(), Results.GetLength()); \
+        return sink; \
+    }
+
+        // #pragma message( FL_PP_TEXT((_FL_EXPORT_FOR_STRING(1))) )
+
+        //        _FL_EXPORT_FOR_STRING(1)
+
+        FL_ENUM_SCALARS(_FL_EXPORT_FOR_STRING);
+
+#undef _FL_TEMPLATE_PARAMETERS_
+#undef _FL_TEMPLATE_AGUMENTS_
+#undef _FL_REAL_AGUMENTS_
+#undef _FL_EXPORT_FOR_STRING
+#undef _FL_FORMAL_AGUMENTS_
 #endif
     }
 }

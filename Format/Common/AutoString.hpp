@@ -27,7 +27,7 @@ namespace FormatLibrary
                 
         TAutoString()
         {
-            static_assert(Super::DEFAULT_LENGTH>0, "Invalid TAutoString usage.");
+            FL_STATIC_ASSERT(Super::DEFAULT_LENGTH>0, "Invalid TAutoString usage.");
 
             Super::StackVal[0] = 0;
         }
@@ -42,13 +42,13 @@ namespace FormatLibrary
 
                 if (Length <= DEFAULT_LENGTH)
                 {
-                    std::copy(str, str + Length, StackVal);
+                    CharTraits::copy(str, str + Length, StackVal);
                     StackVal[Count] = 0;
                 }
                 else
                 {
                     HeapValPtr = Allocate(Length);
-                    std::copy(str, str + Length, HeapValPtr);
+                    CharTraits::copy(str, str + Length, HeapValPtr);
                     HeapValPtr[Count] = 0;
                 }
             }

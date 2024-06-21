@@ -1,10 +1,8 @@
 #pragma once
 
-#include <cstddef>
-#include <algorithm>
-
 #include <Format/Common/Build.hpp>
 #include <Format/Common/Noncopyable.hpp>
+#include <Format/Common/Algorithm.hpp>
 
 namespace FormatLibrary
 {
@@ -79,12 +77,12 @@ namespace FormatLibrary
             {
                 if (other.IsDataOnStack())
                 {
-                    std::copy(other.StackVal, other.StackVal + Count, StackVal);
+                    Algorithm::CopyArray(other.StackVal, other.StackVal + Count, StackVal);
                 }
                 else
                 {
                     HeapValPtr = Allocate(AllocatedCount);
-                    std::copy(other.HeapValPtr, other.HeapValPtr + Count, HeapValPtr);
+                    Algorithm::CopyArray(other.HeapValPtr, other.HeapValPtr + Count, HeapValPtr);
                 }
             }
         }
@@ -106,16 +104,37 @@ namespace FormatLibrary
             {
                 if (other.IsDataOnStack())
                 {
-                    std::copy(other.StackVal, other.StackVal + Count, StackVal);
+                    Algorithm::CopyArray(other.StackVal, other.StackVal + Count, StackVal);
                 }
                 else
                 {
                     HeapValPtr = Allocate(AllocatedCount);
-                    std::copy(other.HeapValPtr, other.HeapValPtr + Count, HeapValPtr);
+                    Algorithm::CopyArray(other.HeapValPtr, other.HeapValPtr + Count, HeapValPtr);
                 }
             }
 
             return *this;
+        }
+
+        SelfType& TakeFrom(SelfType& other)
+        {
+            if (this == &other)
+            {
+                return *this;
+            }
+
+            Count = other.Count;
+            AllocatedCount = other.AllocatedCount;
+            HeapValPtr = other.HeapValPtr;
+
+            if (Count > 0 && other.IsDataOnStack())
+            {
+                Algorithm::MoveArray(other.StackVal, other.StackVal + Count, StackVal);
+            }
+
+            other.Count = 0;
+            other.AllocatedCount = 0;
+            other.HeapValPtr = NULL;
         }
 
 #if FL_COMPILER_WITH_CXX11
@@ -132,7 +151,7 @@ namespace FormatLibrary
 
             if (Count > 0 && other.IsDataOnStack())
             {
-                std::move(other.StackVal, other.StackVal + Count, StackVal);
+                Algorithm::MoveArray(other.StackVal, other.StackVal + Count, StackVal);
             }
 
             other.Count = 0;
@@ -154,7 +173,7 @@ namespace FormatLibrary
         {
             if (Count > 0 && other.IsDataOnStack())
             {
-                std::move(other.StackVal, other.StackVal + Count, StackVal);
+                Algorithm::MoveArray(other.StackVal, other.StackVal + Count, StackVal);
             }
 
             other.Count = 0;
@@ -274,7 +293,11 @@ namespace FormatLibrary
 
             HeapValPtr = Allocate(AllocatedCount);
 
-            std::move(StackVal, StackVal + Count, HeapValPtr);
+#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
+            Algorithm::MoveArray(StackVal, StackVal + Count, HeapValPtr);
+#else
+            Algorithm::CopyArray(StackVal, StackVal + Count, HeapValPtr);
+#endif
         }
 
         void  ExpandHeapSpace()
@@ -286,7 +309,11 @@ namespace FormatLibrary
 
             assert(DataPtr);
 
-            std::move(HeapValPtr, HeapValPtr + Count, DataPtr);
+#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
+            Algorithm::MoveArray(HeapValPtr, HeapValPtr + Count, DataPtr);
+#else
+            Algorithm::CopyArray(HeapValPtr, HeapValPtr + Count, DataPtr);
+#endif
 
             ReleaseHeapData();
 

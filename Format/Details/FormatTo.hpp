@@ -84,7 +84,10 @@ namespace FormatLibrary
 
             if (Patterns == nullptr)
             {
-                sink.AddStr(Shims::PtrOf(format));
+                const TCharType* rawFormat = Shims::PtrOf(format);
+                const size_t rawLength = Shims::LengthOf(format);
+                sink.AddStr(rawFormat, rawFormat + rawLength);
+
                 return sink;
             }
 
@@ -112,6 +115,71 @@ namespace FormatLibrary
 
             return sink;
         }
+#else
+#define _FL_FORMAT_TO_INDEX_ 1
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 2
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 3
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 4
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 5
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 6
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 7
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 8
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 9
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 10
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 11
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 12
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 13
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 14
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
+#define _FL_FORMAT_TO_INDEX_ 15
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
 #endif
+
+//
+// If you want to support more parameters, you can continue to increase them here, but too large a number may cause the compiler to crash during compilation.
+//
     }
 }
+
