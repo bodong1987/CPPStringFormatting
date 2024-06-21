@@ -136,7 +136,12 @@ namespace FormatLibrary
             /// <param name="pattern">The pattern.</param>
             /// <param name="arg">The argument.</param>
             /// <returns>bool.</returns>
+#if FL_COMPILER_WITH_CXX11
             static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg) = delete;
+#else
+        private:
+            static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg);
+#endif
         };
 
         // convert bool to string

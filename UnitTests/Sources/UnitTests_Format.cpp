@@ -38,6 +38,9 @@ TEST(Format, STL_Char_Format)
 
     const std::string r6 = StandardLibrary::Format("0x{0:x}", 100, (unsigned long)(100));
     EXPECT_EQ(r6, "0x64");
+
+    // gen compile error
+    //StandardLibrary::Format("{0}", std::wstring(L"x"));
 }
 
 TEST(Format, STL_Char_FormatTo)
