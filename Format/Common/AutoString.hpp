@@ -67,7 +67,7 @@ namespace FormatLibrary
                 HeapValPtr[Count] = 0;
             }
         }
-                
+                        
         void AddStr(const CharType* start, const CharType* end = nullptr)
         {
             const size_t Length = end ? end - start : CharTraits::length(start);
@@ -123,7 +123,7 @@ namespace FormatLibrary
 
                     ReleaseHeapData();
 
-                    CharTraits::copy(DataPtr, start, Length);
+                    CharTraits::copy(DataPtr + Count, start, Length);
 
                     Count += Length;
 
@@ -131,6 +131,99 @@ namespace FormatLibrary
                     HeapValPtr = DataPtr;
 
                     HeapValPtr[Count] = 0;
+                }
+            }
+        }
+
+    private:
+        void AppendWithPadding(CharType* bufferPtr, const CharType* start, const size_t length, const size_t targetLength, bool paddingLeft, CharType fillChar)
+        {
+            const bool bNeedPadding = targetLength > length;
+            const int PaddingCount = (int)(targetLength - length);
+
+            assert(bufferPtr);
+            assert(start);
+
+            if (bNeedPadding)
+            {
+                if (paddingLeft)
+                {
+                    CharTraits::Fill(bufferPtr + Count, fillChar, PaddingCount);
+                    CharTraits::copy(bufferPtr + Count + PaddingCount, start, length);
+                }
+                else
+                {
+                    CharTraits::copy(bufferPtr + Count, start, length);
+                    CharTraits::Fill(bufferPtr + Count + length, fillChar, PaddingCount);
+                }
+
+                assert(PaddingCount + length == targetLength);
+
+                Count += targetLength;
+
+                bufferPtr[Count] = (CharType)0;
+            }
+            else
+            {
+                CharTraits::copy(bufferPtr + Count, start, length);
+                Count += length;
+
+                bufferPtr[Count] = (CharType)0;
+            }
+        }
+
+    public:
+        void AddAlignStr(const CharType* start, const CharType* end, int alignedLength, bool paddingLeft, CharType fillChar)
+        {
+            // get text length
+            const size_t Length = end ? end - start : CharTraits::length(start);
+            const size_t TargetLength = Algorithm::Max(Length, (size_t)alignedLength);            
+
+            if (IsDataOnStack())
+            {
+                if (Count + Length <= DEFAULT_LENGTH)
+                {
+                    AppendWithPadding(StackVal, start, Length, TargetLength, paddingLeft, fillChar);
+                }
+                else
+                {
+                    assert(!HeapValPtr);
+                    AllocatedCount = (size_t)((Count + TargetLength) * 1.5f);
+                    HeapValPtr = Allocate(AllocatedCount);
+
+                    assert(HeapValPtr);
+
+                    if (Count > 0)
+                    {
+                        CharTraits::copy(HeapValPtr, StackVal, Count);
+                    }
+                    
+                    AppendWithPadding(HeapValPtr, start, Length, TargetLength, paddingLeft, fillChar);                    
+                }
+            }
+            else
+            {
+                if (Count + TargetLength < AllocatedCount)
+                {
+                    AppendWithPadding(HeapValPtr, start, Length, TargetLength, paddingLeft, fillChar);
+                }
+                else
+                {
+                    const size_t NewCount = (size_t)((Count + TargetLength)*1.5f);
+                    CharType* DataPtr = Allocate(NewCount);
+                    assert(DataPtr);
+
+                    if (Count > 0)
+                    {
+                        CharTraits::copy(DataPtr, HeapValPtr, Count);
+                    }
+
+                    ReleaseHeapData();
+
+                    AllocatedCount = NewCount;
+                    HeapValPtr = DataPtr;
+
+                    AppendWithPadding(HeapValPtr, start, Length, TargetLength, paddingLeft, fillChar);
                 }
             }
         }

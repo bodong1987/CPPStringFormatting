@@ -144,9 +144,34 @@ namespace FormatLibrary
         /// <param name="minValue">The minimum value.</param>
         /// <param name="maxValue">The maximum value.</param>
         /// <returns>T.</returns>
-        template< class T > inline T Clamp(const T x, const T minValue, const T maxValue)
+        template< class T > 
+        constexpr inline T Clamp(const T x, const T minValue, const T maxValue)
         {
             return x < minValue ? minValue : x < maxValue ? x : maxValue;
+        }
+
+        /// <summary>
+        /// Determines the maximum of the parameters.
+        /// </summary>
+        /// <param name="lhs">The LHS.</param>
+        /// <param name="rhs">The RHS.</param>
+        /// <returns>T.</returns>
+        template< class T >
+        constexpr inline T Max(const T lhs, const T rhs)
+        {
+            return lhs > rhs ? lhs : rhs;
+        }
+
+        /// <summary>
+        /// Determines the minimum of the parameters.
+        /// </summary>
+        /// <param name="lhs">The LHS.</param>
+        /// <param name="rhs">The RHS.</param>
+        /// <returns>T.</returns>
+        template < typename T >
+        constexpr inline T Min(const T lhs, const T rhs)
+        {
+            return lhs < rhs ? lhs : rhs;
         }
     }
 }

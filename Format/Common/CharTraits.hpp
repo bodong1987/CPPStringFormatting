@@ -250,6 +250,21 @@ namespace FormatLibrary
         {
             return toupper(ch);
         }
+
+        static char GetSpace()
+        {
+            return ' ';
+        }
+
+        static char GetZero()
+        {
+            return '0';
+        }
+
+        static char GetEndFlag()
+        {
+            return (char)0;
+        }
     };
 
     template <>
@@ -489,6 +504,21 @@ namespace FormatLibrary
         static wchar_t ToUpper(wchar_t ch)
         {
             return towupper(ch);
+        }
+
+        static wchar_t GetSpace()
+        {
+            return L' ';
+        }
+
+        static wchar_t GetZero()
+        {
+            return L'0';
+        }
+
+        static wchar_t GetEndFlag()
+        {
+            return (wchar_t)0;
         }
     };
 
