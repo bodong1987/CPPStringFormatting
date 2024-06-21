@@ -136,6 +136,9 @@ namespace FormatLibrary
             /// <param name="pattern">The pattern.</param>
             /// <param name="arg">The argument.</param>
             /// <returns>bool.</returns>
+            
+            FL_STATIC_ASSERT(false, "You may be trying to format an unsupported type");
+
 #if FL_COMPILER_WITH_CXX11
             static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg) = delete;
 #else
@@ -172,9 +175,37 @@ namespace FormatLibrary
             }
         };
 
+        // convert TCharType to string
+        template < typename TCharType >
+        class TTranslator< TCharType, TCharType > :
+            public TTranslatorBase< TCharType, TCharType >
+        {
+        public:
+            typedef TTranslatorBase< TCharType, TCharType >             Super;
+            typedef typename Super::CharType                            CharType;
+            typedef typename Super::FormatPattern                       FormatPattern;
+            typedef typename Super::ByteType                            ByteType;
+            typedef typename Super::SizeType                            SizeType;
+            typedef typename Super::StringType                          StringType;
+            typedef typename Super::CharTraits                          CharTraits;
+
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, TCharType arg)
+            {
+                TCharType Buffer[2] = {arg, (TCharType)0};
+
+                strRef.AddStr(Buffer, Buffer + 1);
+
+                return true;
+            }
+        };
+
+        #ifndef FL_DEFAULT_FLOAT_PRECISION
+        #define FL_DEFAULT_FLOAT_PRECISION 2
+        #endif
+
         enum
         {
-            DEFAULT_FLOAT_PRECISION = 2
+            DEFAULT_FLOAT_PRECISION = FL_DEFAULT_FLOAT_PRECISION
         };
 
         // convert double to string
@@ -444,11 +475,11 @@ namespace FormatLibrary
 
         FL_CONVERT_TRANSLATOR(int32_t, int64_t, INT_MAX);
         FL_CONVERT_TRANSLATOR(uint32_t, uint64_t, UINT_MAX);
-        FL_CONVERT_TRANSLATOR(char, int64_t, CHAR_MAX);
-        FL_CONVERT_TRANSLATOR(unsigned char, uint64_t, UCHAR_MAX);
-        FL_CONVERT_TRANSLATOR(short, int64_t, SHRT_MAX);
-        FL_CONVERT_TRANSLATOR(unsigned short, uint64_t, USHRT_MAX);
+        FL_CONVERT_TRANSLATOR(uint8_t, uint64_t, UCHAR_MAX);
+        FL_CONVERT_TRANSLATOR(int16_t, int64_t, SHRT_MAX);
+        FL_CONVERT_TRANSLATOR(uint16_t, uint64_t, USHRT_MAX);
         FL_CONVERT_TRANSLATOR(float, double, 0);
+        FL_CONVERT_TRANSLATOR(long, int64_t, INT_MAX);
         FL_CONVERT_TRANSLATOR(unsigned long, uint64_t, ULONG_MAX);
 
 #undef FL_CONVERT_TRANSLATOR

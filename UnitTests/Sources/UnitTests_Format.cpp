@@ -34,7 +34,7 @@ TEST(Format, STL_Char_Format)
     EXPECT_EQ(r4, "100--#--  -40.20--#--{3}");
 
     const std::string r5 = StandardLibrary::Format("{0}", char('c'), short(2));
-    EXPECT_EQ(r5, "99");
+    EXPECT_EQ(r5, "c");
 
     const std::string r6 = StandardLibrary::Format("0x{0:x}", 100, (unsigned long)(100));
     EXPECT_EQ(r6, "0x64");
@@ -65,7 +65,7 @@ TEST(Format, STL_Char_FormatTo)
     EXPECT_EQ(v, "100--#--  -40.20--#--{3}");
 
     StandardLibrary::FormatTo(v, "{0}", char('c'), short(2));
-    EXPECT_EQ(v, "99");
+    EXPECT_EQ(v, "c");
 
     StandardLibrary::FormatTo(v, "0x{0:x}", 100, (unsigned long)(100));
     EXPECT_EQ(v, "0x64");
@@ -104,3 +104,53 @@ TEST(Format, STL_WChar_FormatTo)
     EXPECT_EQ(v, L"\u4F60\u597D : \u4E2D\u6587");
 }
 
+TEST(Format, TestSingleArg) 
+{
+    EXPECT_EQ(StandardLibrary::Format("{0}", 123), "123");
+}
+
+TEST(Format, TestMultipleArgs) 
+{
+    EXPECT_EQ(StandardLibrary::Format("{0} {1}", 123, "hello"), "123 hello");
+}
+
+TEST(Format, TestReorderedArgs) 
+{
+    EXPECT_EQ(StandardLibrary::Format("{1} {0}", 123, "hello"), "hello 123");
+}
+
+TEST(Format, TestRepeatedArgs) 
+{
+    EXPECT_EQ(StandardLibrary::Format("{0} {0}", 123), "123 123");
+}
+
+TEST(Format, TestString) 
+{
+    EXPECT_EQ(StandardLibrary::Format("{0}", "hello"), "hello");
+}
+
+TEST(Format, TestChar) 
+{
+    EXPECT_EQ(StandardLibrary::Format("{0}", 'a'), "a");
+}
+
+TEST(Format, TestBool) 
+{
+    EXPECT_EQ(StandardLibrary::Format("{0}", true), "True");
+    EXPECT_EQ(StandardLibrary::Format("{0}", false), "False");
+}
+
+TEST(Format, TestEmptyFormat) 
+{
+    EXPECT_EQ(StandardLibrary::Format("", 123), "");
+}
+
+TEST(Format, TestNoArgs) 
+{
+    EXPECT_EQ(StandardLibrary::Format("hello"), "hello");
+}
+
+TEST(Format, TestMultipleFormats) 
+{
+    EXPECT_EQ(StandardLibrary::Format("{0} {1} {2}", 123, "hello", 1.23), "123 hello 1.23");
+}
