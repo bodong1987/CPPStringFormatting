@@ -28,25 +28,25 @@ namespace FormatLibrary
     namespace StandardLibrary
     {
         // default FormatTo support Format with no arguments
-        inline std::string& FormatTo(std::string& sink, const char* format)
+        inline void FormatTo(std::string& sink, const char* format)
         {
+            sink.clear();
+
             if (format != nullptr)
-            {
+            {                
                 sink.append(format);
             }
-
-            return sink;
         }
 
         // default FormatTo support Format with no arguments
-        inline std::wstring& FormatTo(std::wstring& sink, const wchar_t* format)
+        inline void FormatTo(std::wstring& sink, const wchar_t* format)
         {
+            sink.clear();
+
             if (format != nullptr)
             {
                 sink.append(format);
             }
-
-            return sink;
         }
 
         template <typename TCharType>
@@ -78,6 +78,20 @@ namespace FormatLibrary
             Details::FormatTo<TCharType, GlobalPatternStorageType, std::basic_string<TCharType>, T0, T...>(Sink, format, arg0, args...);
 
             return Sink.CStr();
+        }
+                
+        template <typename TCharType, typename TFormatType, typename T0, typename... T>
+        inline void FormatTo(std::basic_string<TCharType>& sink, const TFormatType& format, const T0& arg0, T... args)
+        {
+            sink.clear();
+
+            typedef TAutoString<TCharType> SinkType;
+            typedef Details::TGlobalPatternStorage< Details::StandardLibrary::TStandardPolicy<TCharType, Details::StandardLibrary::DefaultMutexType> >    GlobalPatternStorageType;
+
+            SinkType Sink;
+            Details::FormatTo<TCharType, GlobalPatternStorageType, TFormatType, T0, T...>(Sink, format, arg0, args...);
+                        
+            sink.assign(Sink.CStr(), Sink.GetLength());
         }
 #else
 #define _FL_TEMPLATE_PARAMETERS_( d, i ) \
@@ -122,20 +136,20 @@ namespace FormatLibrary
         return std::wstring(Results.CStr(), Results.GetLength()); \
     } \
     template < typename TFormatType, FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
-    std::string& FormatTo(std::string& sink, const TFormatType& format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
+    void FormatTo(std::string& sink, const TFormatType& format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
     { \
-        TAutoString<char> Results; \
-        Details::Format< char, Details::StandardLibrary::STLGlobalPatternStorageA, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format, FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
         sink.clear(); \
+        TAutoString<char> Results; \
+        Details::Format< char, Details::StandardLibrary::STLGlobalPatternStorageA, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format, FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \        
         sink.append(Results.CStr(), Results.GetLength()); \
         return sink; \
     } \
     template < typename TFormatType, FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
-    std::wstring& Format(std::wstring& sink, const TFormatType& format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
+    void Format(std::wstring& sink, const TFormatType& format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
     { \
-        TAutoString<wchar_t> Results; \
-        Details::FormatTo< wchar_t, Details::StandardLibrary::STLGlobalPatternStorageW, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format, FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
         sink.clear(); \
+        TAutoString<wchar_t> Results; \
+        Details::FormatTo< wchar_t, Details::StandardLibrary::STLGlobalPatternStorageW, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format, FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \        
         sink.append(Results.CStr(), Results.GetLength()); \
         return sink; \
     }
