@@ -39,8 +39,8 @@
 */
 template < 
 typename TCharType,     
-typename TFormatType,
 typename TPatternStorageType,
+typename TFormatType,
 FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TEMPLATE_PARAMETERS_, )
 >
 inline TAutoString<TCharType>& FormatTo(
