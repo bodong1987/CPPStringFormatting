@@ -60,7 +60,7 @@ namespace FormatLibrary
         inline std::basic_string<TCharType> Format(const TCharType* format, const T0& arg0, T... args)
         {
             typedef TAutoString<TCharType> SinkType;
-            typedef Details::TGlobalPatternStorage<Details::StandardLibrary::TStandardPolicy<TCharType>> GlobalPatternStorageType;
+            typedef Details::TGlobalPatternStorage< Details::StandardLibrary::TStandardPolicy<TCharType, Details::StandardLibrary::DefaultMutexType> >    GlobalPatternStorageType;
             
             SinkType Sink;
             Details::FormatTo<TCharType, GlobalPatternStorageType, const TCharType*, T0, T...>(Sink, format, arg0, args...);
@@ -72,7 +72,7 @@ namespace FormatLibrary
         inline std::basic_string<TCharType> Format(const std::basic_string<TCharType>& format, const T0& arg0, T... args)
         {
             typedef TAutoString<TCharType> SinkType;
-            typedef Details::TGlobalPatternStorage<Details::StandardLibrary::TStandardPolicy<TCharType>> GlobalPatternStorageType;
+            typedef Details::TGlobalPatternStorage< Details::StandardLibrary::TStandardPolicy<TCharType, Details::StandardLibrary::DefaultMutexType> >    GlobalPatternStorageType;
 
             SinkType Sink;
             Details::FormatTo<TCharType, GlobalPatternStorageType, std::basic_string<TCharType>, T0, T...>(Sink, format, arg0, args...);
