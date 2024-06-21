@@ -4,7 +4,7 @@
 // https://code.google.com/p/stringencoders/downloads/detail?name=stringencoders-v3.10.3.tar.gz&can=2&q=
 #pragma once
 
-#include <cstdint>
+#include <Format/Common/Build.hpp>
 
 namespace FormatLibrary
 {

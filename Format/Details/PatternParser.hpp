@@ -24,14 +24,28 @@ namespace FormatLibrary
             }
 
         protected:
+#if FL_COMPILER_WITH_CXX11
             enum class EParseState
+#else
+            struct EParseState
             {
-                EPS_Literal   = 0x0000000F,                
-                EPS_OpenCurly = 0x000000F0,                
-                EPS_Parameter = 0x00000F00,                
-                EPS_Width     = 0x0000F000,                
-                EPS_Precision = 0x000F0000
+                enum Enum
+#endif
+                {
+                    EPS_Literal   = 0x0000000F,                
+                    EPS_OpenCurly = 0x000000F0,                
+                    EPS_Parameter = 0x00000F00,                
+                    EPS_Width     = 0x0000F000,                
+                    EPS_Precision = 0x000F0000
+                };
+
+#if FL_COMPILER_WITH_CXX11
+            typedef EParseState ParseStateType;
+#else
             };
+
+            typedef typename EParseState::Enum ParseStateType;
+#endif
 
             static int32_t CastToSmallNumber(const CharType* const start, const CharType* const end)
             {
@@ -271,7 +285,7 @@ namespace FormatLibrary
                 const CharType*& p1,
                 const CharType* const /*start*/,
                 const CharType* const /*end*/,
-                EParseState& state,
+                ParseStateType& state,
                 PatternListType& /*patterns*/
             )
             {
@@ -300,7 +314,7 @@ namespace FormatLibrary
                 const CharType*& p1,
                 const CharType* const start,
                 const CharType* const /*end*/,
-                EParseState& state,
+                ParseStateType& state,
                 PatternListType& patterns
             )
             {
@@ -432,7 +446,7 @@ namespace FormatLibrary
                 const CharType* p1 = p0;
                 const CharType* const start = p0;
                 const CharType* const end = fomatStart + length;
-                EParseState     state = EParseState::EPS_Literal;
+                ParseStateType     state = EParseState::EPS_Literal;
 
                 for (; p1 != end; ++p1)
                 {

@@ -95,7 +95,7 @@ namespace FormatLibrary
                 ConstIterator     CurrentIter;
             };
 
-            template <typename TCharType>
+            template <typename TCharType, typename TMutexType>
             class TStandardPolicy
             {
             public:
@@ -104,10 +104,16 @@ namespace FormatLibrary
                 typedef typename FormatPattern::SizeType                       SizeType;
                 typedef typename FormatPattern::ByteType                       ByteType;
                 typedef TAutoArray<FormatPattern, 0xF, 0>                      PatternListType;
-                typedef typename PatternListType::ConstIterator                PatternIterator;
-                typedef std::unordered_map<SizeType, PatternListType>          PatternMapType;
+                typedef typename PatternListType::ConstIterator                PatternIterator;                
                 typedef TDefaultStringHasher<CharType>                         HasherType;
                 typedef std::runtime_error                                     ExceptionType;
+                typedef TMutexType                                             MutexType;
+
+#if FL_COMPILER_WITH_CXX11
+                typedef std::unordered_map<SizeType, PatternListType>          PatternMapType;
+#else
+                typedef std::map<SizeType, PatternListType>                    PatternMapType;
+#endif
 
                 static const PatternListType* FindByHashKey(const PatternMapType& storageReference, SizeType hashKey)
                 {
@@ -121,9 +127,22 @@ namespace FormatLibrary
                     // AtuoArray does not need reserve
                 }
 
-                static const PatternListType* Emplace(PatternMapType& storageReference, SizeType hashKey, PatternListType&& patterns)
+                static const PatternListType* Emplace(
+                    PatternMapType& storageReference, 
+                    SizeType hashKey, 
+#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
+                    PatternListType&& patterns
+#else
+                    const PatternListType& patterns
+#endif
+                    )
                 {
-                    std::pair< typename PatternMapType::iterator, bool> Results = storageReference.emplace(std::make_pair(hashKey, std::move(patterns)));
+                    std::pair< typename PatternMapType::iterator, bool> Results = 
+#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
+                        storageReference.emplace(std::make_pair(hashKey, std::move(patterns)));
+#else
+                        storageReference.insert(std::make_pair(hashKey, patterns));
+#endif
 
                     return Results.second ? &Results.first->second : nullptr;
                 }

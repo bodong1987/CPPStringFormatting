@@ -1,4 +1,14 @@
+#include <Format/Common/Build.hpp>
+
+#if FL_PLATFORM_WINDOWS
+#pragma warning(push)
+#pragma warning(disable:4616)
+#endif
 #include <gtest/gtest.h>
+#if FL_PLATFORM_WINDOWS
+#pragma warning(pop)
+#endif
+
 #include <Format/Format.hpp>
 #include <Format/StandardLibraryAdapter.hpp>
 

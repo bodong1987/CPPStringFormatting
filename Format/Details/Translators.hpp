@@ -1,7 +1,6 @@
 #pragma once
 
-#include <cstdint>
-
+#include <Format/Common/Build.hpp>
 #include <Format/Details/Algorithm.hpp>
 #include <Format/Details/Pattern.hpp>
 #include <Format/Common/AutoString.hpp>

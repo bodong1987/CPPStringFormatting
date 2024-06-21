@@ -1,9 +1,9 @@
 #pragma once
 
-#include <cstdint>
 #include <cstddef>
 #include <algorithm>
 
+#include <Format/Common/Build.hpp>
 #include <Format/Common/Noncopyable.hpp>
 
 namespace FormatLibrary
@@ -50,15 +50,16 @@ namespace FormatLibrary
 
                 return Ptr[index];
             }
-        private:
-            ConstIterator& operator = (const ConstIterator&) = delete;         
-            ConstIterator(ConstIterator&) = delete;
         protected:            
             const SelfType&   Ref;            
             size_t            index;
         };
 
-        TAutoArray()
+		TAutoArray() :
+			Count(0),
+			AllocatedCount(0),
+            HeapValPtr(nullptr)
+
         {
         }
                 
@@ -117,6 +118,7 @@ namespace FormatLibrary
             return *this;
         }
 
+#if FL_COMPILER_WITH_CXX11
         SelfType& TakeFrom(SelfType&& other)
         {
             if (this == &other)
@@ -137,12 +139,14 @@ namespace FormatLibrary
             other.AllocatedCount = 0;
             other.HeapValPtr = nullptr;
         }
+#endif
 
         void TakeTo(SelfType& other)
         {
             other.TakeFrom(*this);
         }
 
+#if FL_COMPILER_WITH_CXX11
         TAutoArray(SelfType&& other) :
             Count(other.Count),
             AllocatedCount(other.AllocatedCount),
@@ -162,6 +166,7 @@ namespace FormatLibrary
         {
             return TakeFrom(other);
         }
+#endif
 
         bool  IsDataOnStack() const
         {
@@ -307,9 +312,9 @@ namespace FormatLibrary
         }
 
     protected:
-        size_t        Count = 0;
-        size_t        AllocatedCount = 0;
+        size_t        Count;
+        size_t        AllocatedCount;
         T             StackVal[DEFAULT_LENGTH + ExtraLength];
-        T*            HeapValPtr = nullptr;
+        T*            HeapValPtr;
     };
 }

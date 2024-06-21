@@ -1,27 +1,55 @@
 #pragma once
 
+#include <Format/Common/Build.hpp>
+
 namespace FormatLibrary
 {
     namespace Details
     {
-        enum class EFormatFlag
-        {
-            Raw,
-            None,
-            Decimal,
-            Exponent,
-            FixedPoint,
-            General,
-            CSV,
-            Percentage,
-            Hex
-        };
+#if FL_COMPILER_WITH_CXX11
+		enum class EFormatFlag : uint8_t
+#else
+		namespace EFormatFlag
+		{ 
+			enum Enum
+#endif
+			{
+				Raw,
+				None,
+				Decimal,
+				Exponent,
+				FixedPoint,
+				General,
+				CSV,
+				Percentage,
+				Hex
+			};
+#if FL_COMPILER_WITH_CXX11
+		typedef EFormatFlag FormatFlagType;
+#else
+		}
 
-        enum class EAlignFlag
-        {
-            Right,
-            Left
-        };
+		typedef EFormatFlag::Enum FormatFlagType;
+#endif
+
+#if FL_COMPILER_WITH_CXX11
+        enum class EAlignFlag : uint8_t
+#else
+		namespace EAlignFlag
+		{ 
+			enum Enum
+#endif
+			{
+				Right,
+				Left
+			};
+
+#if FL_COMPILER_WITH_CXX11
+		typedef EAlignFlag AlignFlagType;
+#else
+		}
+		typedef EAlignFlag::Enum AlignFlagType;
+#endif
 
         /// <summary>
         /// Class TFormatPattern.
@@ -36,7 +64,14 @@ namespace FormatLibrary
             typedef unsigned char                                ByteType;
             typedef size_t                                       SizeType;
                                                 
-            TFormatPattern()
+			TFormatPattern() :
+				Start((SizeType)-1),
+				Len(0),
+				Flag(EFormatFlag::Raw),
+				Align(EAlignFlag::Right),
+				Index((ByteType)-1),
+				Precision((ByteType)-1),
+				Width((ByteType)-1)
             {
             }
                         
@@ -61,13 +96,13 @@ namespace FormatLibrary
             }
 
         public:            
-            SizeType      Start     = (SizeType)-1;
-            SizeType      Len       = 0;            
-            EFormatFlag   Flag      = EFormatFlag::Raw;            
-            EAlignFlag    Align     = EAlignFlag::Right;
-            ByteType      Index     = (ByteType)-1;
-            ByteType      Precision = (ByteType)-1;
-            ByteType      Width     = (ByteType)-1;
+            SizeType         Start;
+            SizeType         Len;            
+            FormatFlagType   Flag;            
+            AlignFlagType    Align;
+            ByteType         Index;
+            ByteType         Precision;
+            ByteType         Width;
         };
     }
 }

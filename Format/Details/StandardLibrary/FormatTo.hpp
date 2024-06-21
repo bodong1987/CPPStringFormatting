@@ -55,6 +55,7 @@ namespace FormatLibrary
             return format;
         }
 
+#if FL_COMPILER_WITH_CXX11
         template <typename TCharType, typename T0, typename... T>
         inline std::basic_string<TCharType> Format(const TCharType* format, const T0& arg0, T... args)
         {
@@ -78,6 +79,7 @@ namespace FormatLibrary
 
             return Sink.CStr();
         }
+#endif
     }
 }
 

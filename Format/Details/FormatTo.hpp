@@ -7,6 +7,7 @@ namespace FormatLibrary
 {
     namespace Details
     {
+#if FL_COMPILER_WITH_CXX11
         namespace Utils
         {
             template <typename TCharType, typename TPatternType, typename T0, typename... T>
@@ -111,5 +112,6 @@ namespace FormatLibrary
 
             return sink;
         }
+#endif
     }
 }

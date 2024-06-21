@@ -1,8 +1,7 @@
 #pragma once
 
-#include <mutex>
-
 #include <Format/Details/PatternParser.hpp>
+#include <Format/Common/Mutex.hpp>
 
 namespace FormatLibrary
 {
@@ -20,15 +19,23 @@ namespace FormatLibrary
             typedef typename TPolicy::PatternMapType                PatternMapType;
             typedef typename TPolicy::HasherType                    HasherType;
             typedef typename TPolicy::ExceptionType                 ExceptionType;
+            typedef typename TPolicy::MutexType                     MutexType;
+            typedef TScopedLocker<MutexType>                        ScopedLockerType;
             typedef TFormatPattern<CharType>                        FormatPattern;
             typedef TPatternParser<TPolicy>                         PatternParser;
 
             TPatternStorage()
             {
+#if FL_DEBUG
+                //printf("created storage\n");
+#endif
             }
 
             ~TPatternStorage()
             {
+#if FL_DEBUG
+                //printf("destroy storage\n");
+#endif
             }
                         
             const PatternListType* LookupPatterns(const CharType* const formatStart, const SizeType length, SizeType hashKey = 0)
@@ -39,19 +46,26 @@ namespace FormatLibrary
                 }
 
                 // First, Find in the cache
-                const PatternListType* PatternList = TPolicy::FindByHashKey(Storage, hashKey);
-
-                if (nullptr != PatternList)
                 {
-                    return PatternList;
+                    ScopedLockerType Locker(MutexValue);
+
+                    const PatternListType* PatternList = TPolicy::FindByHashKey(Storage, hashKey);
+
+                    if (nullptr != PatternList)
+                    {
+                        return PatternList;
+                    }
                 }
+                
 
                 PatternListType Patterns;
                 TPolicy::ReserveList(Patterns, 8);
 
                 if (Parser(formatStart, length, Patterns))
                 {
-                    return TPolicy::Emplace(Storage, hashKey, std::move(Patterns));
+                    ScopedLockerType Locker(MutexValue);
+
+                    return TPolicy::Emplace(Storage, hashKey, FL_MOVE_SEMANTIC(Patterns));
                 }
 
                 assert(false && "invalid format expression!");
@@ -62,6 +76,11 @@ namespace FormatLibrary
             }
 
         protected:
+            /// <summary>
+            /// The critical section value
+            /// </summary>
+            MutexType                   MutexValue;
+
             /// <summary>
             /// The hasher
             /// </summary>
@@ -84,33 +103,50 @@ namespace FormatLibrary
         public:
             static TGlobalPatternStorage* GetStorage()
             {
+#if FL_WITH_THREAD_LOCAL
                 struct ManagedStorage
                 {
-                    std::mutex _localMutext;
-                    TAutoArray<std::shared_ptr<TGlobalPatternStorage>> _Storages;
-                    
-                    void AddStorage(std::shared_ptr<TGlobalPatternStorage>& InputStorage)
+                    typedef TScopedLocker<Mutex>                             LockerType;
+
+                    Mutex                                                    MutexValue;
+                    TAutoArray<TGlobalPatternStorage*>                       Storages;
+
+                    ~ManagedStorage()
+                    {
+                        LockerType Locker(MutexValue);
+
+                        for( SIZE_T i=0; i<Storages.GetLength(); ++i )
+                        {
+                            delete Storages[i];
+                        }
+                    }
+
+                    void AddStorage( TGlobalPatternStorage* InputStorage )
                     {
                         assert(InputStorage);
 
-                        std::unique_lock<std::mutex> lock(_localMutext);
+                        LockerType Locker(MutexValue);
 
-                        _Storages.AddItem(InputStorage);
+                        Storages.AddItem(InputStorage);
                     }
                 };
 
                 static ManagedStorage StaticManager;
 
-                static thread_local std::shared_ptr<TGlobalPatternStorage> StaticStorage;
+                static FL_THREAD_LOCAL TGlobalPatternStorage* StaticStorage = NULL;
 
-                if (!StaticStorage)
+                if( !StaticStorage )
                 {
-                    StaticStorage = std::make_shared<TGlobalPatternStorage>();
+                    StaticStorage = new TGlobalPatternStorage();
 
                     StaticManager.AddStorage(StaticStorage);
                 }
 
-                return StaticStorage.get();
+                return StaticStorage;
+#else
+                static TGlobalPatternStorage StaticStorage;
+                return &StaticStorage;
+#endif
             }
         };
     }
