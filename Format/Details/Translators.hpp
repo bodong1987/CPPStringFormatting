@@ -43,6 +43,11 @@ namespace FormatLibrary
             {
                 strRef.AddAlignStr(start, start + length, pattern.HasWidth()? pattern.Width : (int)length, pattern.Align != EAlignFlag::Left, fillChar);
             }
+
+            static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, const int alignSize, bool paddingLeft, CharType fillChar)
+            {
+                strRef.AddAlignStr(start, start + length, alignSize, paddingLeft, fillChar);
+            }
         };
 
         template < typename TCharType >
@@ -150,13 +155,88 @@ namespace FormatLibrary
             }
         };
 
-        #ifndef FL_DEFAULT_FLOAT_PRECISION
-        #define FL_DEFAULT_FLOAT_PRECISION 2
-        #endif
-
-        enum
+        // convert double to string
+        template < typename TCharType, typename TRealType >
+        class TDoubleTranslatorImpl : public TTranslatorBase< TCharType, double >
         {
-            DEFAULT_FLOAT_PRECISION = FL_DEFAULT_FLOAT_PRECISION
+        public:
+            typedef TTranslatorBase< TCharType, double >                Super;
+            typedef typename Super::CharType                            CharType;
+            typedef typename Super::FormatPattern                       FormatPattern;
+            typedef typename Super::ByteType                            ByteType;
+            typedef typename Super::SizeType                            SizeType;
+            typedef typename Super::StringType                          StringType;
+            typedef typename Super::CharTraits                          CharTraits;
+
+            enum
+            {
+                DefaultPrecision = 2,
+                DefaultFixedPointPrecision = 2,
+                DefaultExponentPrecision = 6
+            };
+
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, double arg, SizeType unusedParam = 0)
+            {
+                FL_UNREFERENCED_PARAMETER(unusedParam);
+
+                if (pattern.Flag == EFormatFlag::None ||
+                    pattern.Flag == EFormatFlag::FixedPoint ||
+                    pattern.Flag == EFormatFlag::General
+                    )
+                {
+                    CharType TempBuf[64];
+
+                    SizeType length = DoubleToString<CharType>(
+                        arg,
+                        TempBuf,
+                        _countof(TempBuf),
+                        pattern.HasPrecision() ? pattern.Precision : (pattern.Flag == EFormatFlag::FixedPoint ? DefaultFixedPointPrecision : DefaultPrecision)
+                    );
+
+                    Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetSpace());
+
+                    return true;
+                }
+                else if (pattern.Flag == EFormatFlag::Exponent)
+                {
+                    CharType FmtBuf[16] = { '%', '.' };
+                    size_t length = Int64ToString(pattern.HasPrecision() ? pattern.Precision : DefaultExponentPrecision, FmtBuf + 2, 10, pattern.bUpper);
+                    FmtBuf[length + 2] = pattern.bUpper ? 'E' : 'e';
+
+                    CharType TempBuf[64];
+                    size_t bufLength = CharTraits::StaticSprintf(TempBuf, _countof(TempBuf), FmtBuf, arg);
+
+                    Super::AppendString(strRef, pattern, TempBuf, bufLength, CharTraits::GetSpace());
+
+                    return true;
+                }
+                else if (pattern.Flag == EFormatFlag::Decimal)
+                {
+                    return TTranslator<TCharType, int64_t>::Transfer(strRef, pattern, static_cast<int64_t>(arg));
+                }
+
+                return false;
+            }
+        };
+
+        // convert float to string
+        template < typename TCharType >
+        class TTranslator< TCharType, float > :
+            public TTranslatorBase< TCharType, float >
+        {
+        public:
+            typedef TTranslatorBase< TCharType, float >                Super;
+            typedef typename Super::CharType                            CharType;
+            typedef typename Super::FormatPattern                       FormatPattern;
+            typedef typename Super::ByteType                            ByteType;
+            typedef typename Super::SizeType                            SizeType;
+            typedef typename Super::StringType                          StringType;
+            typedef typename Super::CharTraits                          CharTraits;
+
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, float arg, SizeType unusedParam = 0)
+            {
+                return TDoubleTranslatorImpl<TCharType, float>::Transfer(strRef, pattern, arg, unusedParam);
+            }
         };
 
         // convert double to string
@@ -175,32 +255,7 @@ namespace FormatLibrary
 
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, double arg, SizeType unusedParam = 0)
             {
-                FL_UNREFERENCED_PARAMETER(unusedParam);
-
-                if (pattern.Flag == EFormatFlag::None ||
-                    pattern.Flag == EFormatFlag::FixedPoint ||
-                    pattern.Flag == EFormatFlag::General
-                    )
-                {
-                    CharType TempBuf[64];
-
-                    SizeType length = DoubleToString<CharType>(
-                        arg,
-                        TempBuf,
-                        _countof(TempBuf),
-                        pattern.HasPrecision() ? pattern.Precision : DEFAULT_FLOAT_PRECISION
-                    );
-
-                    Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetSpace());
-
-                    return true;
-                }
-                else if (pattern.Flag == EFormatFlag::Decimal)
-                {
-                    return TTranslator<TCharType, int64_t>::Transfer(strRef, pattern, static_cast<int64_t>(arg));
-                }
-
-                return false;
+                return TDoubleTranslatorImpl<TCharType, double>::Transfer(strRef, pattern, arg, unusedParam);
             }
         };
 
@@ -247,11 +302,22 @@ namespace FormatLibrary
 
                     CharType TempBuf[32];
 
-                    SizeType length = Int64ToString<CharType>(arg, TempBuf, bHex ? 16 : 10);
+                    SizeType length = Int64ToString<CharType>(arg, TempBuf, bHex ? 16 : 10, pattern.bUpper);
 
-                    Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetSpace());
+                    if (pattern.HasPrecision() && pattern.Precision > length)
+                    {
+                        Super::AppendString(strRef, pattern, TempBuf, length, pattern.Precision, true, CharTraits::GetZero());
+                    }
+                    else
+                    {
+                        Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetSpace());
+                    }                    
 
                     return true;
+                }
+                else if (pattern.Flag == EFormatFlag::Exponent)
+                {
+                    return TTranslator<TCharType, double>::Transfer(strRef, pattern, static_cast<double>(arg));
                 }
                 else if (pattern.Flag == EFormatFlag::FixedPoint)
                 {
@@ -297,11 +363,22 @@ namespace FormatLibrary
 
                     CharType TempBuf[32];
 
-                    SizeType length = Int64ToString<CharType>(arg, TempBuf, bHex ? 16 : 10);
+                    SizeType length = UInt64ToString<CharType>(arg, TempBuf, bHex ? 16 : 10, pattern.bUpper);
 
-                    Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetSpace());
+                    if (pattern.HasPrecision() && pattern.Precision > length)
+                    {
+                        Super::AppendString(strRef, pattern, TempBuf, length, pattern.Precision, true, CharTraits::GetZero());
+                    }
+                    else
+                    {
+                        Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetSpace());
+                    }
 
                     return true;
+                }
+                else if (pattern.Flag == EFormatFlag::Exponent)
+                {
+                    return TTranslator<TCharType, double>::Transfer(strRef, pattern, static_cast<double>(arg));
                 }
                 else if (pattern.Flag == EFormatFlag::FixedPoint)
                 {
@@ -368,8 +445,7 @@ namespace FormatLibrary
         FL_CONVERT_TRANSLATOR(uint32_t, uint64_t, UINT_MAX);
         FL_CONVERT_TRANSLATOR(uint8_t, uint64_t, UCHAR_MAX);
         FL_CONVERT_TRANSLATOR(int16_t, int64_t, SHRT_MAX);
-        FL_CONVERT_TRANSLATOR(uint16_t, uint64_t, USHRT_MAX);
-        FL_CONVERT_TRANSLATOR(float, double, 0);
+        FL_CONVERT_TRANSLATOR(uint16_t, uint64_t, USHRT_MAX);        
         FL_CONVERT_TRANSLATOR(long, int64_t, INT_MAX);
         FL_CONVERT_TRANSLATOR(unsigned long, uint64_t, ULONG_MAX);
 

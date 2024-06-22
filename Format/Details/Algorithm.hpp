@@ -24,13 +24,20 @@ namespace FormatLibrary
         }
 
         template < typename TCharType >
-        inline size_t Int64ToString(int64_t value, TCharType* buffer, int32_t base)
+        inline size_t Int64ToString(int64_t value, TCharType* buffer, int32_t base, bool upper)
         {
             static const char DigitMap[] =
             {
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'A', 'B', 'C', 'D',
                 'E', 'F'
+            };
+
+            static const char DigitMapLower[] =
+            {
+                '0', '1', '2', '3', '4', '5', '6',
+                '7', '8', '9', 'a', 'b', 'c', 'd',
+                'e', 'f'
             };
 
             assert(base > 0 && static_cast<size_t>(base) <= _countof(DigitMap));
@@ -42,7 +49,7 @@ namespace FormatLibrary
             // Conversion. Number is reversed.
             do
             {
-                *Str++ = DigitMap[UValue % base];
+                *Str++ = upper ? DigitMap[UValue % base] : DigitMapLower[UValue % base];
             } while (UValue /= base);
 
             if (value < 0)
@@ -59,13 +66,20 @@ namespace FormatLibrary
         }
 
         template < typename TCharType >
-        inline size_t UInt64ToString(uint64_t value, TCharType* buffer, int32_t base)
+        inline size_t UInt64ToString(uint64_t value, TCharType* buffer, int32_t base, bool upper)
         {
             static const char DigitMap[] =
             {
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'A', 'B', 'C', 'D',
                 'E', 'F'
+            };
+
+            static const char DigitMapLower[] =
+            {
+                '0', '1', '2', '3', '4', '5', '6',
+                '7', '8', '9', 'a', 'b', 'c', 'd',
+                'e', 'f'
             };
 
             assert(base > 0 && static_cast<size_t>(base) <= _countof(DigitMap));
@@ -75,7 +89,7 @@ namespace FormatLibrary
             // Conversion. Number is reversed.
             do
             {
-                *Str++ = DigitMap[value % base];
+                *Str++ = upper ? DigitMap[value % base] : DigitMapLower[value % base];
             } while (value /= base);
 
             *Str = '\0';

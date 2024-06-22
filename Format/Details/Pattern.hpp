@@ -71,7 +71,8 @@ namespace FormatLibrary
 				Align(EAlignFlag::Right),
 				Index((ByteType)-1),
 				Precision((ByteType)-1),
-				Width((ByteType)-1)
+				Width((ByteType)-1),
+                bUpper(false)
             {
             }
                         
@@ -103,6 +104,7 @@ namespace FormatLibrary
             ByteType         Index;
             ByteType         Precision;
             ByteType         Width;
+            bool             bUpper;
         };
     }
 }

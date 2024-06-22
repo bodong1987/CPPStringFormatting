@@ -190,3 +190,35 @@ TEST(Format, TestMixedAlign)
     EXPECT_EQ(StandardLibrary::Format("{0,5} {1,-5}", 123, "hi"), "  123 hi   ");
 }
 
+TEST(Format, TestExponentialNotation)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0:e}", 123.456), "1.234560e+02");
+    EXPECT_EQ(StandardLibrary::Format("{0:E}", 123.456), "1.234560E+02");
+    EXPECT_EQ(StandardLibrary::Format("{0:e3}", 123.456), "1.235e+02");
+    EXPECT_EQ(StandardLibrary::Format("{0:E3}", 123.456), "1.235E+02");
+}
+
+TEST(Format, TestHexadecimalNotation)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0:x}", 123), "7b");
+    EXPECT_EQ(StandardLibrary::Format("{0:X}", 123), "7B");
+    EXPECT_EQ(StandardLibrary::Format("{0:x8}", 123), "0000007b");
+    EXPECT_EQ(StandardLibrary::Format("{0:X8}", 123), "0000007B");
+}
+
+TEST(Format, TestWidth)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0,5}", 123), "  123");
+    EXPECT_EQ(StandardLibrary::Format("{0,-5}", 123), "123  ");
+    EXPECT_EQ(StandardLibrary::Format("{0,5}", "hi"), "   hi");
+    EXPECT_EQ(StandardLibrary::Format("{0,-5}", "hi"), "hi   ");
+}
+
+TEST(Format, TestFloatingPointPrecision)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0:f}", 123.456), "123.46");
+    EXPECT_EQ(StandardLibrary::Format("{0:f3}", 123.456), "123.456");
+    EXPECT_EQ(StandardLibrary::Format("{0:f6}", 123.456), "123.456000");
+    EXPECT_EQ(StandardLibrary::Format("{0:f0}", 123.456), "123");
+}
+

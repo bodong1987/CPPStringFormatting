@@ -153,7 +153,7 @@ namespace FormatLibrary
                     return false;
                 }
 
-                switch (toupper(*TestPtr))
+                switch (TCharTraits<CharType>::ToUpper(*TestPtr))
                 {
                 case 'D':
                     pattern.Flag = EFormatFlag::Decimal;
@@ -179,6 +179,8 @@ namespace FormatLibrary
                     // unsupported Flag!!!
                     return false;
                 }
+
+                pattern.bUpper = TCharTraits<CharType>::IsUpper(*TestPtr);
 
                 ++TestPtr;
 
