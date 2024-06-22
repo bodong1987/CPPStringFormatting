@@ -65,6 +65,12 @@ namespace FormatLibrary
             {
                 return DoTransferHelper<TCharType, TPatternType, T0, T...>::DoTransfer(targetIndex, currentIndex, sink, pattern, format, arg0, args...);
             }
+
+            template <typename TCharType, typename TPatternType>
+            inline bool DoTransfer(int32_t targetIndex, int32_t& currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format)
+            {
+                return TRawTranslator<TCharType>::Transfer(sink, pattern, format);
+            }
         }
 
         template <typename TCharType, typename TPatternStorageType, typename TFormatType, typename... T>

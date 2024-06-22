@@ -222,3 +222,16 @@ TEST(Format, TestFloatingPointPrecision)
     EXPECT_EQ(StandardLibrary::Format("{0:f0}", 123.456), "123");
 }
 
+TEST(Format, TestEscapeBraces)
+{
+    EXPECT_EQ(StandardLibrary::Format("{{0}}"), "{0}");
+    EXPECT_EQ(StandardLibrary::Format("{{0}}1"), "{0}1");
+    EXPECT_EQ(StandardLibrary::Format("a{{0}}1a"), "a{0}1a");
+    EXPECT_EQ(StandardLibrary::Format("{{{0}}}", 1), "{1}");
+    EXPECT_EQ(StandardLibrary::Format("{{0}}, {0}", 1), "{0}, 1");
+}
+
+TEST(Format, TestOtherCharacters)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0} is {1} years old", "John", 30), "John is 30 years old");
+}

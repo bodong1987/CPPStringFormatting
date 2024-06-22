@@ -25,18 +25,19 @@ namespace FormatLibrary
 
         protected:
 #if FL_COMPILER_WITH_CXX11
-            enum class EParseState
+            enum class EParseState : uint8_t
 #else
             struct EParseState
             {
                 enum Enum
 #endif
                 {
-                    EPS_Literal   = 0x0000000F,                
-                    EPS_OpenCurly = 0x000000F0,                
-                    EPS_Parameter = 0x00000F00,                
-                    EPS_Width     = 0x0000F000,                
-                    EPS_Precision = 0x000F0000
+                    EPS_Literal    = 1 << 0,                
+                    EPS_OpenCurly  = 1 << 1,                
+                    EPS_CloseCurly = 1 << 2,
+                    EPS_Parameter  = 1 << 3,                
+                    EPS_Width      = 1 << 4,                
+                    EPS_Precision  = 1 << 5
                 };
 
 #if FL_COMPILER_WITH_CXX11
@@ -297,6 +298,10 @@ namespace FormatLibrary
                     state = EParseState::EPS_OpenCurly;
                     break;
 
+                case '}':
+                    state = EParseState::EPS_CloseCurly;
+                    break;
+
                 default:
                     break;
                 }
@@ -364,6 +369,73 @@ namespace FormatLibrary
                 }
                 default:
                     state = EParseState::EPS_Parameter;
+                    break;
+                }
+            }
+
+            /// <summary>
+            /// Called when get a [close curly].
+            /// </summary>
+            /// <param name="p0">The p0.</param>
+            /// <param name="p1">The p1.</param>
+            /// <param name="start">The start.</param>
+            /// <param name="">The .</param>
+            /// <param name="state">The state.</param>
+            /// <param name="patterns">The patterns.</param>
+            void OnCloseCurly(
+                const CharType*& p0,
+                const CharType*& p1,
+                const CharType* const start,
+                const CharType* const /*end*/,
+                ParseStateType& state,
+                PatternListType& patterns
+            )
+            {
+                if (p1 != p0 + 1)
+                {
+                    // create a pattern if this is the first slice
+                    FormatPattern pattern;
+
+                    if (p0 == start)
+                    {
+                        pattern.Flag = EFormatFlag::Raw;
+                        pattern.Start = 0;
+                        pattern.Len = (SizeType)(p1 - p0) - 1;
+                        pattern.Index = (ByteType)-1;
+                    }
+                    else
+                    {
+                        pattern.Flag = EFormatFlag::Raw;
+                        pattern.Start = p0 - start;
+                        pattern.Len = (SizeType)(p1 - p0) - 1;
+                        pattern.Index = (ByteType)-1;
+                    }
+
+                    TPolicy::AppendPattern(patterns, pattern);
+
+                    p0 = p1 + 1;
+
+                    state = EParseState::EPS_Literal;
+                }
+
+                switch (*p1)
+                {
+                case '}':
+                {
+                    FormatPattern pattern;
+
+                    pattern.Flag = EFormatFlag::Raw;
+                    pattern.Start = p1 - start;
+                    pattern.Len = 1;
+
+                    TPolicy::AppendPattern(patterns, pattern);
+
+                    p0 = p1 + 1;
+
+                    state = EParseState::EPS_Literal;
+                    break;
+                }
+                default:
                     break;
                 }
             }
@@ -450,7 +522,7 @@ namespace FormatLibrary
                 const CharType* const end = fomatStart + length;
                 ParseStateType     state = EParseState::EPS_Literal;
 
-                for (; p1 != end; ++p1)
+                for (; p1 < end; ++p1)
                 {
                     switch (state)
                     {
@@ -459,6 +531,9 @@ namespace FormatLibrary
                         break;
                     case EParseState::EPS_OpenCurly:
                         OnOpenCurly(p0, p1, start, end, state, patterns);
+                        break;
+                    case EParseState::EPS_CloseCurly:
+                        OnCloseCurly(p0, p1, start, end, state, patterns);
                         break;
                     case EParseState::EPS_Parameter:
                         OnParameter(p0, p1, start, end, state, patterns);

@@ -27,32 +27,28 @@ namespace FormatLibrary
 
     namespace StandardLibrary
     {
+        template <typename TCharType>
+        inline std::basic_string<TCharType> Format(const TCharType* format)
+        {
+            typedef TAutoString<TCharType> SinkType;
+            typedef Details::TGlobalPatternStorage< Details::StandardLibrary::TStandardPolicy<TCharType, Details::StandardLibrary::DefaultMutexType> >    GlobalPatternStorageType;
+
+            SinkType Sink;
+            Details::FormatTo<TCharType, GlobalPatternStorageType, const TCharType*>(Sink, format);
+
+            return std::basic_string<TCharType>(Sink.CStr(), Sink.GetLength());
+        }
+
         // default FormatTo support Format with no arguments
         inline void FormatTo(std::string& sink, const char* format)
         {
-            sink.clear();
-
-            if (format != nullptr)
-            {                
-                sink.append(format);
-            }
+            sink = Format<char>(format);
         }
 
         // default FormatTo support Format with no arguments
         inline void FormatTo(std::wstring& sink, const wchar_t* format)
         {
-            sink.clear();
-
-            if (format != nullptr)
-            {
-                sink.append(format);
-            }
-        }
-
-        template <typename TCharType>
-        inline std::basic_string<TCharType> Format(const TCharType* format)
-        {
-            return format;
+            sink = Format<wchar_t>(format);
         }
 
 #if FL_COMPILER_WITH_CXX11
