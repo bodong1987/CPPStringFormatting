@@ -65,7 +65,7 @@ namespace FormatLibrary
             SinkType Sink;
             Details::FormatTo<TCharType, GlobalPatternStorageType, const TCharType*, T0, T...>(Sink, format, arg0, args...);
 
-            return Sink.CStr();
+            return std::basic_string<TCharType>(Sink.CStr(), Sink.GetLength());
         }
 
         template <typename TCharType, typename T0, typename... T>
@@ -77,7 +77,7 @@ namespace FormatLibrary
             SinkType Sink;
             Details::FormatTo<TCharType, GlobalPatternStorageType, std::basic_string<TCharType>, T0, T...>(Sink, format, arg0, args...);
 
-            return Sink.CStr();
+            return std::basic_string<TCharType>(Sink.CStr(), Sink.GetLength());
         }
                 
         template <typename TCharType, typename TFormatType, typename T0, typename... T>
