@@ -235,3 +235,66 @@ TEST(Format, TestOtherCharacters)
 {
     EXPECT_EQ(StandardLibrary::Format("{0} is {1} years old", "John", 30), "John is 30 years old");
 }
+
+TEST(Format, TestMultipleDifferentArgs)
+{
+    int a = 123;
+    double b = 123.456;
+    char c = 'a';
+    const char* d = "hello";
+    bool e = true;
+    std::string f = "world";
+    long g = 1234567890;
+    unsigned int h = 123;
+    float i = 1.23f;
+    short j = 123;
+
+    std::string result = StandardLibrary::Format("{0} {1:f3} {2} {3} {4} {5} {6} {7:x} {8:e} {9}",
+        a, b, c, d, e, f, g, h, i, j);
+
+    EXPECT_EQ(result, "123 123.456 a hello True world 1234567890 7b 1.230000e+00 123");
+}
+
+TEST(Format, TestLongTypes)
+{
+    unsigned long a = 1234567890;
+    long long b = 123456789012345;
+    unsigned long long c = 1234567890123456;
+
+    std::string result = StandardLibrary::Format("{0} {1} {2}", a, b, c);
+    EXPECT_EQ(result, "1234567890 123456789012345 1234567890123456");
+
+    std::wstring resultW = StandardLibrary::Format(L"{0} {1} {2}", a, b, c);
+    EXPECT_EQ(resultW, L"1234567890 123456789012345 1234567890123456");
+
+    result = StandardLibrary::Format("{0:x} {1:x} {2:x}", a, b, c);
+    EXPECT_EQ(result, "499602d2 7048860ddf79 462d53c8abac0");
+
+    resultW = StandardLibrary::Format(L"{0:x} {1:x} {2:x}", a, b, c);
+    EXPECT_EQ(resultW, L"499602d2 7048860ddf79 462d53c8abac0");
+}
+
+TEST(Format, TestMultipleDifferentArgsWChar)
+{
+    int a = 123;
+    double b = 123.456;
+    wchar_t c = L'a';
+    const wchar_t* d = L"hello";
+    bool e = true;
+    std::wstring f = L"world";
+    long g = 1234567890;
+    unsigned int h = 123;
+    float i = 1.23f;
+    short j = 123;
+    unsigned short k = 123;
+    long double l = 123.456789;
+    unsigned long m = 1234567890;
+    long long n = 123456789012345;
+    unsigned long long o = 1234567890123456;
+
+    std::wstring result = StandardLibrary::Format(L"{0} {1:f3} {2} {3} {4} {5} {6} {7:x} {8:e} {9} {10} {11} {12} {13} {14}",
+        a, b, c, d, e, f, g, h, i, j, k, l, m, n, o);
+
+    EXPECT_EQ(result, L"123 123.456 a hello True world 1234567890 7b 1.230000e+00 123 123 123.46 1234567890 123456789012345 1234567890123456");
+}
+

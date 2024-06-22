@@ -64,7 +64,7 @@ namespace FormatLibrary
 
                 while (TestPtr < end)
                 {
-                    Value = Value * 10 + *start - '0';
+                    Value = Value * 10 + *TestPtr - '0';
 
                     ++TestPtr;
                 }

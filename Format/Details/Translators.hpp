@@ -447,7 +447,8 @@ namespace FormatLibrary
         FL_CONVERT_TRANSLATOR(int16_t, int64_t, SHRT_MAX);
         FL_CONVERT_TRANSLATOR(uint16_t, uint64_t, USHRT_MAX);        
         FL_CONVERT_TRANSLATOR(long, int64_t, INT_MAX);
-        FL_CONVERT_TRANSLATOR(unsigned long, uint64_t, ULONG_MAX);
+        FL_CONVERT_TRANSLATOR(unsigned long, uint64_t, ULONG_MAX);        
+        FL_CONVERT_TRANSLATOR(long double, double, 0);
 
 #undef FL_CONVERT_TRANSLATOR
 
