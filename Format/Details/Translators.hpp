@@ -191,7 +191,9 @@ namespace FormatLibrary
                         pattern.HasPrecision() ? pattern.Precision : DEFAULT_FLOAT_PRECISION
                     );
 
-                    Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetZero());
+                    Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetSpace());
+
+                    return true;
                 }
                 else if (pattern.Flag == EFormatFlag::Decimal)
                 {
@@ -247,7 +249,7 @@ namespace FormatLibrary
 
                     SizeType length = Int64ToString<CharType>(arg, TempBuf, bHex ? 16 : 10);
 
-                    Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetZero());
+                    Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetSpace());
 
                     return true;
                 }
@@ -297,7 +299,7 @@ namespace FormatLibrary
 
                     SizeType length = Int64ToString<CharType>(arg, TempBuf, bHex ? 16 : 10);
 
-                    Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetZero());
+                    Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetSpace());
 
                     return true;
                 }

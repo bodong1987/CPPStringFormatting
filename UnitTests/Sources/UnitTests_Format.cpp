@@ -74,13 +74,13 @@ TEST(Format, STL_Char_FormatTo)
 TEST(Format, STL_WChar_Format)
 {   
     const std::wstring r7 = StandardLibrary::Format(L"Test{1}, {2:f4}, {0}, {0,4}", L" X ", 20, -10.005f);
-    EXPECT_EQ(r7, L"Test20, -10.0050,  X ,  X ");
+    EXPECT_EQ(r7, L"Test20, -10.0050,  X ,   X ");
 
     const std::wstring r8 = StandardLibrary::Format(L"Test{1}, {2:f4}, {0}, {0,4}");
     EXPECT_EQ(r8, L"Test{1}, {2:f4}, {0}, {0,4}");
 
     const std::wstring r9 = StandardLibrary::Format(std::wstring(L"Test{1}, {2:f4}, {0}, {0,4}"), L" X ", 20, -10.005f);
-    EXPECT_EQ(r9, L"Test20, -10.0050,  X ,  X ");
+    EXPECT_EQ(r9, L"Test20, -10.0050,  X ,   X ");
 
     const std::wstring r11 = StandardLibrary::Format(L"\u4F60\u597D : {0}", L"\u4E2D\u6587");
     EXPECT_EQ(r11, L"\u4F60\u597D : \u4E2D\u6587");
@@ -91,14 +91,14 @@ TEST(Format, STL_WChar_FormatTo)
     std::wstring v;
 
     StandardLibrary::FormatTo(v, L"Test{1}, {2:f4}, {0}, {0,4}", L" X ", 20, -10.005f);
-    EXPECT_EQ(v, L"Test20, -10.0050,  X ,  X ");
+    EXPECT_EQ(v, L"Test20, -10.0050,  X ,   X ");
 
     // test invalid param
     StandardLibrary::FormatTo(v, L"Test{1}, {2:f4}, {0}, {0,4}");
     EXPECT_EQ(v, L"Test{1}, {2:f4}, {0}, {0,4}");
 
     StandardLibrary::FormatTo(v, std::wstring(L"Test{1}, {2:f4}, {0}, {0,4}"), L" X ", 20, -10.005f);
-    EXPECT_EQ(v, L"Test20, -10.0050,  X ,  X ");
+    EXPECT_EQ(v, L"Test20, -10.0050,  X ,   X ");
 
     StandardLibrary::FormatTo(v, L"\u4F60\u597D : {0}", L"\u4E2D\u6587");
     EXPECT_EQ(v, L"\u4F60\u597D : \u4E2D\u6587");

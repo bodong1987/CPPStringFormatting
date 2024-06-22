@@ -181,7 +181,7 @@ namespace FormatLibrary
 
             if (IsDataOnStack())
             {
-                if (Count + Length <= DEFAULT_LENGTH)
+                if (Count + TargetLength <= DEFAULT_LENGTH)
                 {
                     AppendWithPadding(StackVal, start, Length, TargetLength, paddingLeft, fillChar);
                 }
