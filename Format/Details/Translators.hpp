@@ -90,8 +90,6 @@ namespace FormatLibrary
             /// <param name="arg">The argument.</param>
             /// <returns>bool.</returns>
             
-            FL_STATIC_ASSERT(false, "You may be trying to format an unsupported type");
-
 #if FL_COMPILER_WITH_CXX11
             static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg) = delete;
 #else
