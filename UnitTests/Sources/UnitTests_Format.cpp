@@ -298,3 +298,10 @@ TEST(Format, TestMultipleDifferentArgsWChar)
     EXPECT_EQ(result, L"123 123.456 a hello True world 1234567890 7b 1.230000e+00 123 123 123.46 1234567890 123456789012345 1234567890123456");
 }
 
+TEST(Format, TestLongString)
+{
+    std::string longStr(500, 'a'); 
+    std::string result = StandardLibrary::Format("{0} - NewString", longStr);
+    EXPECT_EQ(result, longStr + " - NewString");
+    EXPECT_GT(result.length(), 265);
+}
