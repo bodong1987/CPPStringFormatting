@@ -192,10 +192,10 @@ TEST(Format, TestMixedAlign)
 
 TEST(Format, TestExponentialNotation)
 {
-    EXPECT_EQ(StandardLibrary::Format("{0:e}", 123.456), "1.234560e+02");
-    EXPECT_EQ(StandardLibrary::Format("{0:E}", 123.456), "1.234560E+02");
-    EXPECT_EQ(StandardLibrary::Format("{0:e3}", 123.456), "1.235e+02");
-    EXPECT_EQ(StandardLibrary::Format("{0:E3}", 123.456), "1.235E+02");
+    EXPECT_EQ(StandardLibrary::Format("{0:e}", 123.456), "1.234560e+002");
+    EXPECT_EQ(StandardLibrary::Format("{0:E}", 123.456), "1.234560E+002");
+    EXPECT_EQ(StandardLibrary::Format("{0:e3}", 123.456), "1.235e+002");
+    EXPECT_EQ(StandardLibrary::Format("{0:E3}", 123.456), "1.235E+002");
 }
 
 TEST(Format, TestHexadecimalNotation)
@@ -252,7 +252,7 @@ TEST(Format, TestMultipleDifferentArgs)
     std::string result = StandardLibrary::Format("{0} {1:f3} {2} {3} {4} {5} {6} {7:x} {8:e} {9}",
         a, b, c, d, e, f, g, h, i, j);
 
-    EXPECT_EQ(result, "123 123.456 a hello True world 1234567890 7b 1.230000e+00 123");
+    EXPECT_EQ(result, "123 123.456 a hello True world 1234567890 7b 1.230000e+000 123");
 }
 
 TEST(Format, TestLongTypes)
@@ -295,7 +295,7 @@ TEST(Format, TestMultipleDifferentArgsWChar)
     std::wstring result = StandardLibrary::Format(L"{0} {1:f3} {2} {3} {4} {5} {6} {7:x} {8:e} {9} {10} {11} {12} {13} {14}",
         a, b, c, d, e, f, g, h, i, j, k, l, m, n, o);
 
-    EXPECT_EQ(result, L"123 123.456 a hello True world 1234567890 7b 1.230000e+00 123 123 123.46 1234567890 123456789012345 1234567890123456");
+    EXPECT_EQ(result, L"123 123.456 a hello True world 1234567890 7b 1.230000e+000 123 123 123.46 1234567890 123456789012345 1234567890123456");
 }
 
 TEST(Format, TestLongString)

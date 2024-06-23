@@ -405,6 +405,11 @@ namespace FormatLibrary
             return wcscasestr(str, match);
         }
 
+        static const wchar_t* rFind(const wchar_t* str, wchar_t ch)
+        {
+            return wcsrchr(str, ch);
+        }
+
         static const wchar_t* rFind(const wchar_t* str, const wchar_t* subString)
         {
             return wcsrstr(str, subString);

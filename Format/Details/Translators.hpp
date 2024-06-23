@@ -168,11 +168,28 @@ namespace FormatLibrary
             typedef typename Super::StringType                          StringType;
             typedef typename Super::CharTraits                          CharTraits;
 
+#ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_PRCISION
+#define FL_DOUBLE_TRANSLATOR_DEFAULT_PRCISION 2
+#endif
+
+#ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_FIXEDPOINT_PRCISION
+#define FL_DOUBLE_TRANSLATOR_DEFAULT_FIXEDPOINT_PRCISION 2
+#endif
+
+#ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_EXPONENT_PRCISION
+#define FL_DOUBLE_TRANSLATOR_DEFAULT_EXPONENT_PRCISION 6
+#endif
+
+#ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH
+#define FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH 3
+#endif
+
             enum
             {
-                DefaultPrecision = 2,
-                DefaultFixedPointPrecision = 2,
-                DefaultExponentPrecision = 6
+                DefaultPrecision = FL_DOUBLE_TRANSLATOR_DEFAULT_PRCISION,
+                DefaultFixedPointPrecision = FL_DOUBLE_TRANSLATOR_DEFAULT_FIXEDPOINT_PRCISION,
+                DefaultExponentPrecision = FL_DOUBLE_TRANSLATOR_DEFAULT_EXPONENT_PRCISION,
+                DefaultMinExponentLength = FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH
             };
 
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, double arg, SizeType unusedParam = 0)
@@ -205,6 +222,24 @@ namespace FormatLibrary
 
                     CharType TempBuf[64];
                     size_t bufLength = CharTraits::StaticSprintf(TempBuf, _countof(TempBuf), FmtBuf, arg);
+
+                    const CharType* plusPos = CharTraits::rFind(TempBuf, (CharType)('+'));
+                    if(plusPos != nullptr)
+                    {
+                        const CharType* endPos = TempBuf + bufLength;
+                        const int exponentLength = endPos - plusPos;
+                        
+                        if(exponentLength < DefaultMinExponentLength + 1)
+                        {
+                            const int padLength = DefaultMinExponentLength + 1 - exponentLength;
+                            
+                            memmove((void*)(plusPos + padLength + 1), plusPos+1, exponentLength * sizeof(CharType));
+
+                            CharTraits::Fill((CharType*)(plusPos+1), CharTraits::GetZero(), padLength);
+
+                            bufLength += padLength;
+                        }
+                    }
 
                     Super::AppendString(strRef, pattern, TempBuf, bufLength, CharTraits::GetSpace());
 
