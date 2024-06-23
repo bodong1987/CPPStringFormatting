@@ -301,7 +301,9 @@ TEST(Format, TestMultipleDifferentArgsWChar)
 TEST(Format, TestLongString)
 {
     std::string longStr(500, 'a'); 
-    std::string result = StandardLibrary::Format("{0} - NewString", longStr);
-    EXPECT_EQ(result, longStr + " - NewString");
-    EXPECT_GT(result.length(), 265);
+    std::string longStr2(1000, 'b');
+    std::string result = StandardLibrary::Format("{0} - {0} - NewString - {1}", longStr, longStr2);
+
+    EXPECT_EQ(result, longStr + " - " + longStr + " - NewString - " + longStr2);
+    EXPECT_GT(result.length(), 2000);
 }
