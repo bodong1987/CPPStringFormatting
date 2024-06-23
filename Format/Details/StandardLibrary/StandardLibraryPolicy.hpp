@@ -2,6 +2,12 @@
 
 #include <Format/Details/PatternStorage.hpp>
 
+#if FL_COMPILER_WITH_CXX11
+#include <unordered_map>
+#else
+#include <map>
+#endif
+
 namespace FormatLibrary
 {
     namespace Details

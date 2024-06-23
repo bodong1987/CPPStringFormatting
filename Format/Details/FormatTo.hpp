@@ -122,6 +122,10 @@ namespace FormatLibrary
             return sink;
         }
 #else
+#define _FL_FORMAT_TO_INDEX_ 0
+#include <Format/Details/InlineFiles/FormatTo.inl>
+#undef _FL_FORMAT_TO_INDEX_
+
 #define _FL_FORMAT_TO_INDEX_ 1
 #include <Format/Details/InlineFiles/FormatTo.inl>
 #undef _FL_FORMAT_TO_INDEX_

@@ -40,12 +40,14 @@
 template < 
 typename TCharType,     
 typename TPatternStorageType,
-typename TFormatType,
+typename TFormatType
+FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
 FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TEMPLATE_PARAMETERS_, )
 >
 inline TAutoString<TCharType>& FormatTo(
     TAutoString<TCharType>& sink,
-    const TFormatType& format,
+    const TFormatType& format
+    FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
     FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_REAL_AGUMENTS_, )
     )
 {
