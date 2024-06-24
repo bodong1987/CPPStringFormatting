@@ -251,10 +251,6 @@ TEST(Format, TestFloatingPointPrecisionComplex)
     EXPECT_EQ(StandardLibrary::Format("{0:e3}", 123456789.0), "1.235e+008");
     EXPECT_EQ(StandardLibrary::Format("{0:e}", 0.000000123456789), "1.234568e-007");
     EXPECT_EQ(StandardLibrary::Format("{0:e3}", 0.000000123456789), "1.235e-007");
-//     EXPECT_EQ(StandardLibrary::Format("{0:g}", 123456789.0), "1.23457e+008");
-//     EXPECT_EQ(StandardLibrary::Format("{0:g}", 0.000000123456789), "1.23457e-007");
-//     EXPECT_EQ(StandardLibrary::Format("{0:g}", 0.0001), "0.0001");
-//     EXPECT_EQ(StandardLibrary::Format("{0:g}", 0.00001), "1e-005");
 }
 
 TEST(Format, TestEscapeBraces)

@@ -1,3 +1,28 @@
+/*
+    MIT License
+
+    Copyright (c) 2024 CppFormatLibrary
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+    Project URL: https://github.com/bodong1987/CPPFormatLibrary
+*/
 #pragma once
 
 #include <Format/Common/Build.hpp>
@@ -168,6 +193,7 @@ namespace FormatLibrary
             typedef typename Super::StringType                          StringType;
             typedef typename Super::CharTraits                          CharTraits;
 
+        private:
 #ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_PRCISION
 #define FL_DOUBLE_TRANSLATOR_DEFAULT_PRCISION 2
 #endif
@@ -192,7 +218,7 @@ namespace FormatLibrary
                 DefaultMinExponentLength = FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH
             };
 
-            static bool Transfer(StringType& strRef, const FormatPattern& pattern, double arg, SizeType unusedParam = 0)
+            static bool TransferCore(StringType& strRef, const FormatPattern& pattern, FormatFlagType usedFlag, double arg, SizeType unusedParam = 0)
             {
                 FL_UNREFERENCED_PARAMETER(unusedParam);
 
@@ -225,18 +251,18 @@ namespace FormatLibrary
                     size_t bufLength = CharTraits::StaticSprintf(TempBuf, _countof(TempBuf), FmtBuf, arg);
 
                     const CharType* plusPos = CharTraits::rFind(TempBuf, eFlagChar);
-                    if(plusPos != nullptr)
+                    if (plusPos != nullptr)
                     {
                         const CharType* endPos = TempBuf + bufLength;
                         const int exponentLength = endPos - plusPos;
-                        
-                        if(exponentLength < DefaultMinExponentLength)
+
+                        if (exponentLength < DefaultMinExponentLength)
                         {
                             const int padLength = DefaultMinExponentLength - exponentLength;
-                            
+
                             memmove((void*)(plusPos + padLength + 2), plusPos + 2, exponentLength * sizeof(CharType));
 
-                            CharTraits::Fill((CharType*)(plusPos+2), CharTraits::GetZero(), padLength);
+                            CharTraits::Fill((CharType*)(plusPos + 2), CharTraits::GetZero(), padLength);
 
                             bufLength += padLength;
                         }
@@ -252,6 +278,12 @@ namespace FormatLibrary
                 }
 
                 return false;
+            }
+
+        public:
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, double arg, SizeType unusedParam = 0)
+            {
+                return TransferCore(strRef, pattern, pattern.Flag, arg, unusedParam);
             }
         };
 
