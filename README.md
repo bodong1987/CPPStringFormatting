@@ -119,12 +119,12 @@ You can refer to the source code of `UnitTests/Sources/MFCAdapter.hpp`, which sh
 With these simple adapters, you can apply this string formatting library to your own types.  
 
 ## 如何扩展？ How to extends?
-CppFormatLibrary本身是类型安全的系统，如果你尝试将不支持的类型提交给格式化函数，那么你将会在编译阶段得到一个编译错误。要解决这个错误，你有两种办法：
+CPPFormatLibrary本身是类型安全的系统，如果你尝试将不支持的类型提交给格式化函数，那么你将会在编译阶段得到一个编译错误。要解决这个错误，你有两种办法：
 * 第一，将参数转换成受支持的类型。
 * 第二，提供一个针对该类型的自定义Translator，这样框架将能自动帮你完成转换操作。
 你可以在`UnitTests/Sources/UnityTests_Extends.cpp`中找到扩展的方法和举例。   
 
-CppFormatLibrary itself is a type-safe system, if you try to submit an unsupported type to the formatting function, then you will get a compilation error during the compilation phase. To resolve this error, you have two options:
+CPPFormatLibrary itself is a type-safe system, if you try to submit an unsupported type to the formatting function, then you will get a compilation error during the compilation phase. To resolve this error, you have two options:
 * First, convert the parameters to a supported type.
 * Second, provide a custom Translator for this type, so that the framework will automatically complete the conversion operation for you.
 You can find extension methods and examples in `UnitTests/Sources/UnityTests_Extends.cpp`.  
@@ -187,9 +187,9 @@ namespace Formatting
 ```
 
 ## 差异 Difference
-虽然CppFormatLibrary支持了大部分常见的格式化需求，但并也有许多C#格式化的功能尚不支持。具体C#支持的格式化规范请参考这里:  https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings  
+虽然CPPFormatLibrary支持了大部分常见的格式化需求，但并也有许多C#格式化的功能尚不支持。具体C#支持的格式化规范请参考这里:  https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings  
 
-Although CppFormatLibrary supports most common formatting needs, there are also many C# formatting functions that are not yet supported. For specific formatting specifications supported by C#, please refer here:  
+Although CPPFormatLibrary supports most common formatting needs, there are also many C# formatting functions that are not yet supported. For specific formatting specifications supported by C#, please refer here:  
 https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings  
 
 
@@ -208,9 +208,9 @@ https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-fo
 | Percision  | &#x2714;            
 | Width      | &#x2714;          
 
-遇到不支持的格式标志符时C#会抛出异常，CppFormatLibrary会直接输出格式符字符串，一些情况会触发assert或忽略。因此当你遇到与预期不一致的问题时，请检查格式标志符是否正确，或者是否使用了不被支持的标志符。  
+遇到不支持的格式标志符时C#会抛出异常，CPPFormatLibrary会直接输出格式符字符串，一些情况会触发assert或忽略。因此当你遇到与预期不一致的问题时，请检查格式标志符是否正确，或者是否使用了不被支持的标志符。  
 
-C# will throw an exception when encountering an unsupported format identifier, and CppFormatLibrary will directly output the format character string. In some cases, assert or ignore will be triggered. So when you encounter problems that are inconsistent with expectations, please check whether the format identifier is correct, or whether an unsupported identifier is used.  
+C# will throw an exception when encountering an unsupported format identifier, and CPPFormatLibrary will directly output the format character string. In some cases, assert or ignore will be triggered. So when you encounter problems that are inconsistent with expectations, please check whether the format identifier is correct, or whether an unsupported identifier is used.  
 
 ## 提交错误报告 Bugreport
 直接通过[Issues](https://github.com/bodong1987/CPPFormatLibrary/issues)页面提交即可  
