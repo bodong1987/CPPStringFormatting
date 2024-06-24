@@ -35,6 +35,11 @@ namespace Formatting
 {
     namespace Details
     {
+        /// <summary>
+        /// String reverse.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
         template < typename TCharType >
         inline void StringReverse(TCharType* start, TCharType* end)
         {
@@ -48,6 +53,14 @@ namespace Formatting
             }
         }
 
+        /// <summary>
+        /// Int64 to string.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="base">The base.</param>
+        /// <param name="upper">The upper.</param>
+        /// <returns>size_t.</returns>
         template < typename TCharType >
         inline size_t Int64ToString(int64_t value, TCharType* buffer, int32_t base, bool upper)
         {
@@ -90,6 +103,14 @@ namespace Formatting
             return Str - buffer;
         }
 
+        /// <summary>
+        /// uint64 to string.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="base">The base.</param>
+        /// <param name="upper">The upper.</param>
+        /// <returns>size_t.</returns>
         template < typename TCharType >
         inline size_t UInt64ToString(uint64_t value, TCharType* buffer, int32_t base, bool upper)
         {
@@ -125,6 +146,14 @@ namespace Formatting
             return Str - buffer;
         }
 
+        /// <summary>
+        /// Doubles to string.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="precision">The precision.</param>
+        /// <returns>size_t.</returns>
         template < typename TCharType >
         inline size_t DoubleToString(double value, TCharType* buffer, size_t size, int32_t precision)
         {

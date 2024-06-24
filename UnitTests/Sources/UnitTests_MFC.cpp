@@ -11,7 +11,7 @@
 
 #include "MFCAdapter.hpp"
 
-#if FL_PLATFORM_WINDOWS
+#if FL_PLATFORM_WINDOWS && FL_COMPILER_MSVC
 
 using namespace Formatting;
 

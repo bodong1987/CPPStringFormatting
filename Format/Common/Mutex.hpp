@@ -44,6 +44,11 @@ namespace Formatting
 {
     namespace Details
     {
+        /// <summary>
+        /// Class Mutex.
+        /// Implements the <see cref="Noncopyable" />
+        /// </summary>
+        /// <seealso cref="Noncopyable" />
         class Mutex : Noncopyable
         {
         public:
@@ -102,6 +107,12 @@ namespace Formatting
 #endif
         };
 
+        /// <summary>
+        /// Class MutexNone.
+        /// no operation mutex
+        /// Implements the <see cref="Noncopyable" />
+        /// </summary>
+        /// <seealso cref="Noncopyable" />
         class MutexNone : Noncopyable
         {
         public:

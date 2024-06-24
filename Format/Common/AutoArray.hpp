@@ -31,6 +31,10 @@
 
 namespace Formatting
 {
+    /// <summary>
+    /// Class TAutoArray.
+    /// a dynamic array can be place on stack memory if the count is less than DefaultLength
+    /// </summary>
     template <
         typename T,
         int32_t DefaultLength = 0xFF,

@@ -105,6 +105,14 @@ namespace Formatting
             }
         }
 
+        /// <summary>
+        /// Formats to.
+        /// format params to buffer 
+        /// </summary>
+        /// <param name="sink">The sink.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="...args">The ...args.</param>
+        /// <returns>TAutoString&lt;TCharType&amp;.</returns>
         template <typename TCharType, typename TPatternStorageType, typename TFormatType, typename... T>
         inline TAutoString<TCharType>& FormatTo(TAutoString<TCharType>& sink, const TFormatType& format, const T&... args)
         {
@@ -116,6 +124,7 @@ namespace Formatting
 
             assert(Storage);
 
+            // find patterns first
             const PatternListType* Patterns = Storage->LookupPatterns(Shims::PtrOf(format), Shims::LengthOf(format));
 
             assert(Patterns);

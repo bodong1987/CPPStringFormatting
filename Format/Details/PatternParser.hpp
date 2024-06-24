@@ -57,22 +57,28 @@ namespace Formatting
                 enum Enum
 #endif
                 {
-                    EPS_Literal    = 1 << 0,                
-                    EPS_OpenCurly  = 1 << 1,                
-                    EPS_CloseCurly = 1 << 2,
-                    EPS_Parameter  = 1 << 3,                
-                    EPS_Width      = 1 << 4,                
-                    EPS_Precision  = 1 << 5
+                    Literal    = 1 << 0,                
+                    OpenCurly  = 1 << 1,                
+                    CloseCurly = 1 << 2,
+                    Parameter  = 1 << 3,                
+                    Width      = 1 << 4,                
+                    Precision  = 1 << 5
                 };
 
 #if FL_COMPILER_WITH_CXX11
-            typedef EParseState ParseStateType;
+            typedef EParseState                 ParseStateType;
 #else
             };
 
-            typedef typename EParseState::Enum ParseStateType;
+            typedef typename EParseState::Enum  ParseStateType;
 #endif
 
+            /// <summary>
+            /// Casts to small number.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <returns>int32_t.</returns>
             static int32_t CastToSmallNumber(const CharType* const start, const CharType* const end)
             {
                 assert(start && end && start < end && "invalid parameters!");
@@ -99,6 +105,13 @@ namespace Formatting
                 return Value;
             }
 
+            /// <summary>
+            /// Finds the next number.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <param name="endPoint">The end point.</param>
+            /// <returns>int32_t.</returns>
             static int32_t FindNextNumber(const CharType* const start, const CharType* const end, const CharType*& endPoint)
             {
                 const CharType* TestPtr = start;
@@ -120,6 +133,13 @@ namespace Formatting
                 return val;
             }
 
+            /// <summary>
+            /// Parses the align mode.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <param name="pattern">The pattern.</param>
+            /// <returns>bool.</returns>
             static bool ParseAlignMode(const CharType* const start, const CharType* const end, FormatPattern& pattern)
             {
                 assert(start && end && start < end && "invalid parameters!");
@@ -166,6 +186,13 @@ namespace Formatting
                 return true;
             }
 
+            /// <summary>
+            /// Parses the format mode.
+            /// </summary>
+            /// <param name="start">The start.</param>
+            /// <param name="end">The end.</param>
+            /// <param name="pattern">The pattern.</param>
+            /// <returns>bool.</returns>
             static bool ParseFormatMode(const CharType* const start, const CharType* const end, FormatPattern& pattern)
             {
                 assert(start && end && start < end && "invalid parameters!");
@@ -322,11 +349,11 @@ namespace Formatting
                 switch (*p1)
                 {
                 case '{':
-                    state = EParseState::EPS_OpenCurly;
+                    state = EParseState::OpenCurly;
                     break;
 
                 case '}':
-                    state = EParseState::EPS_CloseCurly;
+                    state = EParseState::CloseCurly;
                     break;
 
                 default:
@@ -391,11 +418,11 @@ namespace Formatting
 
                     p0 = p1 + 1;
 
-                    state = EParseState::EPS_Literal;
+                    state = EParseState::Literal;
                     break;
                 }
                 default:
-                    state = EParseState::EPS_Parameter;
+                    state = EParseState::Parameter;
                     break;
                 }
             }
@@ -442,7 +469,7 @@ namespace Formatting
 
                     p0 = p1 + 1;
 
-                    state = EParseState::EPS_Literal;
+                    state = EParseState::Literal;
                 }
 
                 switch (*p1)
@@ -459,7 +486,7 @@ namespace Formatting
 
                     p0 = p1 + 1;
 
-                    state = EParseState::EPS_Literal;
+                    state = EParseState::Literal;
                     break;
                 }
                 default:
@@ -502,7 +529,7 @@ namespace Formatting
                     break;
                 case    '}':
                 {
-                    state = EParseState::EPS_Literal;
+                    state = EParseState::Literal;
 
                     FormatPattern pattern;
 
@@ -547,22 +574,22 @@ namespace Formatting
                 const CharType* p1 = p0;
                 const CharType* const start = p0;
                 const CharType* const end = fomatStart + length;
-                ParseStateType     state = EParseState::EPS_Literal;
+                ParseStateType     state = EParseState::Literal;
 
                 for (; p1 < end; ++p1)
                 {
                     switch (state)
                     {
-                    case EParseState::EPS_Literal:
+                    case EParseState::Literal:
                         OnLiteral(p0, p1, start, end, state, patterns);
                         break;
-                    case EParseState::EPS_OpenCurly:
+                    case EParseState::OpenCurly:
                         OnOpenCurly(p0, p1, start, end, state, patterns);
                         break;
-                    case EParseState::EPS_CloseCurly:
+                    case EParseState::CloseCurly:
                         OnCloseCurly(p0, p1, start, end, state, patterns);
                         break;
-                    case EParseState::EPS_Parameter:
+                    case EParseState::Parameter:
                         OnParameter(p0, p1, start, end, state, patterns);
                         break;
                     default:

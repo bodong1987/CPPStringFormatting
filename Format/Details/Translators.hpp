@@ -52,6 +52,10 @@ namespace Formatting
             };
         };
 
+        /// <summary>
+        /// Class TTranslatorBase.
+        /// provide base interfaces
+        /// </summary>
         template < typename TCharType, typename T >
         class TTranslatorBase
         {
@@ -75,6 +79,10 @@ namespace Formatting
             }
         };
 
+        /// <summary>
+        /// Class TRawTranslator.
+        /// raw translator, transfer raw string to buffer
+        /// </summary>
         template < typename TCharType >
         class TRawTranslator
         {
@@ -101,6 +109,12 @@ namespace Formatting
             }
         };
 
+        /// <summary>
+        /// Class TTranslator.
+        /// invalid translator place holder
+        /// Implements the <see cref="TTranslatorBase{TCharType, T}" />
+        /// </summary>
+        /// <seealso cref="TTranslatorBase{TCharType, T}" />
         template < typename TCharType, typename T >
         class TTranslator : public TTranslatorBase< TCharType, T >
         {

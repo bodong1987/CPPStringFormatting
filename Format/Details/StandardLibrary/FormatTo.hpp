@@ -52,6 +52,7 @@ namespace Formatting
 
     namespace StandardLibrary
     {
+        // format with no params
         template <typename TCharType>
         inline std::basic_string<TCharType> Format(const TCharType* format)
         {

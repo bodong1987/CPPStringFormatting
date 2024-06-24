@@ -39,6 +39,10 @@ namespace Formatting
     {
         namespace StandardLibrary
         {
+            /// <summary>
+            /// Class TDefaultStringHasher.
+            /// stl default string hasher
+            /// </summary>
             template < typename TCharType >
             class TDefaultStringHasher
             {
@@ -86,6 +90,10 @@ namespace Formatting
                 }
             };
 
+            /// <summary>
+            /// Class TStandardPolicy.
+            /// stl default policy
+            /// </summary>
             template <typename TCharType, typename TMutexType>
             class TStandardPolicy
             {

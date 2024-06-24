@@ -29,6 +29,9 @@
 
 namespace Formatting
 {
+    /// <summary>
+    /// Class Noncopyable.
+    /// </summary>
     class Noncopyable
     {
     public:

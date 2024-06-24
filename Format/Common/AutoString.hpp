@@ -31,6 +31,12 @@
 
 namespace Formatting
 {
+    /// <summary>
+    /// Class TAutoString.
+    /// stack string
+    /// Implements the <see cref="TAutoArray{TCharType, 0xFF, 2}" />
+    /// </summary>
+    /// <seealso cref="TAutoArray{TCharType, 0xFF, 2}" />
     template < typename TCharType >
     class TAutoString :
         public TAutoArray< TCharType, 0xFF, 2 >

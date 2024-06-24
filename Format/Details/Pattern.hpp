@@ -89,7 +89,10 @@ namespace Formatting
             typedef unsigned char                                ByteType;
             typedef size_t                                       SizeType;
                                                 
-			TFormatPattern() :
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TFormatPattern"/> class.
+            /// </summary>
+            TFormatPattern() :
 				Start((SizeType)-1),
 				Len(0),
 				Flag(EFormatFlag::Raw),
@@ -101,21 +104,37 @@ namespace Formatting
             {
             }
                         
+            /// <summary>
+            /// Gets the length.
+            /// </summary>
+            /// <returns>SizeType.</returns>
             SizeType  GetLength() const
             {
                 return Len;
             }
                         
+            /// <summary>
+            /// Returns true if ... is valid.
+            /// </summary>
+            /// <returns>bool.</returns>
             bool    IsValid() const
             {
                 return Start != -1 && Len != -1 && Index >= 0;
             }
                         
+            /// <summary>
+            /// Determines whether this instance has width.
+            /// </summary>
+            /// <returns>bool.</returns>
             bool    HasWidth() const
             {
                 return Width != (ByteType)-1;
             }
                         
+            /// <summary>
+            /// Determines whether this instance has precision.
+            /// </summary>
+            /// <returns>bool.</returns>
             bool    HasPrecision() const
             {
                 return Precision != (ByteType)-1;
