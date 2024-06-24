@@ -39,7 +39,7 @@ private:
 };
 
 /*
-if you disable this translator 
+if you disable this translator
 you will get a compile error of Transfer can't access :
 vs2022:
 \CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280: ¡°bool Formatting::Details::TTranslator<TCharType,Formatting::Details::Utils::DoTransferHelper<TCharType,TPatternType,T0>::DoTransfer::TransferType>::Transfer(Formatting::TAutoString<TCharType> &,const Formatting::Details::TFormatPattern<TCharType> &,const T &)¡±: Try to reference a deleted function
@@ -50,7 +50,7 @@ vs2022:
 \CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:             T0=Vector3,
 \CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:             T=Formatting::Details::Utils::DoTransferHelper<wchar_t,Formatting::Details::FormatTo::FormatPatternType,Vector3>::DoTransfer::TransferType
 \CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:         ]
- 
+
 xcode:
  Showing All Messages
  /Users/bodong/Desktop/CPPFormatLibrary/UnitTests/Sources/UnitTests_Extends.cpp:12:10: in file included from /Users/bodong/Desktop/CPPFormatLibrary/UnitTests/Sources/UnitTests_Extends.cpp:12:
@@ -60,9 +60,27 @@ xcode:
  /Users/bodong/Desktop/CPPFormatLibrary/Format/Details/StandardLibrary/FormatTo.hpp:88:22: In instantiation of function template specialization 'Formatting::Details::FormatTo<char, Formatting::Details::TGlobalPatternStorage<Formatting::Details::StandardLibrary::TStandardPolicy<char, Formatting::Details::MutexNone>>, const char *, Vector3>' requested here
  /Users/bodong/Desktop/CPPFormatLibrary/UnitTests/Sources/UnitTests_Extends.cpp:118:32: In instantiation of function template specialization 'Formatting::StandardLibrary::Format<char, Vector3>' requested here
  /Users/bodong/Desktop/CPPFormatLibrary/Format/Details/Translators.hpp:138:25: 'Transfer' has been explicitly marked deleted here
-*/
-#if 1
 
+ gcc:
+ In file included from I:/CPPFormatLibrary/Format/Format.hpp:39,
+                 from I:\CPPFormatLibrary\UnitTests\Sources\UnitTests_Extends.cpp:12:
+I:/CPPFormatLibrary/Format/Details/FormatTo.hpp: In instantiation of 'static bool Formatting::Details::Utils::DoTransferHelper<TCharType, TPatternType, T0>::DoTransfer(int32_t, int32_t&, Formatting::TAutoString<TCharType>&, const TPatternType&, const TCharType*, const T0&) [with TCharType = char; TPatternType = Formatting::Details::TFormatPattern<char>; T0 = Vector3; int32_t = int]':
+I:/CPPFormatLibrary/Format/Details/FormatTo.hpp:98:87:   required from 'bool Formatting::Details::Utils::DoTransfer(int32_t, int32_t&, Formatting::TAutoString<TCharType>&, const TPatternType&, const TCharType*, const T0&, const T& ...) [with TCharType = char; TPatternType = Formatting::Details::TFormatPattern<char>; T0 = Vector3; T = {}; int32_t = int]'
+I:/CPPFormatLibrary/Format/Details/FormatTo.hpp:154:79:   required from 'Formatting::TAutoString<TCharType>& Formatting::Details::FormatTo(Formatting::TAutoString<TCharType>&, const TFormatType&, const T& ...) [with TCharType = char; TPatternStorageType = Formatting::Details::TGlobalPatternStorage<Formatting::Details::StandardLibrary::TStandardPolicy<char, Formatting::Details::Mutex> >; TFormatType = const char*; T = {Vector3}]'
+I:/CPPFormatLibrary/Format/Details/StandardLibrary/FormatTo.hpp:88:95:   required from 'std::__cxx11::basic_string<_CharT> Formatting::StandardLibrary::Format(const TCharType*, const T0&, T ...) [with TCharType = char; T0 = Vector3; T = {}]'
+I:\CPPFormatLibrary\UnitTests\Sources\UnitTests_Extends.cpp:124:5:   required from here
+I:/CPPFormatLibrary/Format/Details/FormatTo.hpp:83:76: error: use of deleted function 'static bool Formatting::Details::TTranslator<TCharType, T>::Transfer(typename Formatting::Details::TTranslator<TCharType, T>::Super::StringType&, const typename Formatting::Details::TTranslator<TCharType, T>::Super::FormatPattern&, const T&) [with TCharType = char; T = Vector3; typename Formatting::Details::TTranslator<TCharType, T>::Super::StringType = Formatting::TAutoString<char>; typename Formatting::Details::TTranslator<TCharType, T>::Super::FormatPattern = Formatting::Details::TFormatPattern<char>]'
+                         if (!TTranslator<TCharType, TransferType>::Transfer(sink, pattern, arg0))
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+In file included from I:/CPPFormatLibrary/Format/Details/FormatTo.hpp:28,
+                 from I:/CPPFormatLibrary/Format/Format.hpp:39,
+                 from I:\CPPFormatLibrary\UnitTests\Sources\UnitTests_Extends.cpp:12:
+I:/CPPFormatLibrary/Format/Details/Translators.hpp:138:25: note: declared here
+             static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg) = delete;
+                         ^~~~~~~~
+
+*/
+#if 0
 // The following class provides automatic conversion capabilities for Vector3, so that Vector3 type parameters can be formatted directly.
 namespace Formatting
 {
