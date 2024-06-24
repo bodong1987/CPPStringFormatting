@@ -73,13 +73,13 @@ namespace Formatting
 
                 if (Length <= DEFAULT_LENGTH)
                 {
-                    CharTraits::copy(str, str + Length, StackVal);
+                    CharTraits::copy(StackVal, str, Length);
                     StackVal[Count] = 0;
                 }
                 else
                 {
                     HeapValPtr = Allocate(Length);
-                    CharTraits::copy(str, str + Length, HeapValPtr);
+                    CharTraits::copy(HeapValPtr, str, Length);
                     HeapValPtr[Count] = 0;
                 }
             }
