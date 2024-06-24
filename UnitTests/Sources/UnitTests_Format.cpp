@@ -72,7 +72,7 @@ TEST(Format, STL_Char_FormatTo)
 }
 
 TEST(Format, STL_WChar_Format)
-{   
+{
     const std::wstring r7 = StandardLibrary::Format(L"Test{1}, {2:f4}, {0}, {0,4}", L" X ", 20, -10.005f);
     EXPECT_EQ(r7, L"Test20, -10.0050,  X ,   X ");
 
@@ -104,53 +104,53 @@ TEST(Format, STL_WChar_FormatTo)
     EXPECT_EQ(v, L"\u4F60\u597D : \u4E2D\u6587");
 }
 
-TEST(Format, TestSingleArg) 
+TEST(Format, TestSingleArg)
 {
     EXPECT_EQ(StandardLibrary::Format("{0}", 123), "123");
 }
 
-TEST(Format, TestMultipleArgs) 
+TEST(Format, TestMultipleArgs)
 {
     EXPECT_EQ(StandardLibrary::Format("{0} {1}", 123, "hello"), "123 hello");
 }
 
-TEST(Format, TestReorderedArgs) 
+TEST(Format, TestReorderedArgs)
 {
     EXPECT_EQ(StandardLibrary::Format("{1} {0}", 123, "hello"), "hello 123");
 }
 
-TEST(Format, TestRepeatedArgs) 
+TEST(Format, TestRepeatedArgs)
 {
     EXPECT_EQ(StandardLibrary::Format("{0} {0}", 123), "123 123");
 }
 
-TEST(Format, TestString) 
+TEST(Format, TestString)
 {
     EXPECT_EQ(StandardLibrary::Format("{0}", "hello"), "hello");
 }
 
-TEST(Format, TestChar) 
+TEST(Format, TestChar)
 {
     EXPECT_EQ(StandardLibrary::Format("{0}", 'a'), "a");
 }
 
-TEST(Format, TestBool) 
+TEST(Format, TestBool)
 {
     EXPECT_EQ(StandardLibrary::Format("{0}", true), "True");
     EXPECT_EQ(StandardLibrary::Format("{0}", false), "False");
 }
 
-TEST(Format, TestEmptyFormat) 
+TEST(Format, TestEmptyFormat)
 {
     EXPECT_EQ(StandardLibrary::Format("", 123), "");
 }
 
-TEST(Format, TestNoArgs) 
+TEST(Format, TestNoArgs)
 {
     EXPECT_EQ(StandardLibrary::Format("hello"), "hello");
 }
 
-TEST(Format, TestMultipleFormats) 
+TEST(Format, TestMultipleFormats)
 {
     EXPECT_EQ(StandardLibrary::Format("{0} {1} {2}", 123, "hello", 1.23), "123 hello 1.23");
 }
@@ -343,7 +343,7 @@ TEST(Format, TestMultipleDifferentArgsWChar)
 
 TEST(Format, TestLongString)
 {
-    std::string longStr(500, 'a'); 
+    std::string longStr(500, 'a');
     std::string longStr2(1000, 'b');
     std::string result = StandardLibrary::Format("{0} - {0} - NewString - {1}", longStr, longStr2);
 
@@ -382,19 +382,19 @@ TEST(Format, TestBinaryStringNotation)
 
     EXPECT_EQ(StandardLibrary::Format("{0:B}", int64_t(9223372036854775807)), "111111111111111111111111111111111111111111111111111111111111111");
     EXPECT_EQ(StandardLibrary::Format("{0:b}", int64_t(9223372036854775807)), "111111111111111111111111111111111111111111111111111111111111111");
-    EXPECT_EQ(StandardLibrary::Format("{0:B}", uint64_t(18446744073709551615)), "1111111111111111111111111111111111111111111111111111111111111111");
-    EXPECT_EQ(StandardLibrary::Format("{0:b}", uint64_t(18446744073709551615)), "1111111111111111111111111111111111111111111111111111111111111111");
+    EXPECT_EQ(StandardLibrary::Format("{0:B}", uint64_t(18446744073709551615ull)), "1111111111111111111111111111111111111111111111111111111111111111");
+    EXPECT_EQ(StandardLibrary::Format("{0:b}", uint64_t(18446744073709551615ull)), "1111111111111111111111111111111111111111111111111111111111111111");
     EXPECT_EQ(StandardLibrary::Format("{0:B}", int64_t(1234567890123456789)), "1000100100010000100001111010001111101111010011000000100010101");
     EXPECT_EQ(StandardLibrary::Format("{0:b}", int64_t(1234567890123456789)), "1000100100010000100001111010001111101111010011000000100010101");
-    EXPECT_EQ(StandardLibrary::Format("{0:B}", uint64_t(9876543210987654321)), "1000100100010000100001111011100011100011101101110000110010110001");
-    EXPECT_EQ(StandardLibrary::Format("{0:b}", uint64_t(9876543210987654321)), "1000100100010000100001111011100011100011101101110000110010110001");
+    EXPECT_EQ(StandardLibrary::Format("{0:B}", uint64_t(9876543210987654321ull)), "1000100100010000100001111011100011100011101101110000110010110001");
+    EXPECT_EQ(StandardLibrary::Format("{0:b}", uint64_t(9876543210987654321ull)), "1000100100010000100001111011100011100011101101110000110010110001");
 
     EXPECT_EQ(StandardLibrary::Format(L"{0:B}", int64_t(9223372036854775807)), L"111111111111111111111111111111111111111111111111111111111111111");
     EXPECT_EQ(StandardLibrary::Format(L"{0:b}", int64_t(9223372036854775807)), L"111111111111111111111111111111111111111111111111111111111111111");
-    EXPECT_EQ(StandardLibrary::Format(L"{0:B}", uint64_t(18446744073709551615)), L"1111111111111111111111111111111111111111111111111111111111111111");
-    EXPECT_EQ(StandardLibrary::Format(L"{0:b}", uint64_t(18446744073709551615)), L"1111111111111111111111111111111111111111111111111111111111111111");
+    EXPECT_EQ(StandardLibrary::Format(L"{0:B}", uint64_t(18446744073709551615ull)), L"1111111111111111111111111111111111111111111111111111111111111111");
+    EXPECT_EQ(StandardLibrary::Format(L"{0:b}", uint64_t(18446744073709551615ull)), L"1111111111111111111111111111111111111111111111111111111111111111");
     EXPECT_EQ(StandardLibrary::Format(L"{0:B}", int64_t(1234567890123456789)), L"1000100100010000100001111010001111101111010011000000100010101");
     EXPECT_EQ(StandardLibrary::Format(L"{0:b}", int64_t(1234567890123456789)), L"1000100100010000100001111010001111101111010011000000100010101");
-    EXPECT_EQ(StandardLibrary::Format(L"{0:B}", uint64_t(9876543210987654321)), L"1000100100010000100001111011100011100011101101110000110010110001");
-    EXPECT_EQ(StandardLibrary::Format(L"{0:b}", uint64_t(9876543210987654321)), L"1000100100010000100001111011100011100011101101110000110010110001");
+    EXPECT_EQ(StandardLibrary::Format(L"{0:B}", uint64_t(9876543210987654321ull)), L"1000100100010000100001111011100011100011101101110000110010110001");
+    EXPECT_EQ(StandardLibrary::Format(L"{0:b}", uint64_t(9876543210987654321ull)), L"1000100100010000100001111011100011100011101101110000110010110001");
 }
