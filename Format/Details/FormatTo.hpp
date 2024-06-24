@@ -38,7 +38,7 @@ namespace Formatting
             template <typename TCharType, typename TPatternType, typename T0, typename... T>
             struct DoTransferHelper
             {
-                static bool DoTransfer(int32_t targetIndex, int32_t& currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format, const T0& arg0, const T&... args)
+                static bool DoTransfer(int32_t targetIndex, int32_t currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format, const T0& arg0, const T&... args)
                 {
                     if (targetIndex == currentIndex)
                     {
@@ -56,14 +56,14 @@ namespace Formatting
                         return true;
                     }
 
-                    return DoTransferHelper<TCharType, TPatternType, T...>::DoTransfer(targetIndex, ++currentIndex, sink, pattern, format, args...);
+                    return DoTransferHelper<TCharType, TPatternType, T...>::DoTransfer(targetIndex, currentIndex + 1, sink, pattern, format, args...);
                 }
             };
 
             template <typename TCharType, typename TPatternType, typename T0>
             struct DoTransferHelper<TCharType, TPatternType, T0>
             {
-                static bool DoTransfer(int32_t targetIndex, int32_t& currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format, const T0& arg0)
+                static bool DoTransfer(int32_t targetIndex, int32_t currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format, const T0& arg0)
                 {
                     if (targetIndex == currentIndex)
                     {
@@ -93,13 +93,13 @@ namespace Formatting
             };
 
             template <typename TCharType, typename TPatternType, typename T0, typename... T>
-            inline bool DoTransfer(int32_t targetIndex, int32_t& currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format, const T0& arg0, const T&... args)
+            inline bool DoTransfer(int32_t targetIndex, int32_t currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format, const T0& arg0, const T&... args)
             {
                 return DoTransferHelper<TCharType, TPatternType, T0, T...>::DoTransfer(targetIndex, currentIndex, sink, pattern, format, arg0, args...);
             }
 
             template <typename TCharType, typename TPatternType>
-            inline bool DoTransfer(int32_t targetIndex, int32_t& currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format)
+            inline bool DoTransfer(int32_t targetIndex, int32_t currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format)
             {
                 return TRawTranslator<TCharType>::Transfer(sink, pattern, format);
             }
@@ -111,7 +111,7 @@ namespace Formatting
         /// </summary>
         /// <param name="sink">The sink.</param>
         /// <param name="format">The format.</param>
-        /// <param name="...args">The ...args.</param>
+        /// <param name="args">The arguments.</param>
         /// <returns>TAutoString&lt;TCharType&amp;.</returns>
         template <typename TCharType, typename TPatternStorageType, typename TFormatType, typename... T>
         inline TAutoString<TCharType>& FormatTo(TAutoString<TCharType>& sink, const TFormatType& format, const T&... args)
@@ -150,8 +150,7 @@ namespace Formatting
                 }
                 else
                 {
-                    int temp = 0;
-                    if (!Utils::DoTransfer<TCharType, FormatPatternType, T...>(Pattern.Index, temp, sink, Pattern, Shims::PtrOf(format), args...))
+                    if (!Utils::DoTransfer<TCharType, FormatPatternType, T...>(Pattern.Index, 0, sink, Pattern, Shims::PtrOf(format), args...))
                     {
                         TRawTranslator<TCharType>::Transfer(sink, Pattern, Shims::PtrOf(format));
                     }                    
