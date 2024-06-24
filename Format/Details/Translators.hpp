@@ -402,7 +402,7 @@ namespace Formatting
                 }
                 else if (pattern.Flag == EFormatFlag::Binary)
                 {
-                    constexpr int length = sizeof(TRealType) * 8;
+                    constexpr const int length = sizeof(TRealType) * 8;
                     CharType TempBuf[length + 1];
 
                     int usedLength = IntegerToBinaryString<TCharType, TRealType>(static_cast<TRealType>(arg), TempBuf);
@@ -507,7 +507,7 @@ namespace Formatting
                 }
                 else if (pattern.Flag == EFormatFlag::Binary)
                 {
-                    constexpr int length = sizeof(TRealType) * 8;
+                    constexpr const int length = sizeof(TRealType) * 8;
                     CharType TempBuf[length + 1];
 
                     int usedLength = IntegerToBinaryString<TCharType, TRealType>(static_cast<TRealType>(arg), TempBuf);
