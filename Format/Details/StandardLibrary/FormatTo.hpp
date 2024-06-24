@@ -29,7 +29,7 @@
 #include <Format/Details/FormatTo.hpp>
 #include <Format/Details/StandardLibrary/StandardLibraryPolicy.hpp>
 
-namespace FormatLibrary
+namespace Formatting
 {
     namespace Details
     {

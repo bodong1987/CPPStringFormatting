@@ -12,7 +12,7 @@
 #include <Format/Format.hpp>
 #include <Format/StandardLibraryAdapter.hpp>
 
-using namespace FormatLibrary;
+using namespace Formatting;
 
 TEST(Format, STL_Char_Format)
 {

@@ -40,7 +40,7 @@
 #include <sys/syscall.h>
 #endif
 
-namespace FormatLibrary
+namespace Formatting
 {
     namespace Details
     {

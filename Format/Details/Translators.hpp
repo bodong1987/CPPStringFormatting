@@ -30,7 +30,7 @@
 #include <Format/Details/Pattern.hpp>
 #include <Format/Common/AutoString.hpp>
 
-namespace FormatLibrary
+namespace Formatting
 {
     namespace Details
     {        
@@ -64,12 +64,12 @@ namespace FormatLibrary
             typedef TCharTraits<CharType>                               CharTraits;          
             
         protected:
-            static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, CharType fillChar)
+            static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, CharType fillChar = CharTraits::GetSpace())
             {
                 strRef.AddAlignStr(start, start + length, pattern.HasWidth()? pattern.Width : (int)length, pattern.Align != EAlignFlag::Left, fillChar);
             }
 
-            static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, const int alignSize, bool paddingLeft, CharType fillChar)
+            static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, const int alignSize, bool paddingLeft, CharType fillChar = CharTraits::GetSpace())
             {
                 strRef.AddAlignStr(start, start + length, alignSize, paddingLeft, fillChar);
             }
@@ -150,7 +150,7 @@ namespace FormatLibrary
                 const TCharType* Selection = arg ? TrueStr : FalseStr;
                 const SizeType length = arg ? _countof(TrueStr) : _countof(FalseStr);
 
-                Super::AppendString(strRef, pattern, Selection, length, CharTraits::GetSpace());
+                Super::AppendString(strRef, pattern, Selection, length);
 
                 return true;
             }
@@ -174,7 +174,7 @@ namespace FormatLibrary
             {
                 TCharType Buffer[2] = {arg, (TCharType)0};
 
-                Super::AppendString(strRef, pattern, Buffer, 1, CharTraits::GetSpace());
+                Super::AppendString(strRef, pattern, Buffer, 1);
 
                 return true;
             }
@@ -236,7 +236,7 @@ namespace FormatLibrary
                         pattern.HasPrecision() ? pattern.Precision : (pattern.Flag == EFormatFlag::FixedPoint ? DefaultFixedPointPrecision : DefaultPrecision)
                     );
 
-                    Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetSpace());
+                    Super::AppendString(strRef, pattern, TempBuf, length);
 
                     return true;
                 }
@@ -268,7 +268,7 @@ namespace FormatLibrary
                         }
                     }
 
-                    Super::AppendString(strRef, pattern, TempBuf, bufLength, CharTraits::GetSpace());
+                    Super::AppendString(strRef, pattern, TempBuf, bufLength);
 
                     return true;
                 }
@@ -378,7 +378,7 @@ namespace FormatLibrary
                     }
                     else
                     {
-                        Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetSpace());
+                        Super::AppendString(strRef, pattern, TempBuf, length);
                     }                    
 
                     return true;
@@ -439,7 +439,7 @@ namespace FormatLibrary
                     }
                     else
                     {
-                        Super::AppendString(strRef, pattern, TempBuf, length, CharTraits::GetSpace());
+                        Super::AppendString(strRef, pattern, TempBuf, length);
                     }
 
                     return true;
@@ -486,7 +486,7 @@ namespace FormatLibrary
             {
                 if (str)
                 {
-                    Super::AppendString(strRef, pattern, str, CharTraits::length(str), CharTraits::GetSpace());
+                    Super::AppendString(strRef, pattern, str, CharTraits::length(str));
                 }
 
                 return true;

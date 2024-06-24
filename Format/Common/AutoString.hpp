@@ -29,7 +29,7 @@
 #include <Format/Common/CharTraits.hpp>
 #include <cassert>
 
-namespace FormatLibrary
+namespace Formatting
 {
     template < typename TCharType >
     class TAutoString :

@@ -27,7 +27,7 @@
 
 #include <Format/Common/Build.hpp>
 
-namespace FormatLibrary
+namespace Formatting
 {
     namespace Details
     {

@@ -28,7 +28,7 @@
 #include <Format/Details/Translators.hpp>
 #include <Format/Common/Mpl.hpp>
 
-namespace FormatLibrary
+namespace Formatting
 {
     namespace Details
     {
@@ -72,7 +72,14 @@ namespace FormatLibrary
                             const typename Mpl::RemoveArray<T0>::Type*,
                             T0
                         >::Type TransferType;
-
+                                                
+                        /*
+                        // if you get a compile error with Transfer function can't visit
+                        // it means that you have transfer an unsupported parameter to format pipeline
+                        // you can do them to fix this error:
+                        //    1. change your code, convert it to the support type
+                        //    2. make a specialization of TTranslator for your type.
+                        */
                         if (!TTranslator<TCharType, TransferType>::Transfer(sink, pattern, arg0))
                         {
                             TTranslator<TCharType, const TCharType*>::Transfer(sink, pattern, format);

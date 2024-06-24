@@ -33,7 +33,7 @@
 #include <map>
 #endif
 
-namespace FormatLibrary
+namespace Formatting
 {
     namespace Details
     {
@@ -86,46 +86,6 @@ namespace FormatLibrary
                 }
             };
 
-            template < typename TContainer >
-            class TSTLConstIterator
-            {
-            public:
-                typedef typename TContainer::const_iterator            ConstIterator;
-                typedef typename ConstIterator::pointer                PointerType;
-                typedef typename ConstIterator::reference              ReferenceType;
-
-            public:
-                TSTLConstIterator(const TContainer& con) :
-                    ContainerRef(con),
-                    CurrentIter(con.begin())
-                {
-                }
-
-            public:
-                inline bool       IsValid() const
-                {
-                    return CurrentIter != ContainerRef.end();
-                }
-
-                ReferenceType operator*() const
-                {
-                    return *CurrentIter;
-                }
-
-                inline bool       Next()
-                {
-                    assert(IsValid() && "Next Handle of Iterator Need Is Valid.");
-
-                    ++CurrentIter;
-
-                    return IsValid();
-                }
-
-            protected:
-                const TContainer& ContainerRef;
-                ConstIterator     CurrentIter;
-            };
-
             template <typename TCharType, typename TMutexType>
             class TStandardPolicy
             {
@@ -155,7 +115,7 @@ namespace FormatLibrary
 
                 static void ReserveList(PatternListType& /*ListRef*/, int /*Len*/)
                 {
-                    // AtuoArray does not need reserve
+                    // AutoArray does not need reserve
                 }
 
                 static const PatternListType* Emplace(

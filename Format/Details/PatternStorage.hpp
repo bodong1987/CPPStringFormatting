@@ -28,7 +28,7 @@
 #include <Format/Details/PatternParser.hpp>
 #include <Format/Common/Mutex.hpp>
 
-namespace FormatLibrary
+namespace Formatting
 {
     namespace Details
     {

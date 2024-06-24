@@ -5,12 +5,12 @@ This is a library that uses the C# formatted string style to format C++ strings.
 本项目支持几乎常见所有主流编译，无论有无C++ 11支持都可以。我使用Visual Studio 2008/2010/2022、CodeBlock with gcc、xcode 15对项目进行了测试，并通过了测试。  
 This project supports almost all common mainstream compilations, whether with or without C++11 support. I tested the project using Visual Studio 2008/2010/2022, CodeBlock with gcc, xcode 15 and it passed.  
 
-## How to use?
+## 如何使用？ How to use?
 这是一个纯C++头文件项目，clone项目，然后将项目根目录添加到头文件搜索路径中并包含`Format/Format.hpp`即可。  
 
 This is a pure C++ header file project, clone the project, then add the project root directory to the header file search path and include `Format/Format.hpp`.  
 
-## How to Test?
+## 如何测试？ How to Test?
 请先Clone本项目，然后使用CMake生成项目即可测试。
 需要注意的一点是本项目依赖于googletests，所以你在clone之后，需要使用如下指令确保googletests的submodule正确被拉取下来了，否则CMake生成项目时会出错。  
 
@@ -29,7 +29,7 @@ In addition, if the C++ compiler version you want to test is very early, such as
 
 After generating the project, just use the IDE to open the generated project file, compile and run the `UniTests` project to start testing. The code in `UnitTests_Format.cpp` is a use case for `std::basic_string<TCharType>`. You can refer to the code of StandardLibraryAdapter.hpp to add an adapter to your own string class, so that this system can work with your string class.  
 
-## Code Segment
+## 代码片段 Code Segment
 这里简单展示一下代码风格和用法，你可以在`UnitTests_Format.cpp`中找到更多用法和案例。  
 
 Here is a brief demonstration of the code style and usage. You can find more usage and cases in `UnitTests_Format.cpp`.   
@@ -38,7 +38,7 @@ Here is a brief demonstration of the code style and usage. You can find more usa
 #include <Format/Format.hpp>
 #include <Format/StandardLibraryAdapter.hpp>
 
-using namespace FormatLibrary;
+using namespace Formatting;
 
 TEST(Format, STL_Char_Format)
 {
@@ -103,3 +103,85 @@ TEST(Format, STL_WChar_FormatTo)
 }
 ```
 
+## 如何集成？ How to integrated
+想要将格式化库适配你自己的字符串类或者使用你自己的容器类来接管格式化库内部的容器，那么你只需要做三件事：
+* 第一，实现自己的Policy类，这个类需要告知框架必须要的基础类型都是什么，这通过typedef来实现；并且你还需要实现几个基础接口即可：`FindByHashKey`、`ReserveList`、`AppendPattern`。  
+* 第二，你需要在命名空间`Formatting::Shims`下实现两个垫片函数`PtrOf`和`LengthOf`，这两个函数是针对你的字符串类的重载。  
+* 第三，你需要实现自己的`Format`函数。如果你使用C++ 11或更新标准，那么你只需要使用不定参数模板即可；如果你要支持C++ 11更早的版本，你需要用到一些宏技巧来生成支持多个参数的`Format`函数。  
+你可以参考`UnitTests/Sources/MFCAdapter.hpp`的源代码，这里展示了如何为MFC字符串提供Format支持。当然也可以参考`Format/StandardLibraryAdapter.hpp`，这里是针对`stl::basic_string<TCharType>`的适配代码。  
+通过这几个简单的适配器，你就可以将这个字符串格式化库用到你自己的类型上了。  
+
+If you want to adapt the formatting library to your own string class or use your own container class to take over the container inside the formatting library, then you only need to do three things:
+* First, implement your own Policy class. This class needs to tell the framework what the basic types are. This is achieved through typedef; and you also need to implement several basic interfaces: `FindByHashKey`, `ReserveList`, `AppendPattern`.  
+* Second, you need to implement two shim functions `PtrOf` and `LengthOf` under the namespace `Formatting::Shims`. These two functions are overloaded for your string class.  
+* Third, you need to implement your own `Format` function. If you use C++11 or newer standards, then you only need to use indefinite parameter templates; if you want to support earlier versions of C++11, you need to use some macro tricks to generate a `Format` function that supports multiple parameters.  
+You can refer to the source code of `UnitTests/Sources/MFCAdapter.hpp`, which shows how to provide Format support for MFC strings. Of course, you can also refer to `Format/StandardLibraryAdapter.hpp`, here is the adaptation code for `stl::basic_string<TCharType>`.  
+With these simple adapters, you can apply this string formatting library to your own types.  
+
+## 如何扩展？ How to extends?
+CppFormatLibrary本身是类型安全的系统，如果你尝试将不支持的类型提交给格式化函数，那么你将会在编译阶段得到一个编译错误。要解决这个错误，你有两种办法：
+* 第一，将参数转换成受支持的类型。
+* 第二，提供一个针对该类型的自定义Translator，这样框架将能自动帮你完成转换操作。
+你可以在`UnitTests/Sources/UnityTests_Extends.cpp`中找到扩展的方法和举例。   
+
+CppFormatLibrary itself is a type-safe system, if you try to submit an unsupported type to the formatting function, then you will get a compilation error during the compilation phase. To resolve this error, you have two options:
+* First, convert the parameters to a supported type.
+* Second, provide a custom Translator for this type, so that the framework will automatically complete the conversion operation for you.
+You can find extension methods and examples in `UnitTests/Sources/UnityTests_Extends.cpp`.  
+
+```C++
+// The following class provides automatic conversion capabilities for Vector3, so that Vector3 type parameters can be formatted directly.
+namespace Formatting
+{
+    namespace Details
+    {
+        // convert Vector3 to string
+        template <>
+        class TTranslator< char, Vector3 > :
+            public TTranslatorBase< char, Vector3 >
+        {
+        public:
+            typedef TTranslatorBase< char, Vector3 >                    Super;
+            typedef typename Super::CharType                            CharType;
+            typedef typename Super::FormatPattern                       FormatPattern;
+            typedef typename Super::ByteType                            ByteType;
+            typedef typename Super::SizeType                            SizeType;
+            typedef typename Super::StringType                          StringType;
+            typedef typename Super::CharTraits                          CharTraits;
+
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, const Vector3& arg)
+            {
+                std::string text = arg.ToString();
+
+                Super::AppendString(strRef, pattern, text.c_str(), text.size());
+
+                return true;
+            }
+        };
+
+        // convert Vector3 to wstring
+        template <>
+        class TTranslator< wchar_t, Vector3 > :
+            public TTranslatorBase< wchar_t, Vector3 >
+        {
+        public:
+            typedef TTranslatorBase< wchar_t, Vector3 >                 Super;
+            typedef typename Super::CharType                            CharType;
+            typedef typename Super::FormatPattern                       FormatPattern;
+            typedef typename Super::ByteType                            ByteType;
+            typedef typename Super::SizeType                            SizeType;
+            typedef typename Super::StringType                          StringType;
+            typedef typename Super::CharTraits                          CharTraits;
+
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, const Vector3& arg)
+            {
+                std::wstring text = arg.ToWString();
+
+                Super::AppendString(strRef, pattern, text.c_str(), text.size());
+
+                return true;
+            }
+        };
+    }
+}
+```

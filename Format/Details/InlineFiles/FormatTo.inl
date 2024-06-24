@@ -104,6 +104,13 @@ inline TAutoString<TCharType>& FormatTo(
             {
                 switch (Pattern.Index)
                 {
+                    /*
+                    // if you get a compile error with Transfer function can't visit
+                    // it means that you have transfer an unsupported parameter to format pipeline
+                    // you can do them to fix this error:
+                    //    1. change your code, convert it to the support type
+                    //    2. make a specialization of TTranslator for your type.
+                    */
                     FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TRANSFER_BODY_, );
                 default:
                     TRawTranslator<TCharType>::Transfer(sink, Pattern, Shims::PtrOf(format));

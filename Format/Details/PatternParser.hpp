@@ -29,7 +29,7 @@
 
 #include <Format/Details/Pattern.hpp>
 
-namespace FormatLibrary
+namespace Formatting
 {
     namespace Details
     {

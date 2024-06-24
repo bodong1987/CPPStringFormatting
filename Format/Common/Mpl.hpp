@@ -40,7 +40,7 @@
 #endif // FL_COMPILER_GCC
 
 
-namespace FormatLibrary
+namespace Formatting
 {
     namespace Mpl
     {

@@ -29,7 +29,7 @@
 #include <Format/Common/Mpl.hpp>
 #include <algorithm>
 
-namespace FormatLibrary
+namespace Formatting
 {
     namespace Algorithm
     {

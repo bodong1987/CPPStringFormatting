@@ -29,7 +29,7 @@
 #include <Format/Common/Noncopyable.hpp>
 #include <Format/Common/Algorithm.hpp>
 
-namespace FormatLibrary
+namespace Formatting
 {
     template <
         typename T,
@@ -159,7 +159,9 @@ namespace FormatLibrary
 
             other.Count = 0;
             other.AllocatedCount = 0;
-            other.HeapValPtr = NULL;
+            other.HeapValPtr = nullptr;
+
+            return *this;
         }
 
 #if FL_COMPILER_WITH_CXX11
@@ -182,6 +184,8 @@ namespace FormatLibrary
             other.Count = 0;
             other.AllocatedCount = 0;
             other.HeapValPtr = nullptr;
+
+            return *this;
         }
 #endif
 
