@@ -181,7 +181,7 @@ namespace FormatLibrary
 #endif
 
 #ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH
-#define FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH 3
+#define FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH 5
 #endif
 
             enum
@@ -216,26 +216,27 @@ namespace FormatLibrary
                 }
                 else if (pattern.Flag == EFormatFlag::Exponent)
                 {
+                    const CharType eFlagChar = pattern.bUpper ? 'E' : 'e';
                     CharType FmtBuf[16] = { '%', '.' };
                     size_t length = Int64ToString(pattern.HasPrecision() ? pattern.Precision : DefaultExponentPrecision, FmtBuf + 2, 10, pattern.bUpper);
-                    FmtBuf[length + 2] = pattern.bUpper ? 'E' : 'e';
+                    FmtBuf[length + 2] = eFlagChar;
 
                     CharType TempBuf[64];
                     size_t bufLength = CharTraits::StaticSprintf(TempBuf, _countof(TempBuf), FmtBuf, arg);
 
-                    const CharType* plusPos = CharTraits::rFind(TempBuf, (CharType)('+'));
+                    const CharType* plusPos = CharTraits::rFind(TempBuf, eFlagChar);
                     if(plusPos != nullptr)
                     {
                         const CharType* endPos = TempBuf + bufLength;
                         const int exponentLength = endPos - plusPos;
                         
-                        if(exponentLength < DefaultMinExponentLength + 1)
+                        if(exponentLength < DefaultMinExponentLength)
                         {
-                            const int padLength = DefaultMinExponentLength + 1 - exponentLength;
+                            const int padLength = DefaultMinExponentLength - exponentLength;
                             
-                            memmove((void*)(plusPos + padLength + 1), plusPos+1, exponentLength * sizeof(CharType));
+                            memmove((void*)(plusPos + padLength + 2), plusPos + 2, exponentLength * sizeof(CharType));
 
-                            CharTraits::Fill((CharType*)(plusPos+1), CharTraits::GetZero(), padLength);
+                            CharTraits::Fill((CharType*)(plusPos+2), CharTraits::GetZero(), padLength);
 
                             bufLength += padLength;
                         }

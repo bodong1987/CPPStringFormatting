@@ -190,6 +190,23 @@ TEST(Format, TestMixedAlign)
     EXPECT_EQ(StandardLibrary::Format("{0,5} {1,-5}", 123, "hi"), "  123 hi   ");
 }
 
+TEST(Format, TestPositiveNumberPadding)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0,5}", 123), "  123");
+    EXPECT_EQ(StandardLibrary::Format("{0,-5}", 123), "123  ");
+}
+
+TEST(Format, TestNegativeNumberPadding)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0,6}", -123), "  -123");
+    EXPECT_EQ(StandardLibrary::Format("{0,-6}", -123), "-123  ");
+}
+
+TEST(Format, TestEscapeSequence)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0}", "\n\t\""), "\n\t\"");
+}
+
 TEST(Format, TestExponentialNotation)
 {
     EXPECT_EQ(StandardLibrary::Format("{0:e}", 123.456), "1.234560e+002");
@@ -222,6 +239,24 @@ TEST(Format, TestFloatingPointPrecision)
     EXPECT_EQ(StandardLibrary::Format("{0:f0}", 123.456), "123");
 }
 
+TEST(Format, TestFloatingPointPrecisionComplex)
+{
+    EXPECT_EQ(StandardLibrary::Format("{0:f4}", 123.456789), "123.4568");
+    EXPECT_EQ(StandardLibrary::Format("{0:f2}", 123.456789), "123.46");
+    EXPECT_EQ(StandardLibrary::Format("{0:f0}", 123.456789), "123");
+    EXPECT_EQ(StandardLibrary::Format("{0:f1}", -123.456789), "-123.5");
+    EXPECT_EQ(StandardLibrary::Format("{0:f6}", 0.000000123456789), "0.000000");
+    EXPECT_EQ(StandardLibrary::Format("{0:f6}", 0.00000123456789), "0.000001");
+    EXPECT_EQ(StandardLibrary::Format("{0:e}", 123456789.0), "1.234568e+008");
+    EXPECT_EQ(StandardLibrary::Format("{0:e3}", 123456789.0), "1.235e+008");
+    EXPECT_EQ(StandardLibrary::Format("{0:e}", 0.000000123456789), "1.234568e-007");
+    EXPECT_EQ(StandardLibrary::Format("{0:e3}", 0.000000123456789), "1.235e-007");
+//     EXPECT_EQ(StandardLibrary::Format("{0:g}", 123456789.0), "1.23457e+008");
+//     EXPECT_EQ(StandardLibrary::Format("{0:g}", 0.000000123456789), "1.23457e-007");
+//     EXPECT_EQ(StandardLibrary::Format("{0:g}", 0.0001), "0.0001");
+//     EXPECT_EQ(StandardLibrary::Format("{0:g}", 0.00001), "1e-005");
+}
+
 TEST(Format, TestEscapeBraces)
 {
     EXPECT_EQ(StandardLibrary::Format("{{0}}"), "{0}");
@@ -229,6 +264,18 @@ TEST(Format, TestEscapeBraces)
     EXPECT_EQ(StandardLibrary::Format("a{{0}}1a"), "a{0}1a");
     EXPECT_EQ(StandardLibrary::Format("{{{0}}}", 1), "{1}");
     EXPECT_EQ(StandardLibrary::Format("{{0}}, {0}", 1), "{0}, 1");
+}
+
+TEST(Format, TestEscapeBracesComplex)
+{
+    EXPECT_EQ(StandardLibrary::Format("{{{{0}}}}"), "{{0}}");
+    EXPECT_EQ(StandardLibrary::Format("{{{0}}}", 123), "{123}");
+    EXPECT_EQ(StandardLibrary::Format("{{{{{0}}}}}", 123), "{{123}}");
+    EXPECT_EQ(StandardLibrary::Format("{{{{0}}}}, {0}", 1), "{{0}}, 1");
+    EXPECT_EQ(StandardLibrary::Format("{{{{0}}}}, {0}, {{{0}}}, {{{{0}}}}", 1), "{{0}}, 1, {1}, {{0}}");
+    EXPECT_EQ(StandardLibrary::Format("{{0}} {0} {{0}} {0}", "Test"), "{0} Test {0} Test");
+    EXPECT_EQ(StandardLibrary::Format("{{{{{0}}}}}", "Test"), "{{Test}}");
+    EXPECT_EQ(StandardLibrary::Format("{{{{0}}}}, {0}, {{{0}}}, {{{{0}}}}", "Test"), "{{0}}, Test, {Test}, {{0}}");
 }
 
 TEST(Format, TestOtherCharacters)
