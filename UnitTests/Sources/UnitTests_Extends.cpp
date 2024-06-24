@@ -78,9 +78,33 @@ In file included from I:/CPPFormatLibrary/Format/Details/FormatTo.hpp:28,
 I:/CPPFormatLibrary/Format/Details/Translators.hpp:138:25: note: declared here
              static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg) = delete;
                          ^~~~~~~~
-
+ vs2008:
+ 1>D:\CPPFormatLibrary\Format/Details/InlineFiles/FormatTo.inl(114) : error C2248: “Formatting::Details::TTranslator<TCharType,T>::Transfer”: 无法访问 private 成员(在“Formatting::Details::TTranslator<TCharType,T>”类中声明)
+ 1>        with
+ 1>        [
+ 1>            TCharType=char,
+ 1>            T=TransferType
+ 1>        ]
+ 1>        D:\CPPFormatLibrary\Format/Details/Translators.hpp(141) : 参见“Formatting::Details::TTranslator<TCharType,T>::Transfer”的声明
+ 1>        with
+ 1>        [
+ 1>            TCharType=char,
+ 1>            T=TransferType
+ 1>        ]
+ 1>        D:\CPPFormatLibrary\Format/Details/StandardLibrary/FormatTo.hpp(181): 参见对正在编译的函数 模板 实例化“Formatting::TAutoString<TCharType> &Formatting::Details::FormatTo<char,Formatting::Details::StandardLibrary::STLGlobalPatternStorageA,const char*,T0>(Formatting::TAutoString<TCharType> &,const TFormatType &,const T0 &)”的引用
+ 1>        with
+ 1>        [
+ 1>            TCharType=char,
+ 1>            T0=Vector3,
+ 1>            TFormatType=const char *
+ 1>        ]
+ 1>        ..\UnitTests\Sources\UnitTests_Extends.cpp(143): 参见对正在编译的函数 模板 实例化“std::string Formatting::StandardLibrary::Format<Vector3>(const char *,const T0 &)”的引用
+ 1>        with
+ 1>        [
+ 1>            T0=Vector3
+ 1>        ]
 */
-#if 0
+#if 1
 // The following class provides automatic conversion capabilities for Vector3, so that Vector3 type parameters can be formatted directly.
 namespace Formatting
 {
