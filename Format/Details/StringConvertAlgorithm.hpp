@@ -54,6 +54,33 @@ namespace Formatting
         }
 
         /// <summary>
+        /// Integers to binary string.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The buffer.</param>
+        template <typename TCharType, typename TIntegerType>
+        inline int IntegerToBinaryString(TIntegerType value, TCharType buffer[sizeof(TIntegerType) * 8 + 1])
+        {
+            constexpr int length = sizeof(TIntegerType) * 8;
+
+            buffer[length] = (TCharType)0;
+
+            for (int i = length-1; i >= 0; --i)
+            {
+                buffer[i] = (value&1) + '0';
+
+                value >>= 1;
+
+                if (value == 0)
+                {
+                    return length - i;
+                }
+            }
+
+            return length;
+        }
+
+        /// <summary>
         /// Int64 to string.
         /// </summary>
         /// <param name="value">The value.</param>

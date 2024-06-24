@@ -141,7 +141,7 @@ namespace Formatting
             public TTranslatorBase< char, Vector3 >
         {
         public:
-            typedef TTranslatorBase< char, Vector3 >                    Super;
+            typedef TTranslatorBase< char, Vector3 >           Super;
             typedef Super::CharType                            CharType;
             typedef Super::FormatPattern                       FormatPattern;
             typedef Super::ByteType                            ByteType;
@@ -165,7 +165,7 @@ namespace Formatting
             public TTranslatorBase< wchar_t, Vector3 >
         {
         public:
-            typedef TTranslatorBase< wchar_t, Vector3 >                 Super;
+            typedef TTranslatorBase< wchar_t, Vector3 >        Super;
             typedef Super::CharType                            CharType;
             typedef Super::FormatPattern                       FormatPattern;
             typedef Super::ByteType                            ByteType;
@@ -185,3 +185,34 @@ namespace Formatting
     }
 }
 ```
+
+## 差异 Difference
+虽然CppFormatLibrary支持了大部分常见的格式化需求，但并也有许多C#格式化的功能尚不支持。具体C#支持的格式化规范请参考这里:  https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings  
+
+Although CppFormatLibrary supports most common formatting needs, there are also many C# formatting functions that are not yet supported. For specific formatting specifications supported by C#, please refer here:  
+https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings  
+
+
+| Type       | Status
+| :----      | :------:            
+| B          | &#x2714;            
+| C          | &#x2716;            
+| D          | &#x2714;            
+| E          | &#x2714;            
+| F          | &#x2714;            
+| G          | &#x2716;            
+| N          | &#x2716;            
+| P          | &#x2716;            
+| R          | &#x2716;            
+| X          | &#x2714;            
+| Percision  | &#x2714;            
+| Width      | &#x2714;          
+
+遇到不支持的格式标志符时C#会抛出异常，CppFormatLibrary会直接输出格式符字符串，一些情况会触发assert或忽略。因此当你遇到与预期不一致的问题时，请检查格式标志符是否正确，或者是否使用了不被支持的标志符。  
+
+C# will throw an exception when encountering an unsupported format identifier, and CppFormatLibrary will directly output the format character string. In some cases, assert or ignore will be triggered. So when you encounter problems that are inconsistent with expectations, please check whether the format identifier is correct, or whether an unsupported identifier is used.  
+
+## 提交错误报告 Bugreport
+直接通过[Issues](https://github.com/bodong1987/CPPFormatLibrary/issues)页面提交即可  
+
+Submit directly through the [Issues](https://github.com/bodong1987/CPPFormatLibrary/issues) page  

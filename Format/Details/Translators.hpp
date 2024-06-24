@@ -33,21 +33,21 @@
 namespace Formatting
 {
     namespace Details
-    {        
+    {
         template <uint64_t MaxValue>
         struct TMaxLength
         {
             enum
-            {                
+            {
                 Value = TMaxLength<MaxValue / 10>::Value + 1
             };
         };
-                
+
         template <>
         struct TMaxLength<0>
         {
             enum
-            {                
+            {
                 Value = 1
             };
         };
@@ -65,12 +65,12 @@ namespace Formatting
             typedef typename FormatPattern::ByteType                    ByteType;
             typedef typename FormatPattern::SizeType                    SizeType;
             typedef TAutoString<CharType>                               StringType;
-            typedef TCharTraits<CharType>                               CharTraits;          
-            
+            typedef TCharTraits<CharType>                               CharTraits;
+
         protected:
             static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, CharType fillChar = CharTraits::GetSpace())
             {
-                strRef.AddAlignStr(start, start + length, pattern.HasWidth()? pattern.Width : (int)length, pattern.Align != EAlignFlag::Left, fillChar);
+                strRef.AddAlignStr(start, start + length, pattern.HasWidth() ? pattern.Width : (int)length, pattern.Align != EAlignFlag::Left, fillChar);
             }
 
             static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, const int alignSize, bool paddingLeft, CharType fillChar = CharTraits::GetSpace())
@@ -133,7 +133,7 @@ namespace Formatting
             /// <param name="pattern">The pattern.</param>
             /// <param name="arg">The argument.</param>
             /// <returns>bool.</returns>
-            
+
 #if FL_COMPILER_WITH_CXX11
             static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg) = delete;
 #else
@@ -186,7 +186,7 @@ namespace Formatting
 
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, TCharType arg)
             {
-                TCharType Buffer[2] = {arg, (TCharType)0};
+                TCharType Buffer[2] = { arg, (TCharType)0 };
 
                 Super::AppendString(strRef, pattern, Buffer, 1);
 
@@ -232,10 +232,8 @@ namespace Formatting
                 DefaultMinExponentLength = FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH
             };
 
-            static bool TransferCore(StringType& strRef, const FormatPattern& pattern, FormatFlagType usedFlag, double arg, SizeType unusedParam = 0)
+            static bool TransferCore(StringType& strRef, const FormatPattern& pattern, FormatFlagType usedFlag, double arg)
             {
-                FL_UNREFERENCED_PARAMETER(unusedParam);
-
                 if (pattern.Flag == EFormatFlag::None ||
                     pattern.Flag == EFormatFlag::FixedPoint ||
                     pattern.Flag == EFormatFlag::General
@@ -290,14 +288,18 @@ namespace Formatting
                 {
                     return TTranslator<TCharType, int64_t>::Transfer(strRef, pattern, static_cast<int64_t>(arg));
                 }
+                else if (pattern.Flag == EFormatFlag::Binary)
+                {
+                    assert(false && "double to binary string is not supported.");
+                }
 
                 return false;
             }
 
         public:
-            static bool Transfer(StringType& strRef, const FormatPattern& pattern, double arg, SizeType unusedParam = 0)
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, double arg)
             {
-                return TransferCore(strRef, pattern, pattern.Flag, arg, unusedParam);
+                return TransferCore(strRef, pattern, pattern.Flag, arg);
             }
         };
 
@@ -315,9 +317,9 @@ namespace Formatting
             typedef typename Super::StringType                          StringType;
             typedef typename Super::CharTraits                          CharTraits;
 
-            static bool Transfer(StringType& strRef, const FormatPattern& pattern, float arg, SizeType unusedParam = 0)
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, float arg)
             {
-                return TDoubleTranslatorImpl<TCharType, float>::Transfer(strRef, pattern, arg, unusedParam);
+                return TDoubleTranslatorImpl<TCharType, float>::Transfer(strRef, pattern, arg);
             }
         };
 
@@ -327,7 +329,7 @@ namespace Formatting
             public TTranslatorBase< TCharType, double >
         {
         public:
-            typedef TTranslatorBase< TCharType, double >                Super;            
+            typedef TTranslatorBase< TCharType, double >                Super;
             typedef typename Super::CharType                            CharType;
             typedef typename Super::FormatPattern                       FormatPattern;
             typedef typename Super::ByteType                            ByteType;
@@ -335,9 +337,90 @@ namespace Formatting
             typedef typename Super::StringType                          StringType;
             typedef typename Super::CharTraits                          CharTraits;
 
-            static bool Transfer(StringType& strRef, const FormatPattern& pattern, double arg, SizeType unusedParam = 0)
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, double arg)
             {
-                return TDoubleTranslatorImpl<TCharType, double>::Transfer(strRef, pattern, arg, unusedParam);
+                return TDoubleTranslatorImpl<TCharType, double>::Transfer(strRef, pattern, arg);
+            }
+        };
+
+        /// <summary>
+        /// Class TInt64TranslatorImpl.
+        /// Implements the <see cref="TTranslatorBase{TCharType, int64_t}" />
+        /// </summary>
+        /// <seealso cref="TTranslatorBase{TCharType, int64_t}" />
+        template < typename TCharType, typename TRealType >
+        class TInt64TranslatorImpl : public TTranslatorBase<TCharType, int64_t>
+        {
+        public:
+            typedef TTranslatorBase< TCharType, int64_t >               Super;
+            typedef typename Super::CharType                            CharType;
+            typedef typename Super::FormatPattern                       FormatPattern;
+            typedef typename Super::ByteType                            ByteType;
+            typedef typename Super::SizeType                            SizeType;
+            typedef typename Super::StringType                          StringType;
+            typedef typename Super::CharTraits                          CharTraits;
+
+            /// <summary>
+            /// Transfers the specified string reference.
+            /// </summary>
+            /// <param name="strRef">The string reference.</param>
+            /// <param name="pattern">The pattern.</param>
+            /// <param name="arg">The argument.</param>
+            /// <returns>bool.</returns>
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, int64_t arg)
+            {
+                if (pattern.Flag == EFormatFlag::None ||
+                    pattern.Flag == EFormatFlag::Decimal ||
+                    pattern.Flag == EFormatFlag::General ||
+                    pattern.Flag == EFormatFlag::Hex
+                    )
+                {
+                    const bool bHex = pattern.Flag == EFormatFlag::Hex;
+
+                    CharType TempBuf[32];
+
+                    SizeType length = Int64ToString<CharType>(arg, TempBuf, bHex ? 16 : 10, pattern.bUpper);
+
+                    if (pattern.HasPrecision() && pattern.Precision > length)
+                    {
+                        Super::AppendString(strRef, pattern, TempBuf, length, pattern.Precision, true, CharTraits::GetZero());
+                    }
+                    else
+                    {
+                        Super::AppendString(strRef, pattern, TempBuf, length);
+                    }
+
+                    return true;
+                }
+                else if (pattern.Flag == EFormatFlag::Exponent)
+                {
+                    return TTranslator<TCharType, double>::Transfer(strRef, pattern, static_cast<double>(arg));
+                }
+                else if (pattern.Flag == EFormatFlag::FixedPoint)
+                {
+                    return TTranslator<TCharType, float>::Transfer(strRef, pattern, static_cast<float>(arg));
+                }
+                else if (pattern.Flag == EFormatFlag::Binary)
+                {
+                    constexpr int length = sizeof(TRealType) * 8;
+                    CharType TempBuf[length + 1];
+
+                    int usedLength = IntegerToBinaryString<TCharType, TRealType>(static_cast<TRealType>(arg), TempBuf);
+                    const TCharType* textPos = TempBuf + (length - usedLength);
+
+                    if (pattern.HasPrecision() && pattern.Precision > usedLength)
+                    {
+                        Super::AppendString(strRef, pattern, textPos, usedLength, pattern.Precision, true, CharTraits::GetZero());
+                    }
+                    else
+                    {
+                        Super::AppendString(strRef, pattern, textPos, usedLength);
+                    }
+
+                    return true;
+                }
+
+                return false;
             }
         };
 
@@ -359,65 +442,26 @@ namespace Formatting
             typedef typename Super::StringType                          StringType;
             typedef typename Super::CharTraits                          CharTraits;
 
-            enum
-            {
-                MAX_LENGTH = TMaxLength<LLONG_MAX>::Value
-            };
-
             /// <summary>
             /// Transfers the specified string reference.
             /// </summary>
             /// <param name="strRef">The string reference.</param>
             /// <param name="pattern">The pattern.</param>
             /// <param name="arg">The argument.</param>
-            /// <param name="maxLength">The maximum length.</param>
             /// <returns>bool.</returns>
-            static bool Transfer(StringType& strRef, const FormatPattern& pattern, int64_t arg, SizeType maxLength = MAX_LENGTH)
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, int64_t arg)
             {
-                if (pattern.Flag == EFormatFlag::None ||
-                    pattern.Flag == EFormatFlag::Decimal ||
-                    pattern.Flag == EFormatFlag::General ||
-                    pattern.Flag == EFormatFlag::Hex
-                    )
-                {
-                    const bool bHex = pattern.Flag == EFormatFlag::Hex;
-
-                    CharType TempBuf[32];
-
-                    SizeType length = Int64ToString<CharType>(arg, TempBuf, bHex ? 16 : 10, pattern.bUpper);
-
-                    if (pattern.HasPrecision() && pattern.Precision > length)
-                    {
-                        Super::AppendString(strRef, pattern, TempBuf, length, pattern.Precision, true, CharTraits::GetZero());
-                    }
-                    else
-                    {
-                        Super::AppendString(strRef, pattern, TempBuf, length);
-                    }                    
-
-                    return true;
-                }
-                else if (pattern.Flag == EFormatFlag::Exponent)
-                {
-                    return TTranslator<TCharType, double>::Transfer(strRef, pattern, static_cast<double>(arg));
-                }
-                else if (pattern.Flag == EFormatFlag::FixedPoint)
-                {
-                    return TTranslator<TCharType, float>::Transfer(strRef, pattern, static_cast<float>(arg));
-                }
-
-                return false;
+                return TInt64TranslatorImpl<TCharType, int64_t>::Transfer(strRef, pattern, arg);
             }
         };
 
         /// <summary>
-        /// uint64 to string
+        /// Class TUInt64TranslatorImpl.
         /// Implements the <see cref="TTranslatorBase{TCharType, uint64_t}" />
         /// </summary>
         /// <seealso cref="TTranslatorBase{TCharType, uint64_t}" />
-        template < typename TCharType >
-        class TTranslator< TCharType, uint64_t > :
-            public TTranslatorBase< TCharType, uint64_t >
+        template < typename TCharType, typename TRealType >
+        class TUInt64TranslatorImpl : public TTranslatorBase<TCharType, uint64_t>
         {
         public:
             typedef TTranslatorBase< TCharType, uint64_t >              Super;
@@ -428,12 +472,7 @@ namespace Formatting
             typedef typename Super::StringType                          StringType;
             typedef typename Super::CharTraits                          CharTraits;
 
-            enum
-            {
-                MAX_LENGTH = TMaxLength<ULLONG_MAX>::Value
-            };
-
-            static bool Transfer(StringType& strRef, const FormatPattern& pattern, uint64_t arg, SizeType maxLength = MAX_LENGTH)
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, uint64_t arg)
             {
                 if (pattern.Flag == EFormatFlag::None ||
                     pattern.Flag == EFormatFlag::Decimal ||
@@ -466,8 +505,51 @@ namespace Formatting
                 {
                     return TTranslator<TCharType, float>::Transfer(strRef, pattern, static_cast<float>(arg));
                 }
+                else if (pattern.Flag == EFormatFlag::Binary)
+                {
+                    constexpr int length = sizeof(TRealType) * 8;
+                    CharType TempBuf[length + 1];
+
+                    int usedLength = IntegerToBinaryString<TCharType, TRealType>(static_cast<TRealType>(arg), TempBuf);
+                    const TCharType* textPos = TempBuf + (length - usedLength);
+
+                    if (pattern.HasPrecision() && pattern.Precision > usedLength)
+                    {
+                        Super::AppendString(strRef, pattern, textPos, usedLength, pattern.Precision, true, CharTraits::GetZero());
+                    }
+                    else
+                    {
+                        Super::AppendString(strRef, pattern, textPos, usedLength);
+                    }
+
+                    return true;
+                }
 
                 return false;
+            }
+        };
+
+        /// <summary>
+        /// uint64 to string
+        /// Implements the <see cref="TTranslatorBase{TCharType, uint64_t}" />
+        /// </summary>
+        /// <seealso cref="TTranslatorBase{TCharType, uint64_t}" />
+        template < typename TCharType >
+        class TTranslator< TCharType, uint64_t > :
+            public TTranslatorBase< TCharType, uint64_t >
+        {
+        public:
+            typedef TTranslatorBase< TCharType, uint64_t >              Super;
+            typedef typename Super::CharType                            CharType;
+            typedef typename Super::FormatPattern                       FormatPattern;
+            typedef typename Super::ByteType                            ByteType;
+            typedef typename Super::SizeType                            SizeType;
+            typedef typename Super::StringType                          StringType;
+            typedef typename Super::CharTraits                          CharTraits;
+
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, uint64_t arg)
+            {
+                return TUInt64TranslatorImpl<TCharType, uint64_t>::Transfer(strRef, pattern, arg);
             }
         };
 
@@ -509,7 +591,7 @@ namespace Formatting
 
         // convert small numeric type to big numeric type 
         // and convert them to string
-#define FL_CONVERT_TRANSLATOR( Type, BaseType, MaxValue ) \
+#define FL_CONVERT_TRANSLATOR(Type, BaseType, ImplType) \
     template < typename TCharType > \
     class TTranslator< TCharType, Type > : \
         public TTranslator< TCharType, BaseType > \
@@ -519,18 +601,20 @@ namespace Formatting
         \
         static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, Type arg) \
         { \
-            return Super::Transfer(strRef, pattern, static_cast<BaseType>(arg), Details::TMaxLength<MaxValue>::Value); \
+            return ImplType<TCharType, Type>::Transfer(strRef, pattern, arg); \
         } \
     }
 
-        FL_CONVERT_TRANSLATOR(int32_t, int64_t, INT_MAX);
-        FL_CONVERT_TRANSLATOR(uint32_t, uint64_t, UINT_MAX);
-        FL_CONVERT_TRANSLATOR(uint8_t, uint64_t, UCHAR_MAX);
-        FL_CONVERT_TRANSLATOR(int16_t, int64_t, SHRT_MAX);
-        FL_CONVERT_TRANSLATOR(uint16_t, uint64_t, USHRT_MAX);        
-        FL_CONVERT_TRANSLATOR(long, int64_t, INT_MAX);
-        FL_CONVERT_TRANSLATOR(unsigned long, uint64_t, ULONG_MAX);        
-        FL_CONVERT_TRANSLATOR(long double, double, 0);
+        FL_CONVERT_TRANSLATOR(int16_t, int64_t, TInt64TranslatorImpl);
+        FL_CONVERT_TRANSLATOR(int32_t, int64_t, TInt64TranslatorImpl);        
+        FL_CONVERT_TRANSLATOR(long, int64_t, TInt64TranslatorImpl);
+                
+        FL_CONVERT_TRANSLATOR(uint8_t, uint64_t, TUInt64TranslatorImpl);        
+        FL_CONVERT_TRANSLATOR(uint16_t, uint64_t, TUInt64TranslatorImpl);
+        FL_CONVERT_TRANSLATOR(uint32_t, uint64_t, TUInt64TranslatorImpl);
+        FL_CONVERT_TRANSLATOR(unsigned long, uint64_t, TUInt64TranslatorImpl);
+
+        FL_CONVERT_TRANSLATOR(long double, double, TDoubleTranslatorImpl);
 
 #undef FL_CONVERT_TRANSLATOR
 

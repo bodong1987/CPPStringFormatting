@@ -47,7 +47,8 @@ namespace Formatting
 				General,
 				CSV,
 				Percentage,
-				Hex
+				Hex,
+                Binary
 			};
 #if FL_COMPILER_WITH_CXX11
 		typedef EFormatFlag FormatFlagType;

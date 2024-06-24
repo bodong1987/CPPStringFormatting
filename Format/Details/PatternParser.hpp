@@ -226,6 +226,9 @@ namespace Formatting
                 case 'G':
                     pattern.Flag = EFormatFlag::General;
                     break;
+                case 'B':
+                    pattern.Flag = EFormatFlag::Binary;
+                    break;
                 case 'C':
                 case 'R':                
                     // use default.
