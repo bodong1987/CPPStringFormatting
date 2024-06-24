@@ -112,15 +112,15 @@ namespace Formatting
             };
 
 #if FL_WITH_THREAD_LOCAL || !FL_WITH_MULTITHREAD_SUPPORT
-            typedef MutexNone                                       DefaultMutexType;
+            typedef MutexNone                                                           DefaultMutexType;
 #else
-            typedef Mutex                                           DefaultMutexType;
+            typedef Mutex                                                               DefaultMutexType;
 #endif
 
-            typedef TPatternStorage< TMFCPolicy<char, DefaultMutexType> >          MFCPatternStorageA;
-            typedef TPatternStorage< TMFCPolicy<wchar_t, DefaultMutexType> >       MFCPatternStorageW;
-            typedef TGlobalPatternStorage< TMFCPolicy<char, DefaultMutexType> >    MFCGlobalPatternStorageA;
-            typedef TGlobalPatternStorage< TMFCPolicy<wchar_t, DefaultMutexType> > MFCGlobalPatternStorageW;
+            typedef TPatternStorage< TMFCPolicy<char, DefaultMutexType> >               MFCPatternStorageA;
+            typedef TPatternStorage< TMFCPolicy<wchar_t, DefaultMutexType> >            MFCPatternStorageW;
+            typedef TGlobalPatternStorage< TMFCPolicy<char, DefaultMutexType> >         MFCGlobalPatternStorageA;
+            typedef TGlobalPatternStorage< TMFCPolicy<wchar_t, DefaultMutexType> >      MFCGlobalPatternStorageW;
 
 #if FL_UNICODE
             typedef MFCPatternStorageW                                                  MFCPatternStorage;

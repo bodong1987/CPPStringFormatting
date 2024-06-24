@@ -262,13 +262,13 @@ namespace Formatting
                     FmtBuf[length + 2] = eFlagChar;
 
                     CharType TempBuf[64];
-                    size_t bufLength = CharTraits::StaticSprintf(TempBuf, _countof(TempBuf), FmtBuf, arg);
+                    size_t bufLength = CharTraits::StringPrintf(TempBuf, _countof(TempBuf), FmtBuf, arg);
 
                     const CharType* plusPos = CharTraits::rFind(TempBuf, eFlagChar);
                     if (plusPos != nullptr)
                     {
                         const CharType* endPos = TempBuf + bufLength;
-                        const int exponentLength = endPos - plusPos;
+                        const int exponentLength = static_cast<int>(endPos - plusPos);
 
                         if (exponentLength < DefaultMinExponentLength)
                         {
@@ -307,7 +307,7 @@ namespace Formatting
             public TTranslatorBase< TCharType, float >
         {
         public:
-            typedef TTranslatorBase< TCharType, float >                Super;
+            typedef TTranslatorBase< TCharType, float >                 Super;
             typedef typename Super::CharType                            CharType;
             typedef typename Super::FormatPattern                       FormatPattern;
             typedef typename Super::ByteType                            ByteType;

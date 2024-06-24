@@ -62,7 +62,7 @@ namespace Formatting
 
                 pthread_mutexattr_init(&MutexAtt);
                 pthread_mutexattr_settype(&MutexAtt, PTHREAD_MUTEX_RECURSIVE);
-                pthread_mutex_init(&Mutex, &MutexAtt);
+                pthread_mutex_init(&Mutex_t, &MutexAtt);
 #endif
             }
 
@@ -71,7 +71,7 @@ namespace Formatting
 #if FL_PLATFORM_WINDOWS
                 ::DeleteCriticalSection(&CriticalSectionValue);
 #else
-                pthread_mutex_destroy(&Mutex);
+                pthread_mutex_destroy(&Mutex_t);
 #endif
             }
 
@@ -80,7 +80,7 @@ namespace Formatting
 #if FL_PLATFORM_WINDOWS
                 ::EnterCriticalSection(&CriticalSectionValue);
 #else
-                pthread_mutex_lock(&Mutex);                
+                pthread_mutex_lock(&Mutex_t);
 #endif
             }
 
@@ -89,7 +89,7 @@ namespace Formatting
 #if FL_PLATFORM_WINDOWS
                 ::LeaveCriticalSection(&CriticalSectionValue);
 #else
-                pthread_mutex_unlock(&Mutex);
+                pthread_mutex_unlock(&Mutex_t);
 #endif
             }
 
@@ -103,7 +103,7 @@ namespace Formatting
             /// <summary>
             /// The mutex
             /// </summary>
-            pthread_mutex_t Mutex;
+            pthread_mutex_t Mutex_t;
 #endif
         };
 

@@ -157,7 +157,7 @@ namespace Formatting
                     {
                         LockerType Locker(MutexValue);
 
-                        for( SIZE_T i=0; i<Storages.GetLength(); ++i )
+                        for( size_t i=0; i<Storages.GetLength(); ++i )
                         {
                             delete Storages[i];
                         }

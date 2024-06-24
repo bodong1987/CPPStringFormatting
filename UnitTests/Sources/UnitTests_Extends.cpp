@@ -22,14 +22,14 @@ public:
     std::string ToString() const
     {
         char buffer[100];
-        sprintf(buffer, "Vector3(%.2f, %.2f, %.2f)", x, y, z);
+        TCharTraits<char>::StringPrintf(buffer, _countof(buffer), "Vector3(%.2f, %.2f, %.2f)", x, y, z);
         return std::string(buffer);
     }
 
     std::wstring ToWString() const
     {
         wchar_t buffer[100];
-        swprintf(buffer, L"Vector3(%.2f, %.2f, %.2f)", x, y, z);
+        TCharTraits<wchar_t>::StringPrintf(buffer, _countof(buffer), L"Vector3(%.2f, %.2f, %.2f)", x, y, z);
         return std::wstring(buffer);
     }
 
@@ -50,6 +50,16 @@ vs2022:
 \CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:             T0=Vector3,
 \CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:             T=Formatting::Details::Utils::DoTransferHelper<wchar_t,Formatting::Details::FormatTo::FormatPatternType,Vector3>::DoTransfer::TransferType
 \CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:         ]
+ 
+xcode:
+ Showing All Messages
+ /Users/bodong/Desktop/CPPFormatLibrary/UnitTests/Sources/UnitTests_Extends.cpp:12:10: in file included from /Users/bodong/Desktop/CPPFormatLibrary/UnitTests/Sources/UnitTests_Extends.cpp:12:
+ /Users/bodong/Desktop/CPPFormatLibrary/Format/Format.hpp:39:10: in file included from /Users/bodong/Desktop/CPPFormatLibrary/Format/Format.hpp:39:
+ /Users/bodong/Desktop/CPPFormatLibrary/Format/Details/FormatTo.hpp:98:77: In instantiation of member function 'Formatting::Details::Utils::DoTransferHelper<char, Formatting::Details::TFormatPattern<char>, Vector3>::DoTransfer' requested here
+ /Users/bodong/Desktop/CPPFormatLibrary/Format/Details/FormatTo.hpp:154:33: In instantiation of function template specialization 'Formatting::Details::Utils::DoTransfer<char, Formatting::Details::TFormatPattern<char>, Vector3>' requested here
+ /Users/bodong/Desktop/CPPFormatLibrary/Format/Details/StandardLibrary/FormatTo.hpp:88:22: In instantiation of function template specialization 'Formatting::Details::FormatTo<char, Formatting::Details::TGlobalPatternStorage<Formatting::Details::StandardLibrary::TStandardPolicy<char, Formatting::Details::MutexNone>>, const char *, Vector3>' requested here
+ /Users/bodong/Desktop/CPPFormatLibrary/UnitTests/Sources/UnitTests_Extends.cpp:118:32: In instantiation of function template specialization 'Formatting::StandardLibrary::Format<char, Vector3>' requested here
+ /Users/bodong/Desktop/CPPFormatLibrary/Format/Details/Translators.hpp:138:25: 'Transfer' has been explicitly marked deleted here
 */
 #if 1
 
@@ -64,7 +74,7 @@ namespace Formatting
             public TTranslatorBase< char, Vector3 >
         {
         public:
-            typedef TTranslatorBase< char, Vector3 >                    Super;
+            typedef TTranslatorBase< char, Vector3 >           Super;
             typedef Super::CharType                            CharType;
             typedef Super::FormatPattern                       FormatPattern;
             typedef Super::ByteType                            ByteType;
@@ -88,7 +98,7 @@ namespace Formatting
             public TTranslatorBase< wchar_t, Vector3 >
         {
         public:
-            typedef TTranslatorBase< wchar_t, Vector3 >                 Super;
+            typedef TTranslatorBase< wchar_t, Vector3 >        Super;
             typedef Super::CharType                            CharType;
             typedef Super::FormatPattern                       FormatPattern;
             typedef Super::ByteType                            ByteType;

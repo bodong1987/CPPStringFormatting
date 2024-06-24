@@ -232,7 +232,7 @@ namespace Formatting
 
             if (value > ThresMax)
             {
-                int32_t Result = TCharTraits<TCharType>::StaticSprintf(
+                int32_t Result = TCharTraits<TCharType>::StringPrintf(
                     buffer,
                     size,
                     TCharTraits<TCharType>::StaticEFormat(),

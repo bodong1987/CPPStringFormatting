@@ -97,7 +97,7 @@ namespace Formatting
         }
 
     public:
-        static int32_t StaticSprintf(
+        static int32_t StringPrintf(
             char* string,
             size_t sizeInBytes,
             const char* format,
@@ -111,7 +111,7 @@ namespace Formatting
 #if FL_COMPILER_MSVC
             result = _vsprintf_s_l(string, sizeInBytes, format, nullptr, arglist);
 #else
-            result = vsprintf(string, format, arglist);
+            result = vsnprintf(string, sizeInBytes, format, arglist);
 #endif
             va_end(arglist);
 
@@ -349,7 +349,7 @@ namespace Formatting
             return s;
         }
     public:
-        static int32_t StaticSprintf(
+        static int32_t StringPrintf(
             wchar_t* string,
             size_t sizeInWords,
             const wchar_t* format,
