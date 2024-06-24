@@ -1,12 +1,13 @@
 #pragma once
 
 #include <Format/Common/Build.hpp>
-#include <Format/Format.hpp>
-#include <Format/Details/PatternStorage.hpp>
 
 #if FL_PLATFORM_WINDOWS
 #include <afx.h>
 #include <afxtempl.h>
+
+#include <Format/Format.hpp>
+#include <Format/Details/PatternStorage.hpp>
 
 namespace Formatting
 {
@@ -154,7 +155,7 @@ namespace Formatting
         public:
             typedef TTranslatorBase<CString::XCHAR, CString>      Super;
 
-            static bool Transfer(typename Super::StringType& s, const typename Super::FormatPattern& /*Pattern*/, const CString& arg)
+            static bool Transfer(Super::StringType& s, const Super::FormatPattern& /*Pattern*/, const CString& arg)
             {
                 s.AddStr(arg.GetString(), arg.GetString() + arg.GetLength());
 
@@ -241,14 +242,14 @@ namespace Formatting
         TAutoString<TCHAR> Results; \
         Details::FormatTo<TCHAR, Details::MFC::MFCGlobalPatternStorage, const TCHAR*, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format, FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
         return CString(Results.CStr(), Results.GetLength()); \
-    } \    
+    } \
     template <FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
     CString Format(const CString& format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
     { \
         TAutoString<TCHAR> Results; \
         Details::FormatTo<TCHAR, Details::MFC::MFCGlobalPatternStorage, const TCHAR*, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format.c_str(), FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
         return CString(Results.CStr(), Results.GetLength()); \
-    } \    
+    } \
     template < typename TFormatType, FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
     void FormatTo(CString& sink, const TFormatType& format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
     { \

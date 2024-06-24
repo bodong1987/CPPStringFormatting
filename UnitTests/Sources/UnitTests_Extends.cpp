@@ -65,12 +65,12 @@ namespace Formatting
         {
         public:
             typedef TTranslatorBase< char, Vector3 >                    Super;
-            typedef typename Super::CharType                            CharType;
-            typedef typename Super::FormatPattern                       FormatPattern;
-            typedef typename Super::ByteType                            ByteType;
-            typedef typename Super::SizeType                            SizeType;
-            typedef typename Super::StringType                          StringType;
-            typedef typename Super::CharTraits                          CharTraits;
+            typedef Super::CharType                            CharType;
+            typedef Super::FormatPattern                       FormatPattern;
+            typedef Super::ByteType                            ByteType;
+            typedef Super::SizeType                            SizeType;
+            typedef Super::StringType                          StringType;
+            typedef Super::CharTraits                          CharTraits;
 
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, const Vector3& arg)
             {
@@ -89,12 +89,12 @@ namespace Formatting
         {
         public:
             typedef TTranslatorBase< wchar_t, Vector3 >                 Super;
-            typedef typename Super::CharType                            CharType;
-            typedef typename Super::FormatPattern                       FormatPattern;
-            typedef typename Super::ByteType                            ByteType;
-            typedef typename Super::SizeType                            SizeType;
-            typedef typename Super::StringType                          StringType;
-            typedef typename Super::CharTraits                          CharTraits;
+            typedef Super::CharType                            CharType;
+            typedef Super::FormatPattern                       FormatPattern;
+            typedef Super::ByteType                            ByteType;
+            typedef Super::SizeType                            SizeType;
+            typedef Super::StringType                          StringType;
+            typedef Super::CharTraits                          CharTraits;
 
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, const Vector3& arg)
             {
