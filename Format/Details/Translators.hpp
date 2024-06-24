@@ -26,7 +26,7 @@
 #pragma once
 
 #include <Format/Common/Build.hpp>
-#include <Format/Details/Algorithm.hpp>
+#include <Format/Details/StringConvertAlgorithm.hpp>
 #include <Format/Details/Pattern.hpp>
 #include <Format/Common/AutoString.hpp>
 
