@@ -1,6 +1,6 @@
 # CPPFormatLibrary
-这是一个使用C#格式化字符串风格来格式化C++字符串的库，它是类型安全的，可乱序的格式化库。并非所有的C#格式化字符串的格式描述符都完美支持，它只支持大部分常见的格式化方法。  
-This is a library that uses the C# formatted string style to format C++ strings. It is a type-safe, reorderable formatting library. Not all C# format string format descriptors are perfectly supported, it only supports most common formatting methods.  
+这是一个使用C#格式化字符串风格来格式化C++字符串的库，它是类型安全的，可乱序的格式化库。
+This is a library that uses the C# formatted string style to format C++ strings. It is a type-safe, reorderable formatting library. 
 
 本项目支持几乎常见所有主流编译，无论有无C++ 11支持都可以。我使用Visual Studio 2008/2010/2022、CodeBlock with gcc、xcode 15对项目进行了测试，并通过了测试。  
 This project supports almost all common mainstream compilations, whether with or without C++11 support. I tested the project using Visual Studio 2008/2010/2022, CodeBlock with gcc, xcode 15 and it passed.  
