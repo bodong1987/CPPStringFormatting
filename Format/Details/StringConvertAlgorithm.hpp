@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) 2024 CppFormatLibrary
+    Copyright (c) 2024 CPPFormatLibrary
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -63,7 +63,7 @@ namespace Formatting
         {
             constexpr int length = sizeof(TIntegerType) * 8;
 
-            buffer[length] = (TCharType)0;
+            buffer[length] = TCharTraits<TCharType>::GetEndFlag();
 
             for (int i = length-1; i >= 0; --i)
             {
@@ -105,7 +105,7 @@ namespace Formatting
                 'e', 'f'
             };
 
-            assert(base > 0 && static_cast<size_t>(base) <= _countof(DigitMap));
+            assert(base > 0 && static_cast<size_t>(base) <= FL_ARRAY_COUNTOF(DigitMap));
 
             TCharType* Str = buffer;
 
@@ -155,7 +155,7 @@ namespace Formatting
                 'e', 'f'
             };
 
-            assert(base > 0 && static_cast<size_t>(base) <= _countof(DigitMap));
+            assert(base > 0 && static_cast<size_t>(base) <= FL_ARRAY_COUNTOF(DigitMap));
 
             TCharType* Str = buffer;
 
@@ -205,7 +205,7 @@ namespace Formatting
             }
 
             /* if input is larger than ThresMax, revert to exponential */
-            constexpr const double ThresMax = (double)(0x7FFFFFFF);
+            constexpr const double ThresMax = (double)(0x7FFFFFFF); 
             
             TCharType* Str = buffer;
 
@@ -228,9 +228,9 @@ namespace Formatting
                 value = -value;
             }
 
-            int32_t Whole = (int32_t)value;
+            int32_t Whole = static_cast<int32_t>(value);
             double tmp = (value - Whole) * pow10[precision];
-            unsigned Frace = (unsigned)(tmp);
+            unsigned Frace = static_cast<unsigned>(tmp);
 
             Diff = tmp - Frace;
 
@@ -291,7 +291,7 @@ namespace Formatting
                 do
                 {
                     --Count;
-                    *Str++ = (TCharType)(48 + (Frace % 10));
+                    *Str++ = static_cast<TCharType>(48 + (Frace % 10));
                 } while (Frace /= 10);
                 // add extra 0s
                 while (Count-- > 0) *Str++ = '0';
@@ -304,7 +304,7 @@ namespace Formatting
             // Conversion. Number is reversed.
             do
             {
-                *Str++ = (TCharType)(48 + (Whole % 10));
+                *Str++ = static_cast<TCharType>(48 + (Whole % 10));
             } while (Whole /= 10);
 
             if (Neg)

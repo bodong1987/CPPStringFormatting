@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) 2024 CppFormatLibrary
+    Copyright (c) 2024 CPPFormatLibrary
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -162,7 +162,7 @@ namespace Formatting
                 static const TCharType FalseStr[] = { 'F', 'a', 'l', 's', 'e' };
 
                 const TCharType* Selection = arg ? TrueStr : FalseStr;
-                const SizeType length = arg ? _countof(TrueStr) : _countof(FalseStr);
+                const SizeType length = arg ? FL_ARRAY_COUNTOF(TrueStr) : FL_ARRAY_COUNTOF(FalseStr);
 
                 Super::AppendString(strRef, pattern, Selection, length);
 
@@ -244,7 +244,7 @@ namespace Formatting
                     SizeType length = DoubleToString<CharType>(
                         arg,
                         TempBuf,
-                        _countof(TempBuf),
+                        FL_ARRAY_COUNTOF(TempBuf),
                         pattern.HasPrecision() ? pattern.Precision : (pattern.Flag == EFormatFlag::FixedPoint ? DefaultFixedPointPrecision : DefaultPrecision)
                     );
 
@@ -260,7 +260,7 @@ namespace Formatting
                     FmtBuf[length + 2] = eFlagChar;
 
                     CharType TempBuf[64];
-                    size_t bufLength = CharTraits::StringPrintf(TempBuf, _countof(TempBuf), FmtBuf, arg);
+                    size_t bufLength = CharTraits::StringPrintf(TempBuf, FL_ARRAY_COUNTOF(TempBuf), FmtBuf, arg);
 
                     const CharType* plusPos = CharTraits::rFind(TempBuf, eFlagChar);
                     if (plusPos != nullptr)

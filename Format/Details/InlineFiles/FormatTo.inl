@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) 2024 CppFormatLibrary
+    Copyright (c) 2024 CPPFormatLibrary
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@
     Project URL: https://github.com/bodong1987/CPPFormatLibrary
 */
 
+// NOLINTBEGIN
 // Internal Use
 #ifndef _FL_FORMAT_TO_INDEX_
 #error "This is an internally used file, please do not include this file directly"
@@ -135,3 +136,4 @@ inline TAutoString<TCharType>& FormatTo(
 #undef _FL_TEMPLATE_PARAMETERS_
 #undef _FL_REAL_AGUMENTS_
 #undef _FL_TRANSFER_BODY_
+// NOLINTEND

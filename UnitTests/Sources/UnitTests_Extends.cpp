@@ -22,14 +22,14 @@ public:
     std::string ToString() const
     {
         char buffer[100];
-        TCharTraits<char>::StringPrintf(buffer, _countof(buffer), "Vector3(%.2f, %.2f, %.2f)", x, y, z);
+        TCharTraits<char>::StringPrintf(buffer, FL_ARRAY_COUNTOF(buffer), "Vector3(%.2f, %.2f, %.2f)", x, y, z);
         return std::string(buffer);
     }
 
     std::wstring ToWString() const
     {
         wchar_t buffer[100];
-        TCharTraits<wchar_t>::StringPrintf(buffer, _countof(buffer), L"Vector3(%.2f, %.2f, %.2f)", x, y, z);
+        TCharTraits<wchar_t>::StringPrintf(buffer, FL_ARRAY_COUNTOF(buffer), L"Vector3(%.2f, %.2f, %.2f)", x, y, z);
         return std::wstring(buffer);
     }
 

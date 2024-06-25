@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) 2024 CppFormatLibrary
+    Copyright (c) 2024 CPPFormatLibrary
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -44,6 +44,7 @@ namespace Formatting
         public std::char_traits<char>
     {
     private:
+        // NOLINTBEGIN
         static const char* strrstr(const char* haystack, const char* needle)
         {
             const char* r = nullptr;
@@ -95,6 +96,7 @@ namespace Formatting
             }
             return s;
         }
+        // NOLINTEND
 
     public:
         static int32_t StringPrintf(
@@ -104,7 +106,7 @@ namespace Formatting
             ...
         )
         {
-            va_list arglist;
+            va_list arglist; // NOLINT
             va_start(arglist, format);
 
             int result = 0;
@@ -208,9 +210,10 @@ namespace Formatting
 
         static char* Fill(char* Dest, char Val, size_t Length)
         {
-            return (char*)memset(Dest, Val, Length);
+            return (char*)memset(Dest, Val, Length); // NOLINT
         }
 
+        // NOLINTBEGIN
         static int IsAlnum(char ch)
         {
             return isalnum(ch);
@@ -275,6 +278,7 @@ namespace Formatting
         {
             return toupper(ch);
         }
+        // NOLINTEND
 
         static char GetSpace()
         {
@@ -297,6 +301,7 @@ namespace Formatting
         public std::char_traits<wchar_t>
     {
     private:
+        // NOLINTBEGIN
         static const wchar_t* wcsrstr(const wchar_t* haystack, const wchar_t* needle)
         {
             const wchar_t* r = nullptr;
@@ -348,6 +353,7 @@ namespace Formatting
             }
             return s;
         }
+        // NOLINTEND
     public:
         static int32_t StringPrintf(
             wchar_t* string,
@@ -356,7 +362,7 @@ namespace Formatting
             ...
         )
         {
-            va_list arglist;
+            va_list arglist; // NOLINT
 
             va_start(arglist, format);
 
@@ -471,7 +477,7 @@ namespace Formatting
             return (wchar_t*)wmemset(Dest, Val, Length);
         }
 
-        static int IsAlnum(wchar_t ch)
+        static int IsAlnum(wchar_t ch) // NOLINT
         {
             return iswalnum(ch);
         }
@@ -501,7 +507,7 @@ namespace Formatting
             return iswxdigit(ch);
         }
 
-        static int IsCntrl(wchar_t ch)
+        static int IsCntrl(wchar_t ch) // NOLINT
         {
             return iswcntrl(ch);
         }
@@ -516,7 +522,7 @@ namespace Formatting
             return iswprint(ch);
         }
 
-        static int IsPunct(wchar_t ch)
+        static int IsPunct(wchar_t ch) // NOLINT
         {
             return iswpunct(ch);
         }

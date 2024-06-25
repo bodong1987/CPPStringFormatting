@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) 2024 CppFormatLibrary
+    Copyright (c) 2024 CPPFormatLibrary
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -172,7 +172,7 @@ namespace Formatting
                     return false;
                 }
 
-                pattern.Width = (ByteType)val;
+                pattern.Width = static_cast<ByteType>(val);
 
                 // find if it is a ':' here
                 if (TestPtr < end && *TestPtr == ':')
@@ -252,9 +252,9 @@ namespace Formatting
                     // get Precision
                     int32_t val = FindNextNumber(TestPtr, end, TestPtr);
 
-                    if (val != (ByteType)-1)
+                    if (val != static_cast<ByteType>(-1))
                     {
-                        pattern.Precision = (ByteType)val;
+                        pattern.Precision = static_cast<ByteType>(val);
                     }
                 }
 
@@ -384,15 +384,15 @@ namespace Formatting
                     {
                         pattern.Flag = EFormatFlag::Raw;
                         pattern.Start = 0;
-                        pattern.Len = (SizeType)(p1 - p0) - 1;
-                        pattern.Index = (ByteType)-1;
+                        pattern.Len = static_cast<SizeType>(p1 - p0) - 1;
+                        pattern.Index = static_cast<ByteType>(-1);
                     }
                     else
                     {
                         pattern.Flag = EFormatFlag::Raw;
                         pattern.Start = p0 - start;
-                        pattern.Len = (SizeType)(p1 - p0) - 1;
-                        pattern.Index = (ByteType)-1;
+                        pattern.Len = static_cast<SizeType>(p1 - p0) - 1;
+                        pattern.Index = static_cast<ByteType>(-1);
                     }
 
                     TPolicy::AppendPattern(patterns, pattern);
@@ -444,15 +444,15 @@ namespace Formatting
                     {
                         pattern.Flag = EFormatFlag::Raw;
                         pattern.Start = 0;
-                        pattern.Len = (SizeType)(p1 - p0) - 1;
-                        pattern.Index = (ByteType)-1;
+                        pattern.Len = static_cast<SizeType>(p1 - p0) - 1;
+                        pattern.Index = static_cast<ByteType>(-1);
                     }
                     else
                     {
                         pattern.Flag = EFormatFlag::Raw;
                         pattern.Start = p0 - start;
-                        pattern.Len = (SizeType)(p1 - p0) - 1;
-                        pattern.Index = (ByteType)-1;
+                        pattern.Len = static_cast<SizeType>(p1 - p0) - 1;
+                        pattern.Index = static_cast<ByteType>(-1);
                     }
 
                     TPolicy::AppendPattern(patterns, pattern);

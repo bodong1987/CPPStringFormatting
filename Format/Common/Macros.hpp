@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) 2024 CppFormatLibrary
+    Copyright (c) 2024 CPPFormatLibrary
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -29,11 +29,11 @@
 #define FL_PP_COMMA() ,
 
 // Text
-#define _FL_PP_TEXT(Expr) #Expr
+#define _FL_PP_TEXT(Expr) #Expr /*NOLINT*/
 #define FL_PP_TEXT(Expr) _FL_PP_TEXT(Expr)
 
 // CAT
-#define _FL_PP_CAT_IMPL_(a, b ) a ## b
+#define _FL_PP_CAT_IMPL_(a, b ) a ## b /*NOLINT*/
 #define FL_PP_CAT(a, b) _FL_PP_CAT_IMPL_( a, b )
 
 // make a unique name
@@ -41,10 +41,12 @@
     FL_PP_CAT(Prefix, FL_PP_CAT(_, __LINE__))
 
 // support not
+// NOLINTBEGIN
 #define FL_PP_COMPL_0 1
 #define FL_PP_COMPL_1 0
 #define _FL_PP_NOT(Expr) FL_PP_CAT(FL_PP_COMPL_, FL_PP_BOOL(Expr))
 #define FL_PP_NOT(Expr) _FL_PP_NOT(Expr)
+// NOLINTEND
 
 // unused parameter
 #if FL_COMPILER_MSVC
@@ -58,6 +60,7 @@
 
 #define FL_PP_BOOL_I(x) FL_PP_BOOL_ ## x
 
+// NOLINTBEGIN
 #define FL_PP_BOOL_0 0
 #define FL_PP_BOOL_1 1
 #define FL_PP_BOOL_2 1
@@ -75,7 +78,7 @@
 #define FL_PP_BOOL_14 1
 #define FL_PP_BOOL_15 1
 #define FL_PP_BOOL_16 1
-
+// NOLINTEND
 
 // Simple If
 #define FL_PP_IF(Condition, t, f) FL_PP_IIF(FL_PP_BOOL(Condition), t, f)

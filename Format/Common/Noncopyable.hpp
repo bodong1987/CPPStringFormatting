@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) 2024 CppFormatLibrary
+    Copyright (c) 2024 CPPFormatLibrary
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -37,8 +37,7 @@ namespace Formatting
     public:
         Noncopyable() {}  // NOLINT      
         ~Noncopyable() {} // NOLINT
-#if FL_COMPILER_WITH_CXX11
-    public:
+#if FL_COMPILER_WITH_CXX11    
         Noncopyable(const Noncopyable&) = delete;
         Noncopyable& operator = (const Noncopyable&) = delete;
 #else

@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) 2024 CppFormatLibrary
+    Copyright (c) 2024 CPPFormatLibrary
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@
 */
 #pragma once
 
+// NOLINTBEGIN
 #if (defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WINDOWS) || defined(_WIN64))
 #define FL_PLATFORM_WINDOWS   1
 #else
@@ -55,7 +56,7 @@
 #define FL_COMPILER_GCC       1
 #else
 #define FL_COMPILER_GCC       0
-#endif // __GNUC__
+#endif // __GNUC__  // NOLINT
 
 // ios or ios simulator
 #if defined(TARGET_OS_IOS) || defined(TARGET_IPHONE_SIMULATOR)
@@ -187,8 +188,8 @@
 
 #endif
 
-#ifndef _countof
-#define _countof( Array ) (sizeof(Array)/sizeof(Array[0]))
+#ifndef FL_ARRAY_COUNTOF
+#define FL_ARRAY_COUNTOF( Array ) (sizeof(Array)/sizeof(Array[0])) /*NOLINT*/
 #endif
 
 #if FL_COMPILER_WITH_CXX11
@@ -212,3 +213,5 @@ typedef unsigned int long long uint64_t;
 #endif
 
 #endif
+
+// NOLINTEND

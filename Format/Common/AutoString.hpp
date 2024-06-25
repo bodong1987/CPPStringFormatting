@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) 2024 CppFormatLibrary
+    Copyright (c) 2024 CPPFormatLibrary
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -172,7 +172,7 @@ namespace Formatting
         void AppendWithPadding(CharType* bufferPtr, const CharType* start, const size_t length, const size_t targetLength, bool paddingLeft, CharType fillChar)
         {
             const bool bNeedPadding = targetLength > length;
-            const int PaddingCount = (int)(targetLength - length);
+            const int PaddingCount = static_cast<int>(targetLength - length);
 
             assert(bufferPtr);
             assert(start);
@@ -194,14 +194,14 @@ namespace Formatting
 
                 Count += targetLength;
 
-                bufferPtr[Count] = (CharType)0;
+                bufferPtr[Count] = TCharTraits<CharType>::GetEndFlag();
             }
             else
             {
                 CharTraits::copy(bufferPtr + Count, start, length);
                 Count += length;
 
-                bufferPtr[Count] = (CharType)0;
+                bufferPtr[Count] = TCharTraits<CharType>::GetEndFlag();
             }
         }
 
@@ -210,7 +210,7 @@ namespace Formatting
         {
             // get text length
             const size_t Length = end ? end - start : CharTraits::length(start);
-            const size_t TargetLength = Algorithm::Max(Length, (size_t)alignedLength);            
+            const size_t TargetLength = Algorithm::Max(Length, static_cast<size_t>(alignedLength));            
 
             if (IsDataOnStack())
             {
@@ -221,7 +221,7 @@ namespace Formatting
                 else
                 {
                     assert(!HeapValPtr);
-                    AllocatedCount = (size_t)((Count + TargetLength) * 1.5f);
+                    AllocatedCount = (size_t)((Count + TargetLength) * 1.5f); // NOLINT
                     HeapValPtr = Allocate(AllocatedCount);
 
                     assert(HeapValPtr);
@@ -242,7 +242,7 @@ namespace Formatting
                 }
                 else
                 {
-                    const size_t NewCount = (size_t)((Count + TargetLength)*1.5f);
+                    const size_t NewCount = (size_t)((Count + TargetLength)*1.5f); // NOLINT
                     CharType* DataPtr = Allocate(NewCount);
                     assert(DataPtr);
 

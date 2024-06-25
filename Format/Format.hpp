@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) 2024 CppFormatLibrary
+    Copyright (c) 2024 CPPFormatLibrary
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -25,10 +25,12 @@
 */
 /*
 * This is a library that uses the C# formatted string style to format C++ strings. 
-* It is a type-safe, reorderable formatting library. 
+* It is a type-safe, reentrant, reorderable formatting library. 
 * Not all C# format string format descriptors are perfectly supported, it only supports most common formatting methods.
 * see also: 
 * @reference https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings
+* usage :
+* https://github.com/bodong1987/CPPFormatLibrary/blob/master/README.md
 */
 #pragma once
 

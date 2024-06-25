@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) 2024 CppFormatLibrary
+    Copyright (c) 2024 CPPFormatLibrary
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -94,13 +94,13 @@ namespace Formatting
             /// Initializes a new instance of the <see cref="TFormatPattern"/> class.
             /// </summary>
             TFormatPattern() :
-				Start((SizeType)-1),
+				Start(static_cast<SizeType>(-1)),
 				Len(0),
 				Flag(EFormatFlag::Raw),
 				Align(EAlignFlag::Right),
-				Index((ByteType)-1),
-				Precision((ByteType)-1),
-				Width((ByteType)-1),
+				Index(static_cast<ByteType>(-1)),
+				Precision(static_cast<ByteType>(-1)),
+				Width(static_cast<ByteType>(-1)),
                 bUpper(false)
             {
             }
@@ -129,7 +129,7 @@ namespace Formatting
             /// <returns>bool.</returns>
             bool    HasWidth() const
             {
-                return Width != (ByteType)-1;
+                return Width != static_cast<ByteType>(-1);
             }
                         
             /// <summary>
@@ -138,7 +138,7 @@ namespace Formatting
             /// <returns>bool.</returns>
             bool    HasPrecision() const
             {
-                return Precision != (ByteType)-1;
+                return Precision != static_cast<ByteType>(-1);
             }
 
         public:            
