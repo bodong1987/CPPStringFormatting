@@ -27,6 +27,10 @@
 
 #include <Format/Common/Build.hpp>
 
+#if !FL_COMPILER_WITH_CXX11
+#include <Format/Common/Mpl.hpp>
+#endif
+
 namespace Formatting
 {
     namespace Details
@@ -152,4 +156,16 @@ namespace Formatting
             bool             bUpper;
         };
     }
+
+#if !FL_COMPILER_WITH_CXX11
+	namespace Mpl
+    {
+    	/// <summary>
+    	/// make a partial specialization, so this TFormatPattern<TCharType> become a simple type
+    	/// it will have a fast Move and copy operation
+    	/// </summary>
+    	template < typename TCharType >
+		struct IsSimple< Details::TFormatPattern<TCharType> > : TrueType{};
+    }
+#endif
 }

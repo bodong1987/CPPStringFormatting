@@ -86,3 +86,73 @@ TEST(Algorithm, TestDoubleToString)
     EXPECT_EQ(Details::DoubleToString<char>(123.456, buffer, sizeof(buffer), 3), 7);
     EXPECT_STREQ(buffer, "123.456");
 }
+
+TEST(TCharTraits, StringPrintf)
+{
+    char buffer[100];
+    TCharTraits<char>::StringPrintf(buffer, FL_ARRAY_COUNTOF(buffer), "%s %d", "test", 123);
+    EXPECT_STREQ(buffer, "test 123");
+
+    wchar_t wbuffer[100];
+    TCharTraits<wchar_t>::StringPrintf(wbuffer, FL_ARRAY_COUNTOF(wbuffer), L"%s %d", L"test", 123);
+    EXPECT_EQ(std::wcscmp(wbuffer, L"test 123"), 0);
+}
+
+TEST(TCharTraits, CompareN)
+{
+    EXPECT_EQ(TCharTraits<char>::CompareN("hello111", "hello222", 5), 0);
+    EXPECT_EQ(TCharTraits<wchar_t>::CompareN(L"hello333", L"hello444", 5), 0);
+}
+
+TEST(TCharTraits, iCompare)
+{
+    EXPECT_EQ(TCharTraits<char>::iCompare("hello", "HELLO"), 0);
+    EXPECT_EQ(TCharTraits<wchar_t>::iCompare(L"hello", L"HELLO"), 0);
+}
+
+TEST(TCharTraits, iCompareN)
+{
+    EXPECT_EQ(TCharTraits<char>::iCompareN("hello111", "HELLO2222", 5), 0);
+    EXPECT_EQ(TCharTraits<wchar_t>::iCompareN(L"hello4444", L"HELLO555", 5), 0);
+}
+
+TEST(TCharTraits, Find)
+{
+    EXPECT_STREQ(TCharTraits<char>::Find("hello world", "world"), "world");
+    EXPECT_EQ(std::wcscmp(TCharTraits<wchar_t>::Find(L"hello world", L"world"), L"world"), 0);
+}
+
+TEST(TCharTraits, iFind)
+{
+    EXPECT_STREQ(TCharTraits<char>::iFind("hello world", "WORLD"), "world");
+    EXPECT_EQ(std::wcscmp(TCharTraits<wchar_t>::iFind(L"hello world", L"WORLD"), L"world"), 0);
+}
+
+TEST(TCharTraits, rFind)
+{
+    EXPECT_STREQ(TCharTraits<char>::rFind("hello world", 'o'), "orld");
+    EXPECT_EQ(std::wcscmp(TCharTraits<wchar_t>::rFind(L"hello world", L'o'), L"orld"), 0);
+}
+
+TEST(TCharTraits, rFindAny)
+{
+    EXPECT_STREQ(TCharTraits<char>::rFindAny("hello world", "od"), "d");
+    EXPECT_EQ(std::wcscmp(TCharTraits<wchar_t>::rFindAny(L"hello world", L"od"), L"d"), 0);
+}
+
+TEST(TCharTraits, rFindNotOfAny)
+{
+    EXPECT_STREQ(TCharTraits<char>::rFindNotOfAny("hello world", "od"), "ld");
+    EXPECT_EQ(std::wcscmp(TCharTraits<wchar_t>::rFindNotOfAny(L"hello world", L"od"), L"ld"), 0);
+}
+
+TEST(TCharTraits, Fill)
+{
+    char buffer[10] = {0};
+    TCharTraits<char>::Fill(buffer, 'a', 5);
+    EXPECT_STREQ(buffer, "aaaaa");
+
+    wchar_t wbuffer[10] = {0};
+    TCharTraits<wchar_t>::Fill(wbuffer, L'a', 5);
+    EXPECT_EQ(std::wcscmp(wbuffer, L"aaaaa"), 0);
+}

@@ -39,7 +39,6 @@
 
 #endif // FL_COMPILER_GCC
 
-
 namespace Formatting
 {
     namespace Mpl
