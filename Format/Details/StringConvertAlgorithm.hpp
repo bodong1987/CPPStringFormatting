@@ -30,6 +30,7 @@
 #pragma once
 
 #include <Format/Common/Build.hpp>
+#include <Format/Common/CharTraits.hpp>
 
 namespace Formatting
 {

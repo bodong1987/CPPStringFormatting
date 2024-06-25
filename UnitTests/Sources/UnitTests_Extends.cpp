@@ -1,4 +1,4 @@
-#include <Format/Common/Build.hpp>
+﻿#include <Format/Common/Build.hpp>
 
 #if FL_PLATFORM_WINDOWS
 #pragma warning(push)
