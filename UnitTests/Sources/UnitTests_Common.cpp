@@ -117,3 +117,52 @@ TEST(TAutoString, InjectAdd)
     str.InjectAdd(1);
     EXPECT_EQ(str.CStr()[1], '\0');
 }
+
+TEST(TAutoString, AddLongStr)
+{    
+    TAutoString<char> str;
+    str.AddStr("Hello");
+    str.AddStr(", ");
+    str.AddStr("World");
+
+    std::string longStr(1024, 'A');
+    std::string longStr2(2048, 'B');
+
+    str.AddStr(longStr.c_str());
+    str.AddStr(longStr2.c_str());
+    
+    EXPECT_STREQ(str.CStr(), (std::string("Hello, World") + longStr + longStr2).c_str());
+}
+
+TEST(TAutoString, AddAlignStr)
+{
+    TAutoString<char> str;
+
+    str.AddAlignStr("Hello", nullptr, 10, false, ' ');
+    EXPECT_STREQ(str.CStr(), "Hello     ");
+
+    str.AddAlignStr("World", nullptr, 10, true, '$');
+    EXPECT_STREQ(str.CStr(), "Hello     $$$$$World");
+    
+    str.AddAlignStr("Hi", nullptr, 5, false, '0');
+    EXPECT_STREQ(str.CStr(), "Hello     $$$$$WorldHi000");
+
+    str.AddAlignStr("HelloWorld", nullptr, 5, true, '0');
+    EXPECT_STREQ(str.CStr(), "Hello     $$$$$WorldHi000HelloWorld");
+
+    str.AddAlignStr("12345", nullptr, 5, true, '0');
+    EXPECT_STREQ(str.CStr(), "Hello     $$$$$WorldHi000HelloWorld12345");
+}
+
+TEST(TAutoString, Clear)
+{
+    TAutoString<wchar_t> str;
+
+    str.AddStr(L"Hello");
+    EXPECT_STREQ(str.CStr(), L"Hello");
+
+    str.Clear();
+
+    EXPECT_TRUE(str.IsEmpty());
+    EXPECT_STREQ(str.CStr(), L"");
+}

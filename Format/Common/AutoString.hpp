@@ -154,6 +154,8 @@ namespace Formatting
 
                     ReleaseHeapData();
 
+                    assert(HeapValPtr == nullptr);
+
                     CharTraits::copy(DataPtr + Count, start, Length);
 
                     Count += Length;
@@ -270,6 +272,21 @@ namespace Formatting
 
             assert(IsDataOnStack() ? (Count <= DEFAULT_LENGTH) : (Count < AllocatedCount));
         }
+
+        void Clear()
+        {
+            Count = 0;
+            StackVal[0] = 0;
+            if(HeapValPtr != nullptr)
+            {
+                HeapValPtr[0] = 0;
+            }
+        }
+
+        bool IsEmpty() const
+        {
+            return Count == 0;
+        }        
 
     protected:        
         void  AddItem(const TCharType& value)

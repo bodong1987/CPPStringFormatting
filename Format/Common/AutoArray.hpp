@@ -350,6 +350,8 @@ namespace Formatting
 
             ReleaseHeapData();
 
+            assert(HeapValPtr == nullptr);
+
             HeapValPtr = DataPtr;
             AllocatedCount = NewCount;
         }
