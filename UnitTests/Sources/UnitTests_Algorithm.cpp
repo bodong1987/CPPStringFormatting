@@ -94,7 +94,14 @@ TEST(TCharTraits, StringPrintf)
     EXPECT_STREQ(buffer, "test 123");
 
     wchar_t wbuffer[100];
-    TCharTraits<wchar_t>::StringPrintf(wbuffer, FL_ARRAY_COUNTOF(wbuffer), L"%s %d", L"test", 123);
+
+#if FL_PLATFORM_APPLE
+    const wchar_t* wFmt = L"%S %d";
+#else
+    const wchar_t* wFmt = L"%s %d";
+#endif
+    
+    TCharTraits<wchar_t>::StringPrintf(wbuffer, FL_ARRAY_COUNTOF(wbuffer), wFmt, L"test", 123);
     EXPECT_EQ(std::wcscmp(wbuffer, L"test 123"), 0);
 }
 
