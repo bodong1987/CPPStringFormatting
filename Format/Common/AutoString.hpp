@@ -31,20 +31,25 @@
 
 namespace Formatting
 {
+    // Allows users to directly define the default TAutoString stack character size from the outside
+#ifndef FL_DEFAULT_AUTO_STRING_STACK_LENGTH
+#define FL_DEFAULT_AUTO_STRING_STACK_LENGTH 120
+#endif    
+    
     /// <summary>
     /// Class TAutoString.
     /// stack string
-    /// Implements the <see cref="TAutoArray{TCharType, 0xFF, 2}" />
+    /// Implements the <see cref="TAutoArray" />
     /// </summary>
-    /// <seealso cref="TAutoArray{TCharType, 0xFF, 2}" />
+    /// <seealso cref="TAutoArray" />
     template < typename TCharType >
     class TAutoString :
-        public TAutoArray< TCharType, 0xFF, 2 >
+        public TAutoArray< TCharType, FL_DEFAULT_AUTO_STRING_STACK_LENGTH, 1 >
     {
     public:
-        typedef TAutoArray< TCharType, 0xFF, 2 > Super;
-        typedef TCharTraits<TCharType>           CharTraits;
-        typedef TCharType                        CharType;
+        typedef TAutoArray< TCharType, FL_DEFAULT_AUTO_STRING_STACK_LENGTH, 1 > Super;
+        typedef TCharTraits<TCharType>                                          CharTraits;
+        typedef TCharType                                                       CharType;
 
         using Super::Count;
         using Super::AllocatedCount;

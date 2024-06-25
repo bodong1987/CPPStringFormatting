@@ -292,7 +292,7 @@ namespace Formatting
 
         static char GetEndFlag()
         {
-            return (char)0;
+            return 0;
         }
     };
 
@@ -554,7 +554,7 @@ namespace Formatting
 
         static wchar_t GetEndFlag()
         {
-            return (wchar_t)0;
+            return 0;
         }
     };
 
