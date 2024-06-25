@@ -1,7 +1,7 @@
 /*
     MIT License
 
-    Copyright (c) 2024 CPPFormatLibrary
+    Copyright (c) 2024 CPPStringFormatting
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 
-    Project URL: https://github.com/bodong1987/CPPFormatLibrary
+    Project URL: https://github.com/bodong1987/CPPStringFormatting
 */
 
 // NOLINTBEGIN

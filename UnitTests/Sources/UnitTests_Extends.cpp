@@ -42,69 +42,69 @@ private:
 if you disable this translator
 you will get a compile error of Transfer can't access :
 vs2022:
-\CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280: ¡°bool Formatting::Details::TTranslator<TCharType,Formatting::Details::Utils::DoTransferHelper<TCharType,TPatternType,T0>::DoTransfer::TransferType>::Transfer(Formatting::TAutoString<TCharType> &,const Formatting::Details::TFormatPattern<TCharType> &,const T &)¡±: Try to reference a deleted function
-\CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:         with
-\CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:         [
-\CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:             TCharType=wchar_t,
-\CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:             TPatternType=Formatting::Details::FormatTo::FormatPatternType,
-\CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:             T0=Vector3,
-\CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:             T=Formatting::Details::Utils::DoTransferHelper<wchar_t,Formatting::Details::FormatTo::FormatPatternType,Vector3>::DoTransfer::TransferType
-\CPPFormatLibrary\Format\Details\FormatTo.hpp(83,68): error C2280:         ]
+\CPPStringFormatting\Format\Details\FormatTo.hpp(83,68): error C2280: ï¿½ï¿½bool Formatting::Details::TTranslator<TCharType,Formatting::Details::Utils::DoTransferHelper<TCharType,TPatternType,T0>::DoTransfer::TransferType>::Transfer(Formatting::TAutoString<TCharType> &,const Formatting::Details::TFormatPattern<TCharType> &,const T &)ï¿½ï¿½: Try to reference a deleted function
+\CPPStringFormatting\Format\Details\FormatTo.hpp(83,68): error C2280:         with
+\CPPStringFormatting\Format\Details\FormatTo.hpp(83,68): error C2280:         [
+\CPPStringFormatting\Format\Details\FormatTo.hpp(83,68): error C2280:             TCharType=wchar_t,
+\CPPStringFormatting\Format\Details\FormatTo.hpp(83,68): error C2280:             TPatternType=Formatting::Details::FormatTo::FormatPatternType,
+\CPPStringFormatting\Format\Details\FormatTo.hpp(83,68): error C2280:             T0=Vector3,
+\CPPStringFormatting\Format\Details\FormatTo.hpp(83,68): error C2280:             T=Formatting::Details::Utils::DoTransferHelper<wchar_t,Formatting::Details::FormatTo::FormatPatternType,Vector3>::DoTransfer::TransferType
+\CPPStringFormatting\Format\Details\FormatTo.hpp(83,68): error C2280:         ]
 
 xcode:
  Showing All Messages
- /Users/bodong/Desktop/CPPFormatLibrary/UnitTests/Sources/UnitTests_Extends.cpp:12:10: in file included from /Users/bodong/Desktop/CPPFormatLibrary/UnitTests/Sources/UnitTests_Extends.cpp:12:
- /Users/bodong/Desktop/CPPFormatLibrary/Format/Format.hpp:39:10: in file included from /Users/bodong/Desktop/CPPFormatLibrary/Format/Format.hpp:39:
- /Users/bodong/Desktop/CPPFormatLibrary/Format/Details/FormatTo.hpp:98:77: In instantiation of member function 'Formatting::Details::Utils::DoTransferHelper<char, Formatting::Details::TFormatPattern<char>, Vector3>::DoTransfer' requested here
- /Users/bodong/Desktop/CPPFormatLibrary/Format/Details/FormatTo.hpp:154:33: In instantiation of function template specialization 'Formatting::Details::Utils::DoTransfer<char, Formatting::Details::TFormatPattern<char>, Vector3>' requested here
- /Users/bodong/Desktop/CPPFormatLibrary/Format/Details/StandardLibrary/FormatTo.hpp:88:22: In instantiation of function template specialization 'Formatting::Details::FormatTo<char, Formatting::Details::TGlobalPatternStorage<Formatting::Details::StandardLibrary::TStandardPolicy<char, Formatting::Details::MutexNone>>, const char *, Vector3>' requested here
- /Users/bodong/Desktop/CPPFormatLibrary/UnitTests/Sources/UnitTests_Extends.cpp:118:32: In instantiation of function template specialization 'Formatting::StandardLibrary::Format<char, Vector3>' requested here
- /Users/bodong/Desktop/CPPFormatLibrary/Format/Details/Translators.hpp:138:25: 'Transfer' has been explicitly marked deleted here
+ /Users/bodong/Desktop/CPPStringFormatting/UnitTests/Sources/UnitTests_Extends.cpp:12:10: in file included from /Users/bodong/Desktop/CPPStringFormatting/UnitTests/Sources/UnitTests_Extends.cpp:12:
+ /Users/bodong/Desktop/CPPStringFormatting/Format/Format.hpp:39:10: in file included from /Users/bodong/Desktop/CPPStringFormatting/Format/Format.hpp:39:
+ /Users/bodong/Desktop/CPPStringFormatting/Format/Details/FormatTo.hpp:98:77: In instantiation of member function 'Formatting::Details::Utils::DoTransferHelper<char, Formatting::Details::TFormatPattern<char>, Vector3>::DoTransfer' requested here
+ /Users/bodong/Desktop/CPPStringFormatting/Format/Details/FormatTo.hpp:154:33: In instantiation of function template specialization 'Formatting::Details::Utils::DoTransfer<char, Formatting::Details::TFormatPattern<char>, Vector3>' requested here
+ /Users/bodong/Desktop/CPPStringFormatting/Format/Details/StandardLibrary/FormatTo.hpp:88:22: In instantiation of function template specialization 'Formatting::Details::FormatTo<char, Formatting::Details::TGlobalPatternStorage<Formatting::Details::StandardLibrary::TStandardPolicy<char, Formatting::Details::MutexNone>>, const char *, Vector3>' requested here
+ /Users/bodong/Desktop/CPPStringFormatting/UnitTests/Sources/UnitTests_Extends.cpp:118:32: In instantiation of function template specialization 'Formatting::StandardLibrary::Format<char, Vector3>' requested here
+ /Users/bodong/Desktop/CPPStringFormatting/Format/Details/Translators.hpp:138:25: 'Transfer' has been explicitly marked deleted here
 
  gcc:
- In file included from I:/CPPFormatLibrary/Format/Format.hpp:39,
-                 from I:\CPPFormatLibrary\UnitTests\Sources\UnitTests_Extends.cpp:12:
-I:/CPPFormatLibrary/Format/Details/FormatTo.hpp: In instantiation of 'static bool Formatting::Details::Utils::DoTransferHelper<TCharType, TPatternType, T0>::DoTransfer(int32_t, int32_t&, Formatting::TAutoString<TCharType>&, const TPatternType&, const TCharType*, const T0&) [with TCharType = char; TPatternType = Formatting::Details::TFormatPattern<char>; T0 = Vector3; int32_t = int]':
-I:/CPPFormatLibrary/Format/Details/FormatTo.hpp:98:87:   required from 'bool Formatting::Details::Utils::DoTransfer(int32_t, int32_t&, Formatting::TAutoString<TCharType>&, const TPatternType&, const TCharType*, const T0&, const T& ...) [with TCharType = char; TPatternType = Formatting::Details::TFormatPattern<char>; T0 = Vector3; T = {}; int32_t = int]'
-I:/CPPFormatLibrary/Format/Details/FormatTo.hpp:154:79:   required from 'Formatting::TAutoString<TCharType>& Formatting::Details::FormatTo(Formatting::TAutoString<TCharType>&, const TFormatType&, const T& ...) [with TCharType = char; TPatternStorageType = Formatting::Details::TGlobalPatternStorage<Formatting::Details::StandardLibrary::TStandardPolicy<char, Formatting::Details::Mutex> >; TFormatType = const char*; T = {Vector3}]'
-I:/CPPFormatLibrary/Format/Details/StandardLibrary/FormatTo.hpp:88:95:   required from 'std::__cxx11::basic_string<_CharT> Formatting::StandardLibrary::Format(const TCharType*, const T0&, T ...) [with TCharType = char; T0 = Vector3; T = {}]'
-I:\CPPFormatLibrary\UnitTests\Sources\UnitTests_Extends.cpp:124:5:   required from here
-I:/CPPFormatLibrary/Format/Details/FormatTo.hpp:83:76: error: use of deleted function 'static bool Formatting::Details::TTranslator<TCharType, T>::Transfer(typename Formatting::Details::TTranslator<TCharType, T>::Super::StringType&, const typename Formatting::Details::TTranslator<TCharType, T>::Super::FormatPattern&, const T&) [with TCharType = char; T = Vector3; typename Formatting::Details::TTranslator<TCharType, T>::Super::StringType = Formatting::TAutoString<char>; typename Formatting::Details::TTranslator<TCharType, T>::Super::FormatPattern = Formatting::Details::TFormatPattern<char>]'
+ In file included from I:/CPPStringFormatting/Format/Format.hpp:39,
+                 from I:\CPPStringFormatting\UnitTests\Sources\UnitTests_Extends.cpp:12:
+I:/CPPStringFormatting/Format/Details/FormatTo.hpp: In instantiation of 'static bool Formatting::Details::Utils::DoTransferHelper<TCharType, TPatternType, T0>::DoTransfer(int32_t, int32_t&, Formatting::TAutoString<TCharType>&, const TPatternType&, const TCharType*, const T0&) [with TCharType = char; TPatternType = Formatting::Details::TFormatPattern<char>; T0 = Vector3; int32_t = int]':
+I:/CPPStringFormatting/Format/Details/FormatTo.hpp:98:87:   required from 'bool Formatting::Details::Utils::DoTransfer(int32_t, int32_t&, Formatting::TAutoString<TCharType>&, const TPatternType&, const TCharType*, const T0&, const T& ...) [with TCharType = char; TPatternType = Formatting::Details::TFormatPattern<char>; T0 = Vector3; T = {}; int32_t = int]'
+I:/CPPStringFormatting/Format/Details/FormatTo.hpp:154:79:   required from 'Formatting::TAutoString<TCharType>& Formatting::Details::FormatTo(Formatting::TAutoString<TCharType>&, const TFormatType&, const T& ...) [with TCharType = char; TPatternStorageType = Formatting::Details::TGlobalPatternStorage<Formatting::Details::StandardLibrary::TStandardPolicy<char, Formatting::Details::Mutex> >; TFormatType = const char*; T = {Vector3}]'
+I:/CPPStringFormatting/Format/Details/StandardLibrary/FormatTo.hpp:88:95:   required from 'std::__cxx11::basic_string<_CharT> Formatting::StandardLibrary::Format(const TCharType*, const T0&, T ...) [with TCharType = char; T0 = Vector3; T = {}]'
+I:\CPPStringFormatting\UnitTests\Sources\UnitTests_Extends.cpp:124:5:   required from here
+I:/CPPStringFormatting/Format/Details/FormatTo.hpp:83:76: error: use of deleted function 'static bool Formatting::Details::TTranslator<TCharType, T>::Transfer(typename Formatting::Details::TTranslator<TCharType, T>::Super::StringType&, const typename Formatting::Details::TTranslator<TCharType, T>::Super::FormatPattern&, const T&) [with TCharType = char; T = Vector3; typename Formatting::Details::TTranslator<TCharType, T>::Super::StringType = Formatting::TAutoString<char>; typename Formatting::Details::TTranslator<TCharType, T>::Super::FormatPattern = Formatting::Details::TFormatPattern<char>]'
                          if (!TTranslator<TCharType, TransferType>::Transfer(sink, pattern, arg0))
                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
-In file included from I:/CPPFormatLibrary/Format/Details/FormatTo.hpp:28,
-                 from I:/CPPFormatLibrary/Format/Format.hpp:39,
-                 from I:\CPPFormatLibrary\UnitTests\Sources\UnitTests_Extends.cpp:12:
-I:/CPPFormatLibrary/Format/Details/Translators.hpp:138:25: note: declared here
+In file included from I:/CPPStringFormatting/Format/Details/FormatTo.hpp:28,
+                 from I:/CPPStringFormatting/Format/Format.hpp:39,
+                 from I:\CPPStringFormatting\UnitTests\Sources\UnitTests_Extends.cpp:12:
+I:/CPPStringFormatting/Format/Details/Translators.hpp:138:25: note: declared here
              static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg) = delete;
                          ^~~~~~~~
  vs2008:
- 1>D:\CPPFormatLibrary\Format/Details/InlineFiles/FormatTo.inl(114) : error C2248: ¡°Formatting::Details::TTranslator<TCharType,T>::Transfer¡±: ÎÞ·¨·ÃÎÊ private ³ÉÔ±(ÔÚ¡°Formatting::Details::TTranslator<TCharType,T>¡±ÀàÖÐÉùÃ÷)
+ 1>D:\CPPStringFormatting\Format/Details/InlineFiles/FormatTo.inl(114) : error C2248: ï¿½ï¿½Formatting::Details::TTranslator<TCharType,T>::Transferï¿½ï¿½: ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ private ï¿½ï¿½Ô±(ï¿½Ú¡ï¿½Formatting::Details::TTranslator<TCharType,T>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
  1>        with
  1>        [
  1>            TCharType=char,
  1>            T=TransferType
  1>        ]
- 1>        D:\CPPFormatLibrary\Format/Details/Translators.hpp(141) : ²Î¼û¡°Formatting::Details::TTranslator<TCharType,T>::Transfer¡±µÄÉùÃ÷
+ 1>        D:\CPPStringFormatting\Format/Details/Translators.hpp(141) : ï¿½Î¼ï¿½ï¿½ï¿½Formatting::Details::TTranslator<TCharType,T>::Transferï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  1>        with
  1>        [
  1>            TCharType=char,
  1>            T=TransferType
  1>        ]
- 1>        D:\CPPFormatLibrary\Format/Details/StandardLibrary/FormatTo.hpp(181): ²Î¼û¶ÔÕýÔÚ±àÒëµÄº¯Êý Ä£°å ÊµÀý»¯¡°Formatting::TAutoString<TCharType> &Formatting::Details::FormatTo<char,Formatting::Details::StandardLibrary::STLGlobalPatternStorageA,const char*,T0>(Formatting::TAutoString<TCharType> &,const TFormatType &,const T0 &)¡±µÄÒýÓÃ
+ 1>        D:\CPPStringFormatting\Format/Details/StandardLibrary/FormatTo.hpp(181): ï¿½Î¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ Ä£ï¿½ï¿½ Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Formatting::TAutoString<TCharType> &Formatting::Details::FormatTo<char,Formatting::Details::StandardLibrary::STLGlobalPatternStorageA,const char*,T0>(Formatting::TAutoString<TCharType> &,const TFormatType &,const T0 &)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  1>        with
  1>        [
  1>            TCharType=char,
  1>            T0=Vector3,
  1>            TFormatType=const char *
  1>        ]
- 1>        ..\UnitTests\Sources\UnitTests_Extends.cpp(143): ²Î¼û¶ÔÕýÔÚ±àÒëµÄº¯Êý Ä£°å ÊµÀý»¯¡°std::string Formatting::StandardLibrary::Format<Vector3>(const char *,const T0 &)¡±µÄÒýÓÃ
+ 1>        ..\UnitTests\Sources\UnitTests_Extends.cpp(143): ï¿½Î¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ Ä£ï¿½ï¿½ Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½std::string Formatting::StandardLibrary::Format<Vector3>(const char *,const T0 &)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  1>        with
  1>        [
  1>            T0=Vector3
  1>        ]
 */
-#if 1
+#if 1 // NOLINT
 // The following class provides automatic conversion capabilities for Vector3, so that Vector3 type parameters can be formatted directly.
 namespace Formatting
 {
