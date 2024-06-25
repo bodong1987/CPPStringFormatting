@@ -120,7 +120,7 @@ namespace Formatting
             /// <returns>bool.</returns>
             bool    IsValid() const
             {
-                return Start != -1 && Len != -1 && Index >= 0;
+                return Start != -1 && Len != -1 && Index != -1;
             }
                         
             /// <summary>

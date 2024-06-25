@@ -70,7 +70,7 @@ namespace Formatting
         protected:
             static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, CharType fillChar = CharTraits::GetSpace())
             {
-                strRef.AddAlignStr(start, start + length, pattern.HasWidth() ? pattern.Width : (int)length, pattern.Align != EAlignFlag::Left, fillChar);
+                strRef.AddAlignStr(start, start + length, pattern.HasWidth() ? pattern.Width : static_cast<int>(length), pattern.Align != EAlignFlag::Left, fillChar);
             }
 
             static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, const int alignSize, bool paddingLeft, CharType fillChar = CharTraits::GetSpace())
@@ -111,7 +111,7 @@ namespace Formatting
 
         /// <summary>
         /// Class TTranslator.
-        /// invalid translator place holder
+        /// invalid translator placeholder
         /// Implements the <see cref="TTranslatorBase{TCharType, T}" />
         /// </summary>
         /// <seealso cref="TTranslatorBase{TCharType, T}" />
@@ -186,7 +186,7 @@ namespace Formatting
 
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, TCharType arg)
             {
-                TCharType Buffer[2] = { arg, (TCharType)0 };
+                TCharType Buffer[2] = { arg, TCharType(0) };
 
                 Super::AppendString(strRef, pattern, Buffer, 1);
 
@@ -208,16 +208,16 @@ namespace Formatting
             typedef typename Super::CharTraits                          CharTraits;
 
         private:
-#ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_PRCISION
-#define FL_DOUBLE_TRANSLATOR_DEFAULT_PRCISION 2
+#ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_PRECISION
+#define FL_DOUBLE_TRANSLATOR_DEFAULT_PRECISION 2
 #endif
 
-#ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_FIXEDPOINT_PRCISION
-#define FL_DOUBLE_TRANSLATOR_DEFAULT_FIXEDPOINT_PRCISION 2
+#ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_FIXED_POINT_PRECISION
+#define FL_DOUBLE_TRANSLATOR_DEFAULT_FIXED_POINT_PRECISION 2
 #endif
 
-#ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_EXPONENT_PRCISION
-#define FL_DOUBLE_TRANSLATOR_DEFAULT_EXPONENT_PRCISION 6
+#ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_EXPONENT_PRECISION
+#define FL_DOUBLE_TRANSLATOR_DEFAULT_EXPONENT_PRECISION 6
 #endif
 
 #ifndef FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH
@@ -226,9 +226,9 @@ namespace Formatting
 
             enum
             {
-                DefaultPrecision = FL_DOUBLE_TRANSLATOR_DEFAULT_PRCISION,
-                DefaultFixedPointPrecision = FL_DOUBLE_TRANSLATOR_DEFAULT_FIXEDPOINT_PRCISION,
-                DefaultExponentPrecision = FL_DOUBLE_TRANSLATOR_DEFAULT_EXPONENT_PRCISION,
+                DefaultPrecision = FL_DOUBLE_TRANSLATOR_DEFAULT_PRECISION,
+                DefaultFixedPointPrecision = FL_DOUBLE_TRANSLATOR_DEFAULT_FIXED_POINT_PRECISION,
+                DefaultExponentPrecision = FL_DOUBLE_TRANSLATOR_DEFAULT_EXPONENT_PRECISION,
                 DefaultMinExponentLength = FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH
             };
 
@@ -272,9 +272,9 @@ namespace Formatting
                         {
                             const int padLength = DefaultMinExponentLength - exponentLength;
 
-                            memmove((void*)(plusPos + padLength + 2), plusPos + 2, exponentLength * sizeof(CharType));
+                            memmove((void*)(plusPos + padLength + 2), plusPos + 2, exponentLength * sizeof(CharType)); // NOLINT
 
-                            CharTraits::Fill((CharType*)(plusPos + 2), CharTraits::GetZero(), padLength);
+                            CharTraits::Fill(const_cast<CharType*>(plusPos + 2), CharTraits::GetZero(), padLength);
 
                             bufLength += padLength;
                         }
@@ -575,7 +575,7 @@ namespace Formatting
             /// Transfers the specified string reference.
             /// </summary>
             /// <param name="strRef">The string reference.</param>
-            /// <param name="">The .</param>
+            /// <param name="pattern">pattern</param>
             /// <param name="str">The string.</param>
             /// <returns>bool.</returns>
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, const TCharType* str)
@@ -590,7 +590,7 @@ namespace Formatting
         };
 
         // convert small numeric type to big numeric type 
-        // and convert them to string
+        // and convert them to string     
 #define FL_CONVERT_TRANSLATOR(Type, BaseType, ImplType) \
     template < typename TCharType > \
     class TTranslator< TCharType, Type > : \
@@ -601,10 +601,11 @@ namespace Formatting
         \
         static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, Type arg) \
         { \
-            return ImplType<TCharType, Type>::Transfer(strRef, pattern, arg); \
+            typedef ImplType<TCharType, Type> ImplementationType; /*NOLINT(bugprone-macro-parentheses)*/ \
+            return ImplementationType::Transfer(strRef, pattern, arg); \
         } \
     }
-
+        
         FL_CONVERT_TRANSLATOR(int16_t, int64_t, TInt64TranslatorImpl);
         FL_CONVERT_TRANSLATOR(int32_t, int64_t, TInt64TranslatorImpl);        
         FL_CONVERT_TRANSLATOR(long, int64_t, TInt64TranslatorImpl);

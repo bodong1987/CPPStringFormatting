@@ -32,13 +32,13 @@ namespace Formatting
     /// <summary>
     /// Class Noncopyable.
     /// </summary>
-    class Noncopyable
+    class Noncopyable // NOLINT
     {
     public:
-        Noncopyable() {}        
-        ~Noncopyable() {}
+        Noncopyable() {}  // NOLINT      
+        ~Noncopyable() {} // NOLINT
 #if FL_COMPILER_WITH_CXX11
-    protected:
+    public:
         Noncopyable(const Noncopyable&) = delete;
         Noncopyable& operator = (const Noncopyable&) = delete;
 #else

@@ -43,9 +43,9 @@ namespace Formatting
             typedef typename TPolicy::PatternListType               PatternListType;
             typedef TFormatPattern<CharType>                        FormatPattern;
 
-            bool operator ()(const CharType* const fomatStart, const SizeType length, PatternListType& patterns)
+            bool operator ()(const CharType* const formatStart, const SizeType length, PatternListType& patterns)
             {
-                return ParsePatterns(fomatStart, length, patterns);
+                return ParsePatterns(formatStart, length, patterns);
             }
 
         protected:
@@ -249,7 +249,7 @@ namespace Formatting
 
                 if (TCharTraits<CharType>::IsDigit(*TestPtr))
                 {
-                    // try get Precision
+                    // get Precision
                     int32_t val = FindNextNumber(TestPtr, end, TestPtr);
 
                     if (val != (ByteType)-1)
@@ -333,13 +333,7 @@ namespace Formatting
 
             /// <summary>
             /// Called when get a [literal].
-            /// </summary>
-            /// <param name="">The .</param>
-            /// <param name="p1">The p1.</param>
-            /// <param name="">The .</param>
-            /// <param name="">The .</param>
-            /// <param name="state">The state.</param>
-            /// <param name="">The .</param>
+            /// </summary>            
             void OnLiteral(
                 const CharType*& /*p0*/,
                 const CharType*& p1,
@@ -370,7 +364,6 @@ namespace Formatting
             /// <param name="p0">The p0.</param>
             /// <param name="p1">The p1.</param>
             /// <param name="start">The start.</param>
-            /// <param name="">The .</param>
             /// <param name="state">The state.</param>
             /// <param name="patterns">The patterns.</param>
             void OnOpenCurly(
@@ -433,12 +426,6 @@ namespace Formatting
             /// <summary>
             /// Called when get a [close curly].
             /// </summary>
-            /// <param name="p0">The p0.</param>
-            /// <param name="p1">The p1.</param>
-            /// <param name="start">The start.</param>
-            /// <param name="">The .</param>
-            /// <param name="state">The state.</param>
-            /// <param name="patterns">The patterns.</param>
             void OnCloseCurly(
                 const CharType*& p0,
                 const CharType*& p1,
@@ -503,7 +490,6 @@ namespace Formatting
             /// <param name="p0">The p0.</param>
             /// <param name="p1">The p1.</param>
             /// <param name="start">The start.</param>
-            /// <param name="">The .</param>
             /// <param name="state">The state.</param>
             /// <param name="patterns">The patterns.</param>
             void OnParameter(
@@ -545,11 +531,11 @@ namespace Formatting
                     }
                     else
                     {
-                        FormatPattern rawpatt;
+                        FormatPattern format_pattern;
 
-                        rawpatt.Flag = EFormatFlag::Raw;
-                        rawpatt.Start = p0 - start;
-                        rawpatt.Len = p1 - p0 + 1;
+                        format_pattern.Flag = EFormatFlag::Raw;
+                        format_pattern.Start = p0 - start;
+                        format_pattern.Len = p1 - p0 + 1;
 
                         TPolicy::AppendPattern(patterns, pattern);
                     }
@@ -557,31 +543,33 @@ namespace Formatting
                     p0 = p1 + 1;
                     break;
                 }
+                default:
+                    break;
                 }
             }
 
             /// <summary>
             /// Parses the patterns.
             /// </summary>
-            /// <param name="fomatStart">The fomat start.</param>
+            /// <param name="formatStart">The format start.</param>
             /// <param name="length">The length.</param>
             /// <param name="patterns">The patterns.</param>
             /// <returns>bool.</returns>
             bool ParsePatterns(
-                const CharType* const fomatStart,
+                const CharType* const formatStart,
                 const SizeType length,
                 PatternListType& patterns
             )
             {
-                const CharType* p0 = fomatStart;
+                const CharType* p0 = formatStart;
                 const CharType* p1 = p0;
                 const CharType* const start = p0;
-                const CharType* const end = fomatStart + length;
+                const CharType* const end = formatStart + length;
                 ParseStateType     state = EParseState::Literal;
 
                 for (; p1 < end; ++p1)
                 {
-                    switch (state)
+                    switch (state) // NOLINT(clang-diagnostic-switch-enum)
                     {
                     case EParseState::Literal:
                         OnLiteral(p0, p1, start, end, state, patterns);
@@ -595,7 +583,7 @@ namespace Formatting
                     case EParseState::Parameter:
                         OnParameter(p0, p1, start, end, state, patterns);
                         break;
-                    default:
+                    default: 
                         assert(false && "unsupported state!");
                         break;
                     }

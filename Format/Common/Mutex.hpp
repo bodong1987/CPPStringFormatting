@@ -33,7 +33,7 @@
 #include <windows.h>
 #endif
 #else
-// assume your platform support pthread library
+// assume your platform support posix thread library
 #include <pthread.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -49,7 +49,7 @@ namespace Formatting
         /// Implements the <see cref="Noncopyable" />
         /// </summary>
         /// <seealso cref="Noncopyable" />
-        class Mutex : Noncopyable
+        class Mutex : Noncopyable /*NOLINT*/
         {
         public:
             Mutex()
@@ -119,11 +119,11 @@ namespace Formatting
             /// <summary>
             /// Locks this instance.
             /// </summary>
-            void Lock() {}
+            void Lock() {} //NOLINT
             /// <summary>
             /// Uns the lock.
             /// </summary>
-            void UnLock() {}
+            void UnLock() {} //NOLINT
         };
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Formatting
         /// </summary>
         /// <seealso cref="Noncopyable" />
         template < typename TReferenceType >
-        class TScopedLocker :
+        class TScopedLocker : /*NOLINT*/
             Noncopyable
         {
         public:

@@ -91,14 +91,14 @@ namespace Formatting
         template < typename TCharType >
         inline size_t Int64ToString(int64_t value, TCharType* buffer, int32_t base, bool upper)
         {
-            static const char DigitMap[] =
+            constexpr static const char DigitMap[] =
             {
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'A', 'B', 'C', 'D',
                 'E', 'F'
             };
 
-            static const char DigitMapLower[] =
+            constexpr static const char DigitMapLower[] =
             {
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'a', 'b', 'c', 'd',
@@ -141,14 +141,14 @@ namespace Formatting
         template < typename TCharType >
         inline size_t UInt64ToString(uint64_t value, TCharType* buffer, int32_t base, bool upper)
         {
-            static const char DigitMap[] =
+            constexpr static const char DigitMap[] =
             {
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'A', 'B', 'C', 'D',
                 'E', 'F'
             };
 
-            static const char DigitMapLower[] =
+            constexpr static const char DigitMapLower[] =
             {
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'a', 'b', 'c', 'd',
@@ -184,7 +184,9 @@ namespace Formatting
         template < typename TCharType >
         inline size_t DoubleToString(double value, TCharType* buffer, size_t size, int32_t precision)
         {
-            static const double pow10[] =
+            double Diff = 0.0; // NOLINT
+            
+            constexpr static const double pow10[] =
             {
                 1, 10, 100, 1000, 10000, 100000, 1000000,
                 10000000, 100000000, 1000000000
@@ -192,10 +194,10 @@ namespace Formatting
 
             /* Hacky test for NaN
             * under -fast-math this won't work, but then you also won't
-            * have correct nan values anyways.  The alternative is
+            * have correct nan values anyway.  The alternative is
             * to link with libmath (bad) or hack IEEE double bits (bad)
             */
-            if (!(value == value))
+            if (!(value == value)) // NOLINT
             {
                 buffer[0] = 'n'; buffer[1] = 'a'; buffer[2] = 'n'; buffer[3] = '\0';
 
@@ -203,9 +205,8 @@ namespace Formatting
             }
 
             /* if input is larger than ThresMax, revert to exponential */
-            const double ThresMax = (double)(0x7FFFFFFF);
-
-            double Diff = 0.0;
+            constexpr const double ThresMax = (double)(0x7FFFFFFF);
+            
             TCharType* Str = buffer;
 
             if (precision < 0)
@@ -272,7 +273,7 @@ namespace Formatting
             {
                 Diff = value - Whole;
                 if (Diff > 0.5)
-                {
+                { /*NOLINT(bugprone-branch-clone)*/
                     /* greater than 0.5, round up, e.g. 1.6 -> 2 */
                     ++Whole;
                 }
