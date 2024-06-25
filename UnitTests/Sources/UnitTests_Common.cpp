@@ -49,6 +49,7 @@ TEST(TAutoArray, CopyConstructor)
     }
 }
 
+#if FL_COMPILER_WITH_CXX11
 TEST(TAutoArray, MoveConstructor)
 {
     TAutoArray<int> array1;
@@ -56,7 +57,7 @@ TEST(TAutoArray, MoveConstructor)
     {
         array1.AddItem(i);
     }
-    TAutoArray<int> array2(std::move(array1));
+    TAutoArray<int> array2(FL_MOVE_SEMANTIC(array1));
     EXPECT_EQ(array2.GetLength(), 10);
     for (int i = 0; i < 10; ++i)
     {
@@ -64,6 +65,7 @@ TEST(TAutoArray, MoveConstructor)
     }
     EXPECT_EQ(array1.GetLength(), 0);
 }
+#endif
 
 TEST(TAutoArray, ExpandHeapSpace)
 {
