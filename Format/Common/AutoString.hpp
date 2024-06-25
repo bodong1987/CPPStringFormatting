@@ -116,7 +116,7 @@ namespace Formatting
                 {
                     assert(!HeapValPtr);
 
-                    AllocatedCount = static_cast<size_t>((Count + Length) * 1.5f);
+                    AllocatedCount = static_cast<size_t>((Count + Length) * 1.5); // NOLINT
                     HeapValPtr = Allocate(AllocatedCount);
                     assert(HeapValPtr);
 
@@ -143,7 +143,7 @@ namespace Formatting
                 }
                 else
                 {
-                    size_t NewCount = static_cast<size_t>((Count + Length) * 1.5f);
+                    size_t NewCount = static_cast<size_t>((Count + Length) * 1.5); // NOLINT
 
                     CharType* DataPtr = Allocate(NewCount);
 

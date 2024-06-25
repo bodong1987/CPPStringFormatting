@@ -78,7 +78,7 @@ namespace Formatting
                 return Ptr[index];
             }
         protected:            
-            const SelfType&   Ref;            
+            const SelfType&   Ref;         // NOLINT   
             size_t            index;
         };
 
@@ -116,7 +116,7 @@ namespace Formatting
             }
         }
 
-        SelfType& operator = (const SelfType& other)
+        SelfType& operator = (const SelfType& other) // NOLINT
         {
             if (this == &other)
             {
@@ -169,7 +169,7 @@ namespace Formatting
         }
 
 #if FL_COMPILER_WITH_CXX11
-        SelfType& TakeFrom(SelfType&& other)
+        SelfType& TakeFrom(SelfType&& other) noexcept
         {
             if (this == &other)
             {
@@ -199,7 +199,7 @@ namespace Formatting
         }
 
 #if FL_COMPILER_WITH_CXX11
-        TAutoArray(SelfType&& other) :
+        TAutoArray(SelfType&& other) noexcept :
             Count(other.Count),
             AllocatedCount(other.AllocatedCount),
             HeapValPtr(other.HeapValPtr)
@@ -214,7 +214,7 @@ namespace Formatting
             other.HeapValPtr = nullptr;
         }
 
-        SelfType& operator = (SelfType&& other)
+        SelfType& operator = (SelfType&& other) noexcept
         {
             return TakeFrom(other);
         }

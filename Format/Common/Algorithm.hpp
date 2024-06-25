@@ -26,7 +26,11 @@
 #pragma once
 
 #include <Format/Common/Build.hpp>
+
+#if !FL_COMPILER_WITH_CXX11
 #include <Format/Common/Mpl.hpp>
+#endif
+
 #include <algorithm>
 
 namespace Formatting

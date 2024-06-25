@@ -110,7 +110,7 @@ namespace Formatting
 
                 throw ExceptionType("invalid format expression!");
 
-                return nullptr;
+                // return nullptr;
             }
 
         protected:
@@ -175,7 +175,7 @@ namespace Formatting
 
                 static ManagedStorage StaticManager;
 
-                static FL_THREAD_LOCAL TGlobalPatternStorage* StaticStorage = NULL;
+                static FL_THREAD_LOCAL TGlobalPatternStorage* StaticStorage = nullptr;
 
                 if( !StaticStorage )
                 {

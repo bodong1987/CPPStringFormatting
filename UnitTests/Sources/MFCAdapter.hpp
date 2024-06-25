@@ -25,7 +25,7 @@ namespace Formatting
 
                 SizeType operator ()(const CharType* const start, SizeType length)
                 {
-                    const unsigned char* const StartTest = (const unsigned char* const)start;
+                    const unsigned char* const StartTest = (const unsigned char* const)start; // NOLINT
 
                     SizeType Count = length * sizeof(CharType);
 
@@ -80,7 +80,7 @@ namespace Formatting
 
                 static const PatternListType* FindByHashKey(const PatternMapType& storageReference, SizeType hashKey)
                 {
-                    const PatternMapType::CPair* pairPtr = storageReference.PLookup(hashKey);
+                    const typename PatternMapType::CPair* pairPtr = storageReference.PLookup(hashKey);
 
                     return pairPtr != nullptr ? &pairPtr->value : nullptr;
                 }
@@ -175,7 +175,7 @@ namespace Formatting
             SinkType Sink;
             Details::FormatTo<TCharType, GlobalPatternStorageType, const TCharType*>(Sink, format);
 
-            return CString(Sink.CStr(), Sink.GetLength());
+            return CString(Sink.CStr(), (int)Sink.GetLength());
         }
 
         // default FormatTo support Format with no arguments
@@ -194,7 +194,7 @@ namespace Formatting
             SinkType Sink;
             Details::FormatTo<TCharType, GlobalPatternStorageType, const TCharType*, T0, T...>(Sink, format, arg0, args...);
 
-            return CString(Sink.CStr(), Sink.GetLength());
+            return CString(Sink.CStr(), (int)Sink.GetLength());
         }
 
         template <typename TCharType, typename T0, typename... T>

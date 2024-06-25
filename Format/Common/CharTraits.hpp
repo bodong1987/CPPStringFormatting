@@ -50,7 +50,7 @@ namespace Formatting
 
             if (!needle[0])
             {
-                return (char*)haystack + strlen(haystack);
+                return haystack + strlen(haystack);
             }
 
             while (true)
@@ -66,7 +66,7 @@ namespace Formatting
                 haystack = p + 1;
             }
 
-            return nullptr;
+            // return nullptr;
         }
 
         /*
@@ -79,7 +79,7 @@ namespace Formatting
 
             if ((c = *find++) != 0)
             {
-                c = tolower(c);
+                c = (char)tolower(c);
                 len = strlen(find);
                 do
                 {
@@ -303,7 +303,7 @@ namespace Formatting
 
             if (!needle[0])
             {
-                return (wchar_t*)haystack + wcslen(haystack);
+                return haystack + wcslen(haystack);
             }
 
             while (true)
@@ -319,7 +319,7 @@ namespace Formatting
                 haystack = p + 1;
             }
 
-            return nullptr;
+            // return nullptr;
         }
 
         /*
@@ -332,7 +332,7 @@ namespace Formatting
 
             if ((c = *find++) != 0)
             {
-                c = tolower(c);
+                c = (wchar_t)tolower(c);
                 len = wcslen(find);
                 do
                 {
@@ -554,24 +554,24 @@ namespace Formatting
 
     namespace Shims
     {
-        inline const wchar_t* PtrOf(const wchar_t* pstr)
+        inline const wchar_t* PtrOf(const wchar_t* rawString)
         {
-            return pstr;
+            return rawString;
         }
 
-        inline const char* PtrOf(const char* pstr)
+        inline const char* PtrOf(const char* rawString)
         {
-            return pstr;
+            return rawString;
         }
 
-        inline size_t LengthOf(const wchar_t* pstr)
+        inline size_t LengthOf(const wchar_t* rawString)
         {
-            return wcslen(pstr);
+            return wcslen(rawString);
         }
 
-        inline size_t LengthOf(const char* pstr)
+        inline size_t LengthOf(const char* rawString)
         {
-            return strlen(pstr);
+            return strlen(rawString);
         }
 
         inline const char* PtrOf(const std::basic_string<char>& str)

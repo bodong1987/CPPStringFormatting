@@ -53,7 +53,7 @@ namespace Formatting
 
                 SizeType operator ()(const CharType* const start, SizeType length)
                 {
-                    const unsigned char* const StartTest = (const unsigned char* const)start;
+                    const unsigned char* const StartTest = (const unsigned char* const)start; // NOLINT
 
                     SizeType Count = length * sizeof(CharType);
 
@@ -75,7 +75,7 @@ namespace Formatting
                     for (SizeType Next = 0; Next < Count; ++Next)
                     {
                         // fold in another byte
-                        Value ^= (SizeType)StartTest[Next];
+                        Value ^= static_cast<SizeType>(StartTest[Next]);
                         Value *= FNVPrime;
                     }
 
