@@ -275,7 +275,7 @@ namespace Formatting
         {
             Count += count;
 
-            assert(IsDataOnStack() ? (Count <= DEFAULT_LENGTH) : (Count < AllocatedCount));
+            assert(IsDataOnStack() ? (Count <= DEFAULT_LENGTH) : (Count < AllocatedCount)); // NOLINT
         }
 
         void Clear()

@@ -61,6 +61,7 @@ namespace Formatting
         {
         public:
             typedef TCharType                                           CharType;
+            typedef T                                                   ParameterType;
             typedef TFormatPattern<TCharType>                           FormatPattern;
             typedef typename FormatPattern::ByteType                    ByteType;
             typedef typename FormatPattern::SizeType                    SizeType;
@@ -75,6 +76,8 @@ namespace Formatting
 
             static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, const int alignSize, bool paddingLeft, CharType fillChar = CharTraits::GetSpace())
             {
+                FL_UNREFERENCED_PARAMETER(pattern);
+                
                 strRef.AddAlignStr(start, start + length, alignSize, paddingLeft, fillChar);
             }
         };
@@ -200,6 +203,7 @@ namespace Formatting
         {
         public:
             typedef TTranslatorBase< TCharType, double >                Super;
+            typedef TRealType                                           RealType;
             typedef typename Super::CharType                            CharType;
             typedef typename Super::FormatPattern                       FormatPattern;
             typedef typename Super::ByteType                            ByteType;
@@ -234,6 +238,8 @@ namespace Formatting
 
             static bool TransferCore(StringType& strRef, const FormatPattern& pattern, FormatFlagType usedFlag, double arg)
             {
+                FL_UNREFERENCED_PARAMETER(usedFlag);
+                
                 if (pattern.Flag == EFormatFlag::None ||
                     pattern.Flag == EFormatFlag::FixedPoint ||
                     pattern.Flag == EFormatFlag::General
@@ -245,7 +251,7 @@ namespace Formatting
                         arg,
                         TempBuf,
                         FL_ARRAY_COUNTOF(TempBuf),
-                        pattern.HasPrecision() ? pattern.Precision : (pattern.Flag == EFormatFlag::FixedPoint ? DefaultFixedPointPrecision : DefaultPrecision)
+                        pattern.HasPrecision() ? pattern.Precision : (pattern.Flag == EFormatFlag::FixedPoint ? DefaultFixedPointPrecision : DefaultPrecision) // NOLINT
                     );
 
                     Super::AppendString(strRef, pattern, TempBuf, length);
@@ -256,7 +262,7 @@ namespace Formatting
                 {
                     const CharType eFlagChar = pattern.bUpper ? 'E' : 'e';
                     CharType FmtBuf[16] = { '%', '.' };
-                    size_t length = Int64ToString(pattern.HasPrecision() ? pattern.Precision : DefaultExponentPrecision, FmtBuf + 2, 10, pattern.bUpper);
+                    const size_t length = Int64ToString(pattern.HasPrecision() ? pattern.Precision : DefaultExponentPrecision, FmtBuf + 2, 10, pattern.bUpper);
                     FmtBuf[length + 2] = eFlagChar;
 
                     CharType TempBuf[64];
@@ -402,7 +408,7 @@ namespace Formatting
                 }
                 else if (pattern.Flag == EFormatFlag::Binary)
                 {
-                    constexpr const int length = sizeof(TRealType) * 8;
+                    constexpr int length = sizeof(TRealType) * 8;
                     CharType TempBuf[length + 1];
 
                     int usedLength = IntegerToBinaryString<TCharType, TRealType>(static_cast<TRealType>(arg), TempBuf);
@@ -461,7 +467,7 @@ namespace Formatting
         /// </summary>
         /// <seealso cref="TTranslatorBase{TCharType, uint64_t}" />
         template < typename TCharType, typename TRealType >
-        class TUInt64TranslatorImpl : public TTranslatorBase<TCharType, uint64_t>
+        class TUInt64TranslatorImpl : public TTranslatorBase<TCharType, uint64_t> // NOLINT
         {
         public:
             typedef TTranslatorBase< TCharType, uint64_t >              Super;
@@ -507,7 +513,7 @@ namespace Formatting
                 }
                 else if (pattern.Flag == EFormatFlag::Binary)
                 {
-                    constexpr const int length = sizeof(TRealType) * 8;
+                    constexpr int length = sizeof(TRealType) * 8;
                     CharType TempBuf[length + 1];
 
                     int usedLength = IntegerToBinaryString<TCharType, TRealType>(static_cast<TRealType>(arg), TempBuf);

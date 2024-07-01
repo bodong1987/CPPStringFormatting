@@ -49,7 +49,7 @@ namespace Formatting
 				Exponent,
 				FixedPoint,
 				General,
-				CSV,
+				CSV, // NOLINT
 				Percentage,
 				Hex,
                 Binary
@@ -153,7 +153,7 @@ namespace Formatting
             ByteType         Index;
             ByteType         Precision;
             ByteType         Width;
-            bool             bUpper;
+            bool             bUpper; // NOLINT
         };
     }
 

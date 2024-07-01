@@ -71,7 +71,7 @@ namespace Formatting
             enum { Value = 0 };
         };
 
-        template < bool, typename T1, typename T2 >
+        template < bool, typename T1, typename T2 > // NOLINT
         class IfElse
         {
         public:
@@ -85,19 +85,19 @@ namespace Formatting
             typedef T1  Type;
         };
 
-        template < typename T1, typename T2 >
+        template < typename T1, typename T2 > // NOLINT
         struct IsSame : FalseType {};
 
         template < typename T >
         struct IsSame<T, T> : TrueType {};
 
-        template < typename T >
+        template < typename T > // NOLINT
         struct IsPtr : FalseType {};
 
-        template < typename T >
+        template < typename T > // NOLINT
         struct IsPtr<T*> : TrueType {};
 
-        template < typename T >
+        template < typename T > // NOLINT
         struct IsArray : FalseType {};
 
         template < typename T, int Size >

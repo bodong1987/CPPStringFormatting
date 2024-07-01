@@ -55,8 +55,8 @@ namespace Formatting
             Mutex()
             {
 #if FL_PLATFORM_WINDOWS
-                ::InitializeCriticalSection(&CriticalSectionValue);
-                ::SetCriticalSectionSpinCount(&CriticalSectionValue, 4000);
+                InitializeCriticalSection(&CriticalSectionValue);
+                SetCriticalSectionSpinCount(&CriticalSectionValue, 4000);
 #else
                 pthread_mutexattr_t MutexAtt;
 
@@ -69,7 +69,7 @@ namespace Formatting
             ~Mutex()
             {
 #if FL_PLATFORM_WINDOWS
-                ::DeleteCriticalSection(&CriticalSectionValue);
+                DeleteCriticalSection(&CriticalSectionValue);
 #else
                 pthread_mutex_destroy(&Mutex_t);
 #endif
@@ -78,7 +78,7 @@ namespace Formatting
             void Lock()
             {
 #if FL_PLATFORM_WINDOWS
-                ::EnterCriticalSection(&CriticalSectionValue);
+                EnterCriticalSection(&CriticalSectionValue);
 #else
                 pthread_mutex_lock(&Mutex_t);
 #endif
@@ -87,7 +87,7 @@ namespace Formatting
             void UnLock()
             {
 #if FL_PLATFORM_WINDOWS
-                ::LeaveCriticalSection(&CriticalSectionValue);
+                LeaveCriticalSection(&CriticalSectionValue);
 #else
                 pthread_mutex_unlock(&Mutex_t);
 #endif

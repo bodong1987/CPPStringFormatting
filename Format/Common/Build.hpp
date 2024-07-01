@@ -209,7 +209,7 @@ typedef unsigned int long long uint64_t;
 #endif
 
 #ifndef constexpr
-#define constexpr 
+#define constexpr const
 #endif
 
 #endif

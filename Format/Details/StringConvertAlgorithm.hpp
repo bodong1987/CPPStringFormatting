@@ -92,14 +92,14 @@ namespace Formatting
         template < typename TCharType >
         inline size_t Int64ToString(int64_t value, TCharType* buffer, int32_t base, bool upper)
         {
-            constexpr static const char DigitMap[] =
+            constexpr static char DigitMap[] =
             {
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'A', 'B', 'C', 'D',
                 'E', 'F'
             };
 
-            constexpr static const char DigitMapLower[] =
+            constexpr static char DigitMapLower[] =
             {
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'a', 'b', 'c', 'd',
@@ -110,7 +110,7 @@ namespace Formatting
 
             TCharType* Str = buffer;
 
-            uint64_t UValue = (value < 0) ? -value : value;
+            uint64_t UValue = value < 0 ? -value : value;
 
             // Conversion. Number is reversed.
             do
@@ -142,14 +142,14 @@ namespace Formatting
         template < typename TCharType >
         inline size_t UInt64ToString(uint64_t value, TCharType* buffer, int32_t base, bool upper)
         {
-            constexpr static const char DigitMap[] =
+            constexpr static char DigitMap[] =
             {
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'A', 'B', 'C', 'D',
                 'E', 'F'
             };
 
-            constexpr static const char DigitMapLower[] =
+            constexpr static char DigitMapLower[] =
             {
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'a', 'b', 'c', 'd',
@@ -187,7 +187,7 @@ namespace Formatting
         {
             double Diff = 0.0; // NOLINT
             
-            constexpr static const double pow10[] =
+            constexpr static double Pow10[] =
             {
                 1, 10, 100, 1000, 10000, 100000, 1000000,
                 10000000, 100000000, 1000000000
@@ -206,7 +206,7 @@ namespace Formatting
             }
 
             /* if input is larger than ThresMax, revert to exponential */
-            constexpr const double ThresMax = (double)(0x7FFFFFFF); 
+            constexpr static double ThresMax = (double)(0x7FFFFFFF);  // NOLINT
             
             TCharType* Str = buffer;
 
@@ -230,7 +230,7 @@ namespace Formatting
             }
 
             int32_t Whole = static_cast<int32_t>(value);
-            double tmp = (value - Whole) * pow10[precision];
+            const double tmp = (value - Whole) * Pow10[precision];
             unsigned Frace = static_cast<unsigned>(tmp);
 
             Diff = tmp - Frace;
@@ -239,13 +239,13 @@ namespace Formatting
             {
                 ++Frace;
                 /* handle rollover, e.g.  case 0.99 with precision 1 is 1.0  */
-                if (Frace >= pow10[precision])
+                if (Frace >= Pow10[precision])
                 {
                     Frace = 0;
                     ++Whole;
                 }
             }
-            else if (Diff == 0.5 && ((Frace == 0) || (Frace & 1)))
+            else if (Diff == 0.5 && ((Frace == 0) || (Frace & 1))) // NOLINT
             {
                 /* if halfway, round up if odd, OR
                 if last digit is 0.  That last part is strange */
@@ -261,7 +261,7 @@ namespace Formatting
 
             if (value > ThresMax)
             {
-                int32_t Result = TCharTraits<TCharType>::StringPrintf(
+                const int32_t Result = TCharTraits<TCharType>::StringPrintf(
                     buffer,
                     size,
                     TCharTraits<TCharType>::StaticEFormat(),
@@ -278,7 +278,7 @@ namespace Formatting
                     /* greater than 0.5, round up, e.g. 1.6 -> 2 */
                     ++Whole;
                 }
-                else if (Diff == 0.5 && (Whole & 1))
+                else if (Diff == 0.5 && (Whole & 1)) // NOLINT
                 {
                     /* exactly 0.5 and ODD, then round up */
                     /* 1.5 -> 2, but 2.5 -> 2 */
@@ -292,7 +292,7 @@ namespace Formatting
                 do
                 {
                     --Count;
-                    *Str++ = static_cast<TCharType>(48 + (Frace % 10));
+                    *Str++ = static_cast<TCharType>(48 + (Frace % 10)); // NOLINT
                 } while (Frace /= 10);
                 // add extra 0s
                 while (Count-- > 0) *Str++ = '0';
@@ -305,7 +305,7 @@ namespace Formatting
             // Conversion. Number is reversed.
             do
             {
-                *Str++ = static_cast<TCharType>(48 + (Whole % 10));
+                *Str++ = static_cast<TCharType>(48 + (Whole % 10)); // NOLINT
             } while (Whole /= 10);
 
             if (Neg)

@@ -50,7 +50,7 @@
 
 // unused parameter
 #if FL_COMPILER_MSVC
-#define FL_UNREFERENCED_PARAMETER(P)   (P) 
+#define FL_UNREFERENCED_PARAMETER(P) (void)(P) 
 #else
 #define FL_UNREFERENCED_PARAMETER(p) (void)(p)
 #endif

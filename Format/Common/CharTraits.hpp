@@ -208,9 +208,9 @@ namespace Formatting
             return nullptr;
         }
 
-        static char* Fill(char* Dest, char Val, size_t Length)
+        static char* Fill(char* dest, char val, size_t length)
         {
-            return (char*)memset(Dest, Val, Length); // NOLINT
+            return (char*)memset(dest, val, length); // NOLINT
         }
 
         // NOLINTBEGIN
@@ -472,9 +472,9 @@ namespace Formatting
             return nullptr;
         }
 
-        static wchar_t* Fill(wchar_t* Dest, wchar_t Val, size_t Length)
+        static wchar_t* Fill(wchar_t* dest, wchar_t val, size_t length)
         {
-            return (wchar_t*)wmemset(Dest, Val, Length);
+            return wmemset(dest, val, length);
         }
 
         static int IsAlnum(wchar_t ch) // NOLINT

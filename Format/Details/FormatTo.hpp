@@ -101,6 +101,9 @@ namespace Formatting
             template <typename TCharType, typename TPatternType>
             inline bool DoTransfer(int32_t targetIndex, int32_t currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format)
             {
+                FL_UNREFERENCED_PARAMETER(targetIndex);
+                FL_UNREFERENCED_PARAMETER(currentIndex);
+                
                 return TRawTranslator<TCharType>::Transfer(sink, pattern, format);
             }
         }

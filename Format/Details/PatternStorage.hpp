@@ -48,26 +48,6 @@ namespace Formatting
             typedef TScopedLocker<MutexType>                        ScopedLockerType;
             typedef TFormatPattern<CharType>                        FormatPattern;
             typedef TPatternParser<TPolicy>                         PatternParser;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="TPatternStorage"/> class.
-            /// </summary>
-            TPatternStorage()
-            {
-#if FL_DEBUG
-                //printf("created storage\n");
-#endif
-            }
-
-            /// <summary>
-            /// Finalizes an instance of the <see cref="TPatternStorage"/> class.
-            /// </summary>
-            ~TPatternStorage()
-            {
-#if FL_DEBUG
-                //printf("destroy storage\n");
-#endif
-            }
                         
             /// <summary>
             /// Lookups the patterns.
@@ -146,7 +126,7 @@ namespace Formatting
             static TGlobalPatternStorage* GetStorage()
             {
 #if FL_WITH_THREAD_LOCAL
-                struct ManagedStorage
+                struct ManagedStorage : Noncopyable // NOLINT
                 {
                     typedef TScopedLocker<Mutex>                             LockerType;
 
@@ -163,13 +143,13 @@ namespace Formatting
                         }
                     }
 
-                    void AddStorage( TGlobalPatternStorage* InputStorage )
+                    void AddStorage( TGlobalPatternStorage* inputStorage )
                     {
-                        assert(InputStorage);
+                        assert(inputStorage);
 
                         LockerType Locker(MutexValue);
 
-                        Storages.AddItem(InputStorage);
+                        Storages.AddItem(inputStorage);
                     }
                 };
 

@@ -126,11 +126,11 @@ namespace Formatting
                     return -1;
                 }
 
-                int32_t val = CastToSmallNumber(start, TestPtr);
+                const int32_t Value = CastToSmallNumber(start, TestPtr);
 
                 endPoint = TestPtr;
 
-                return val;
+                return Value;
             }
 
             /// <summary>

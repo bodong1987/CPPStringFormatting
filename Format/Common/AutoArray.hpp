@@ -47,7 +47,7 @@ namespace Formatting
 
         enum
         {            
-            DEFAULT_LENGTH = DefaultLength
+            DEFAULT_LENGTH = DefaultLength // NOLINT
         };
                 
         class ConstIterator : Noncopyable
@@ -55,18 +55,18 @@ namespace Formatting
         public:            
             ConstIterator(const SelfType& referenceTarget) :
                 Ref(referenceTarget),
-                index(referenceTarget.GetLength() > 0 ? 0 : -1)
+                Index(referenceTarget.GetLength() > 0 ? 0 : -1)
             {
             }
                         
             bool IsValid() const
             {
-                return index < Ref.GetLength();
+                return Index < Ref.GetLength();
             }
                         
             bool Next()
             {
-                ++index;
+                ++Index;
 
                 return IsValid();
             }
@@ -75,11 +75,11 @@ namespace Formatting
             {
                 const T* Ptr = Ref.GetDataPtr();
 
-                return Ptr[index];
+                return Ptr[Index];
             }
         protected:            
             const SelfType&   Ref;         // NOLINT   
-            size_t            index;
+            size_t            Index;
         };
 
 		TAutoArray() :
@@ -335,7 +335,7 @@ namespace Formatting
 
         void  ExpandHeapSpace()
         {
-            size_t NewCount = AllocatedCount * 2;
+            const size_t NewCount = AllocatedCount * 2;
             assert(NewCount > AllocatedCount);
 
             T* DataPtr = Allocate(NewCount);
@@ -367,10 +367,10 @@ namespace Formatting
             AllocatedCount = 0;
         }
 
-        static T* Allocate(const size_t InAllocatedCount)
+        static T* Allocate(const size_t allocatedCount)
         {
             // +ExtraLength this is a hack method for saving string on it.
-            return new T[InAllocatedCount + ExtraLength];
+            return new T[allocatedCount + ExtraLength];
         }
 
     protected:

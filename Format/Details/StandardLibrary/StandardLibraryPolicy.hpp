@@ -102,7 +102,7 @@ namespace Formatting
                 typedef TFormatPattern<CharType>                               FormatPattern;
                 typedef typename FormatPattern::SizeType                       SizeType;
                 typedef typename FormatPattern::ByteType                       ByteType;
-                typedef TAutoArray<FormatPattern, 0xF, 0>                      PatternListType;
+                typedef TAutoArray<FormatPattern, 0xF, 0>                      PatternListType; // NOLINT
                 typedef typename PatternListType::ConstIterator                PatternIterator;                
                 typedef TDefaultStringHasher<CharType>                         HasherType;
                 typedef std::runtime_error                                     ExceptionType;
@@ -153,15 +153,15 @@ namespace Formatting
             };
 
 #if FL_WITH_THREAD_LOCAL || !FL_WITH_MULTITHREAD_SUPPORT
-            typedef MutexNone                                       DefaultMutexType;
+            typedef MutexNone                                                           DefaultMutexType;
 #else
-            typedef Mutex                                           DefaultMutexType;
+            typedef Mutex                                                               DefaultMutexType;
 #endif
 
-            typedef TPatternStorage< TStandardPolicy<char, DefaultMutexType> >          STLPatternStorageA;
-            typedef TPatternStorage< TStandardPolicy<wchar_t, DefaultMutexType> >       STLPatternStorageW;
-            typedef TGlobalPatternStorage< TStandardPolicy<char, DefaultMutexType> >    STLGlobalPatternStorageA;
-            typedef TGlobalPatternStorage< TStandardPolicy<wchar_t, DefaultMutexType> > STLGlobalPatternStorageW;
+            typedef TPatternStorage< TStandardPolicy<char, DefaultMutexType> >          STLPatternStorageA;         // NOLINT
+            typedef TPatternStorage< TStandardPolicy<wchar_t, DefaultMutexType> >       STLPatternStorageW;         // NOLINT
+            typedef TGlobalPatternStorage< TStandardPolicy<char, DefaultMutexType> >    STLGlobalPatternStorageA;   // NOLINT
+            typedef TGlobalPatternStorage< TStandardPolicy<wchar_t, DefaultMutexType> > STLGlobalPatternStorageW;   // NOLINT
         }        
     }
 }
