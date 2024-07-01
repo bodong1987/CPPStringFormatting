@@ -24,10 +24,10 @@
     Project URL: https://github.com/bodong1987/CPPStringFormatting
 */
 
-// NOLINTBEGIN
+// ReSharper disable All
 // Internal Use
 #ifndef _FL_FORMAT_TO_INDEX_
-#error "This is an internally used file, please do not include this file directly"
+#error "This is an internally used file, please do not include this file directly" 
 #endif
 
 #if FL_COMPILER_WITH_CXX11
@@ -57,6 +57,12 @@
 
 //#pragma message( FL_PP_TEXT(FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TEMPLATE_PARAMETERS_, )))
 
+// These two macros can reduce false positives during static code scanning
+#ifndef _FL_FORMAT_TO_INDEX_
+#define FL_PP_COMMA_IF(...) 
+#define FL_PP_REPEAT(n,m,d)
+#endif
+
 /*
 * base iterate function 
 * used to generate the real function for Format...
@@ -68,8 +74,8 @@ template <
     FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
     FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TEMPLATE_PARAMETERS_, )
 >
-inline TAutoString<TCharType>& FormatTo(
-    TAutoString<TCharType>& sink,
+inline TAutoString<TCharType>& FormatTo( 
+    TAutoString<TCharType>& sink, 
     const TFormatType& format
     FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
     FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_REAL_AGUMENTS_, )
@@ -136,4 +142,4 @@ inline TAutoString<TCharType>& FormatTo(
 #undef _FL_TEMPLATE_PARAMETERS_
 #undef _FL_REAL_AGUMENTS_
 #undef _FL_TRANSFER_BODY_
-// NOLINTEND
+// ReSharper restore All
