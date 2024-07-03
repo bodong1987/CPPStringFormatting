@@ -26,6 +26,7 @@
 #pragma once
 
 #include <Format/Details/PatternStorage.hpp>
+#include <stdexcept>
 
 #if FL_COMPILER_WITH_CXX11
 #include <unordered_map>
