@@ -279,6 +279,19 @@ TEST(Format, TestOtherCharacters)
     EXPECT_EQ(StandardLibrary::Format("{0} is {1} years old", "John", 30), "John is 30 years old");
 }
 
+TEST(Format, TestPointer)
+{
+    auto intPtr = new int[12] { 1, 2, 3};
+    char szText[64] = {0};
+
+    TCharTraits<char>::StringPrintf(szText, _countof(szText), "0x%p", intPtr);
+    
+    EXPECT_EQ(StandardLibrary::Format("0x{0:X}", intPtr), szText);
+
+    delete []intPtr;
+}
+
+
 TEST(Format, TestMultipleDifferentArgs)
 {
     int a = 123;

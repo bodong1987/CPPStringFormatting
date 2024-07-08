@@ -595,6 +595,121 @@ namespace Formatting
             }
         };
 
+        /// <summary>
+        /// Class TPointerTranslatorImpl.
+        /// process common pointer format
+        /// Implements the <see cref="TTranslatorBase{TCharType, T}" />
+        /// </summary>
+        /// <seealso cref="TTranslatorBase{TCharType, T}" />
+        template < typename TCharType, typename T>
+        class TPointerTranslatorImpl : public TTranslatorBase<TCharType, T> // NOLINT
+        {
+        public:
+            typedef TTranslatorBase< TCharType, T>                      Super;
+            typedef typename Super::CharType                            CharType;
+            typedef typename Super::FormatPattern                       FormatPattern;
+            typedef typename Super::ByteType                            ByteType;
+            typedef typename Super::SizeType                            SizeType;
+            typedef typename Super::StringType                          StringType;
+            typedef typename Super::CharTraits                          CharTraits;
+
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, T ptr)
+            {
+                FL_STATIC_ASSERT(std::is_pointer<T>::value, "must be pointer type");
+                
+                assert(pattern.Len > 0 && "invalid parameters!!!");
+
+                const bool bHex = pattern.Flag == EFormatFlag::Hex || pattern.Flag == EFormatFlag::None;
+                CharType TempBuf[32];
+
+                const SizeType length = Details::UInt64ToString<CharType>(reinterpret_cast<uint64_t>(ptr), TempBuf, bHex ? 16 : 10, pattern.bUpper);
+
+                if (pattern.HasPrecision() && pattern.Precision > length)
+                {
+                    Super::AppendString(strRef, pattern, TempBuf, length, pattern.Precision, true, CharTraits::GetZero());
+                }
+                else
+                {
+                    constexpr auto defaultAlignedLength = sizeof(void*)*2;
+                    Super::AppendString(strRef, pattern, TempBuf, length, defaultAlignedLength, true, CharTraits::GetZero());
+                }
+
+                return true;
+            }
+        };
+
+        // for const void*
+        template <typename TCharType>
+        class TTranslator<TCharType, const void*> : public TTranslatorBase<TCharType, const void*>
+        {
+            typedef TTranslatorBase< TCharType, const void*>            Super;
+            typedef typename Super::CharType                            CharType;
+            typedef typename Super::FormatPattern                       FormatPattern;
+            typedef typename Super::ByteType                            ByteType;
+            typedef typename Super::SizeType                            SizeType;
+            typedef typename Super::StringType                          StringType;
+            typedef typename Super::CharTraits                          CharTraits;
+        public:
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, const void* ptr)
+            {
+                return TPointerTranslatorImpl<TCharType, const void*>::Transfer(strRef, pattern, ptr);
+            }
+        };
+
+        // for void*
+        template <typename TCharType>
+        class TTranslator<TCharType, void*> : public TTranslatorBase<TCharType, void*>
+        {
+            typedef TTranslatorBase< TCharType, void*>                  Super;
+            typedef typename Super::CharType                            CharType;
+            typedef typename Super::FormatPattern                       FormatPattern;
+            typedef typename Super::ByteType                            ByteType;
+            typedef typename Super::SizeType                            SizeType;
+            typedef typename Super::StringType                          StringType;
+            typedef typename Super::CharTraits                          CharTraits;
+        public:
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, void* ptr)
+            {
+                return TPointerTranslatorImpl<TCharType, void*>::Transfer(strRef, pattern, ptr);
+            }
+        };
+
+        // for T*
+        template <typename TCharType, typename T>
+        class TTranslator<TCharType, T*> : public TTranslatorBase<TCharType, T*>
+        {
+            typedef TTranslatorBase< TCharType, T*>                     Super;
+            typedef typename Super::CharType                            CharType;
+            typedef typename Super::FormatPattern                       FormatPattern;
+            typedef typename Super::ByteType                            ByteType;
+            typedef typename Super::SizeType                            SizeType;
+            typedef typename Super::StringType                          StringType;
+            typedef typename Super::CharTraits                          CharTraits;
+        public:
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, T* ptr)
+            {
+                return TPointerTranslatorImpl<TCharType, T*>::Transfer(strRef, pattern, ptr);
+            }
+        };
+
+        // for const T*
+        template <typename TCharType, typename T>
+        class TTranslator<TCharType, const T*> : public TTranslatorBase<TCharType, const T*>
+        {
+            typedef TTranslatorBase< TCharType, const T*>               Super;
+            typedef typename Super::CharType                            CharType;
+            typedef typename Super::FormatPattern                       FormatPattern;
+            typedef typename Super::ByteType                            ByteType;
+            typedef typename Super::SizeType                            SizeType;
+            typedef typename Super::StringType                          StringType;
+            typedef typename Super::CharTraits                          CharTraits;
+        public:
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, const T* ptr)
+            {
+                return TPointerTranslatorImpl<TCharType, T*>::Transfer(strRef, pattern, ptr);
+            }
+        };
+
         // convert small numeric type to big numeric type 
         // and convert them to string     
 #define FL_CONVERT_TRANSLATOR(Type, BaseType, ImplType) \
