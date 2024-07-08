@@ -281,14 +281,31 @@ TEST(Format, TestOtherCharacters)
 
 TEST(Format, TestPointer)
 {
-    auto intPtr = new int[12] { 1, 2, 3};
-    char szText[64] = {0};
+    {
+        const int* intPtr = new int[12] { 1, 2, 3};
+        char szText[64] = {0};
 
-    TCharTraits<char>::StringPrintf(szText, _countof(szText), "0x%p", intPtr);
+        TCharTraits<char>::StringPrintf(szText, _countof(szText), "0x%p", intPtr);
     
-    EXPECT_EQ(StandardLibrary::Format("0x{0:X}", intPtr), szText);
+        EXPECT_EQ(StandardLibrary::Format("0x{0:X}", intPtr), szText);
+        EXPECT_EQ(StandardLibrary::Format("0x{0:X}", (void*)intPtr), szText);
+        EXPECT_EQ(StandardLibrary::Format("0x{0:X}", (const void*)intPtr), szText);
 
-    delete []intPtr;
+        delete []intPtr;    
+    }
+
+    {
+        int* intPtr = new int[12] { 1, 2, 3};
+        wchar_t szText[64] = {0};
+
+        TCharTraits<wchar_t>::StringPrintf(szText, _countof(szText), L"0x%p", intPtr);
+    
+        EXPECT_EQ(StandardLibrary::Format(L"0x{0:X}", intPtr), szText);
+        EXPECT_EQ(StandardLibrary::Format(L"0x{0:X}", (void*)intPtr), szText);
+        EXPECT_EQ(StandardLibrary::Format(L"0x{0:X}", (const void*)intPtr), szText);
+
+        delete []intPtr;
+    }
 }
 
 

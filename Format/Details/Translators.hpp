@@ -706,7 +706,7 @@ namespace Formatting
         public:
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, const T* ptr)
             {
-                return TPointerTranslatorImpl<TCharType, T*>::Transfer(strRef, pattern, ptr);
+                return TPointerTranslatorImpl<TCharType, const T*>::Transfer(strRef, pattern, ptr);
             }
         };
 
