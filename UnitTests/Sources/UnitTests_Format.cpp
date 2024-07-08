@@ -285,7 +285,11 @@ TEST(Format, TestPointer)
         const int* intPtr = new int[12];
         char szText[64] = {0};
 
-        TCharTraits<char>::StringPrintf(szText, _countof(szText), "0x%p", intPtr);
+#if FL_PLATFORM_MACOS
+        TCharTraits<char>::StringPrintf(szText, FL_ARRAY_COUNTOF(szText), "0x%016lX", intPtr);
+#else
+        TCharTraits<char>::StringPrintf(szText, FL_ARRAY_COUNTOF(szText), "0x%p", intPtr);
+#endif
     
         EXPECT_EQ(StandardLibrary::Format("0x{0:X}", intPtr), szText);
         EXPECT_EQ(StandardLibrary::Format("0x{0:X}", (void*)intPtr), szText);
@@ -298,7 +302,11 @@ TEST(Format, TestPointer)
         int* intPtr = new int[12];
         wchar_t szText[64] = {0};
 
-        TCharTraits<wchar_t>::StringPrintf(szText, _countof(szText), L"0x%p", intPtr);
+#if FL_PLATFORM_MACOS
+        TCharTraits<wchar_t>::StringPrintf(szText, FL_ARRAY_COUNTOF(szText), L"0x%016lX", intPtr);
+#else
+        TCharTraits<wchar_t>::StringPrintf(szText, FL_ARRAY_COUNTOF(szText), L"0x%p", intPtr);
+#endif
     
         EXPECT_EQ(StandardLibrary::Format(L"0x{0:X}", intPtr), szText);
         EXPECT_EQ(StandardLibrary::Format(L"0x{0:X}", (void*)intPtr), szText);
