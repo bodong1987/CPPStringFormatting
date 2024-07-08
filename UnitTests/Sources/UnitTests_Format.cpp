@@ -282,7 +282,7 @@ TEST(Format, TestOtherCharacters)
 TEST(Format, TestPointer)
 {
     {
-        const int* intPtr = new int[12] { 1, 2, 3};
+        const int* intPtr = new int[12];
         char szText[64] = {0};
 
         TCharTraits<char>::StringPrintf(szText, _countof(szText), "0x%p", intPtr);
@@ -295,7 +295,7 @@ TEST(Format, TestPointer)
     }
 
     {
-        int* intPtr = new int[12] { 1, 2, 3};
+        int* intPtr = new int[12];
         wchar_t szText[64] = {0};
 
         TCharTraits<wchar_t>::StringPrintf(szText, _countof(szText), L"0x%p", intPtr);

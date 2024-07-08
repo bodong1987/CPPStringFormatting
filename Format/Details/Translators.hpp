@@ -615,7 +615,7 @@ namespace Formatting
 
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, T ptr)
             {
-                FL_STATIC_ASSERT(std::is_pointer<T>::value, "must be pointer type");
+                FL_STATIC_ASSERT(Mpl::IsPtr<T>::Value, "must be pointer type");
                 
                 assert(pattern.Len > 0 && "invalid parameters!!!");
 
@@ -630,7 +630,7 @@ namespace Formatting
                 }
                 else
                 {
-                    constexpr auto defaultAlignedLength = sizeof(void*)*2;
+                    constexpr size_t defaultAlignedLength = sizeof(void*)*2;
                     Super::AppendString(strRef, pattern, TempBuf, length, defaultAlignedLength, true, CharTraits::GetZero());
                 }
 
