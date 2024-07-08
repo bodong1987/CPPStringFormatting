@@ -599,5 +599,47 @@ namespace Formatting
         {
             return str.length();
         }
+
+#if FL_COMPILER_WITH_CXX11
+        inline const char16_t* PtrOf(const char16_t* rawString)
+        {
+            return rawString;
+        }
+
+        inline size_t LengthOf(const char16_t* rawString)
+        {
+            return std::char_traits<char16_t>::length(rawString);
+        }
+
+        inline const char16_t* PtrOf(const std::basic_string<char16_t>& str)
+        {
+            return str.c_str();
+        }
+
+        inline size_t LengthOf(const std::basic_string<char16_t>& str)
+        {
+            return str.size();
+        }
+
+        inline const char32_t* PtrOf(const char32_t* rawString)
+        {
+            return rawString;
+        }
+
+        inline size_t LengthOf(const char32_t* rawString)
+        {
+            return std::char_traits<char32_t>::length(rawString);
+        }
+
+        inline const char32_t* PtrOf(const std::basic_string<char32_t>& str)
+        {
+            return str.c_str();
+        }
+
+        inline size_t LengthOf(const std::basic_string<char32_t>& str)
+        {
+            return str.size();
+        }
+#endif
     }
 }
