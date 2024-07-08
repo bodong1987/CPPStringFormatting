@@ -29,6 +29,7 @@
 #include <Format/Details/StringConvertAlgorithm.hpp>
 #include <Format/Details/Pattern.hpp>
 #include <Format/Common/AutoString.hpp>
+#include <Format/Common/Mpl.hpp>
 
 namespace Formatting
 {
