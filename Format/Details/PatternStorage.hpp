@@ -42,7 +42,6 @@ namespace Formatting
             typedef typename TPolicy::PatternListType               PatternListType;
             typedef typename TPolicy::PatternIterator               PatternIterator;
             typedef typename TPolicy::PatternMapType                PatternMapType;
-            typedef typename TPolicy::HasherType                    HasherType;
             typedef typename TPolicy::ExceptionType                 ExceptionType;
             typedef typename TPolicy::MutexType                     MutexType;
             typedef TScopedLocker<MutexType>                        ScopedLockerType;
@@ -56,13 +55,8 @@ namespace Formatting
             /// <param name="length">The length.</param>
             /// <param name="hashKey">The hash key.</param>
             /// <returns>const PatternListType *.</returns>
-            const PatternListType* LookupPatterns(const CharType* const formatStart, const SizeType length, SizeType hashKey = 0)
+            const PatternListType* LookupPatterns(const CharType* const formatStart, const SizeType length, SizeType hashKey)
             {
-                if (0 == hashKey)
-                {
-                    hashKey = Hasher(formatStart, length);
-                }
-
                 // First, Find in the cache
                 {
                     ScopedLockerType Locker(MutexValue);
@@ -98,16 +92,12 @@ namespace Formatting
             /// The critical section value
             /// </summary>
             MutexType                   MutexValue;
-
-            /// <summary>
-            /// The hasher
-            /// </summary>
-            HasherType                  Hasher;
             
             /// <summary>
             /// The storage
             /// </summary>
             PatternMapType              Storage;
+            
             /// <summary>
             /// The parser
             /// </summary>

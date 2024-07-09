@@ -89,8 +89,14 @@ inline TAutoString<TCharType>& FormatTo(
 
     assert(Storage);
 
-    const PatternListType* Patterns =
-        Storage->LookupPatterns(Shims::PtrOf(format), Shims::LengthOf(format));
+    const TCharType* localFormatText = Shims::PtrOf(format);
+    const size_t localLength = Shims::LengthOf(format);
+    
+    const PatternListType* Patterns = Storage->LookupPatterns(
+        localFormatText,
+        localLength,
+        CalculateByteArrayHash(reinterpret_cast<const uint8_t*>(localFormatText), localLength*sizeof(TCharType))
+        );
 
     assert(Patterns);
 

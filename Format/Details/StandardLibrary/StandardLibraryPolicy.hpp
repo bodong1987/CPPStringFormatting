@@ -41,57 +41,6 @@ namespace Formatting
         namespace StandardLibrary
         {
             /// <summary>
-            /// Class TDefaultStringHasher.
-            /// stl default string hasher
-            /// </summary>
-            template < typename TCharType >
-            class TDefaultStringHasher
-            {
-            public:
-                typedef TCharType                               CharType;
-                typedef TFormatPattern<CharType>                FormatPattern;
-                typedef typename FormatPattern::SizeType        SizeType;
-
-                SizeType operator ()(const CharType* const start, SizeType length)
-                {
-                    const unsigned char* const StartTest = (const unsigned char* const)start; // NOLINT
-
-                    SizeType Count = length * sizeof(CharType);
-
-#if FL_PLATFORM_X64
-                    FL_STATIC_ASSERT(sizeof(SizeType) == 8, "This code is for 64-bit SizeType.");
-
-                    const SizeType FNVOffsetBasis = 14695981039346656037ULL;
-                    const SizeType FNVPrime = 1099511628211ULL;
-
-#else
-                    FL_STATIC_ASSERT(sizeof(SizeType) == 4, "This code is for 32-bit SizeType.");
-
-                    const SizeType FNVOffsetBasis = 2166136261U;
-                    const SizeType FNVPrime = 16777619U;
-#endif
-
-                    SizeType Value = FNVOffsetBasis;
-
-                    for (SizeType Next = 0; Next < Count; ++Next)
-                    {
-                        // fold in another byte
-                        Value ^= static_cast<SizeType>(StartTest[Next]);
-                        Value *= FNVPrime;
-                    }
-
-#if FL_PLATFORM_X64
-                    FL_STATIC_ASSERT(sizeof(SizeType) == 8, "This code is for 64-bit SizeType.");
-                    Value ^= Value >> 32;
-
-#else
-                    FL_STATIC_ASSERT(sizeof(SizeType) == 4, "This code is for 32-bit SizeType.");
-#endif
-                    return Value;
-                }
-            };
-
-            /// <summary>
             /// Class TStandardPolicy.
             /// stl default policy
             /// </summary>
@@ -104,8 +53,7 @@ namespace Formatting
                 typedef typename FormatPattern::SizeType                       SizeType;
                 typedef typename FormatPattern::ByteType                       ByteType;
                 typedef TAutoArray<FormatPattern, 0xF, 0>                      PatternListType; // NOLINT
-                typedef typename PatternListType::ConstIterator                PatternIterator;                
-                typedef TDefaultStringHasher<CharType>                         HasherType;
+                typedef typename PatternListType::ConstIterator                PatternIterator;
                 typedef std::runtime_error                                     ExceptionType;
                 typedef TMutexType                                             MutexType;
 

@@ -32,6 +32,42 @@ namespace Formatting
 {
     namespace Details
     {
+        constexpr inline size_t CalculateByteArrayHash(const uint8_t* const start, const size_t length)
+        {
+#if FL_PLATFORM_X64
+            FL_STATIC_ASSERT(sizeof(void*) == 8, "This code is for 64-bit pointer.");
+
+            constexpr size_t FNVOffsetBasis = 14695981039346656037ULL;
+            
+            // ReSharper disable once CppTooWideScope
+            constexpr size_t FNVPrime = 1099511628211ULL;
+
+#else
+            FL_STATIC_ASSERT(sizeof(void*) == 4, "This code is for 32-bit pointer.");
+
+            constexpr SizeType FNVOffsetBasis = 2166136261U;
+
+            // ReSharper disable once CppTooWideScope
+            constexpr SizeType FNVPrime = 16777619U;
+#endif
+
+            size_t Value = FNVOffsetBasis;
+            
+            for (size_t Next = 0; Next < length; ++Next)
+            {
+                // fold in another byte
+                Value ^= static_cast<size_t>(start[Next]);
+                Value *= FNVPrime;
+            }
+
+#if FL_PLATFORM_X64
+            FL_STATIC_ASSERT(sizeof(void*) == 8, "This code is for 64-bit pointer.");
+            Value ^= Value >> 32;
+#endif
+            
+            return Value;
+        }
+        
 #if FL_COMPILER_WITH_CXX11
         namespace Utils
         {
@@ -128,15 +164,20 @@ namespace Formatting
             assert(Storage);
 
             // find patterns first
-            const PatternListType* Patterns = Storage->LookupPatterns(Shims::PtrOf(format), Shims::LengthOf(format));
+            const TCharType* localFormatText = Shims::PtrOf(format);
+            const size_t localLength = Shims::LengthOf(format);
+            
+            const PatternListType* Patterns = Storage->LookupPatterns(
+                localFormatText,
+                localLength,
+                CalculateByteArrayHash(reinterpret_cast<const uint8_t*>(localFormatText), localLength*sizeof(TCharType))
+                );
 
             assert(Patterns);
 
             if (Patterns == nullptr)
             {
-                const TCharType* rawFormat = Shims::PtrOf(format);
-                const size_t rawLength = Shims::LengthOf(format);
-                sink.AddStr(rawFormat, rawFormat + rawLength);
+                sink.AddStr(localFormatText, localFormatText + localLength);
 
                 return sink;
             }
