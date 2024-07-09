@@ -184,7 +184,7 @@ namespace Formatting
             sink = Format<TCHAR>(format);
         }
 
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
         template <typename TCharType, typename T0, typename... T>
         inline CString Format(const TCharType* format, const T0& arg0, T... args)
         {

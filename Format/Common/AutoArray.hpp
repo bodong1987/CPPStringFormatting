@@ -168,7 +168,7 @@ namespace Formatting
             return *this;
         }
 
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
         SelfType& TakeFrom(SelfType&& other) noexcept
         {
             if (this == &other)
@@ -198,7 +198,7 @@ namespace Formatting
             other.TakeFrom(*this);
         }
 
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
         TAutoArray(SelfType&& other) noexcept :
             Count(other.Count),
             AllocatedCount(other.AllocatedCount),

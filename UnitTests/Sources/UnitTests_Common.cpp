@@ -49,7 +49,7 @@ TEST(TAutoArray, CopyConstructor)
     }
 }
 
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
 TEST(TAutoArray, MoveConstructor)
 {
     TAutoArray<int> array1;

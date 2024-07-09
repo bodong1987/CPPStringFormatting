@@ -68,7 +68,7 @@ namespace Formatting
             return Value;
         }
         
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
         namespace Utils
         {
             template <typename TCharType, typename TPatternType, typename T0, typename... T>

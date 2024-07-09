@@ -49,7 +49,7 @@ namespace Formatting
             }
 
         protected:
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
             enum class EParseState : uint8_t
 #else
             struct EParseState
@@ -65,7 +65,7 @@ namespace Formatting
                     Precision  = 1 << 5
                 };
 
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
             typedef EParseState                 ParseStateType;
 #else
             };

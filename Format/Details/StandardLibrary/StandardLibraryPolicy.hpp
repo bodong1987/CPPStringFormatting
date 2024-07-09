@@ -28,7 +28,7 @@
 #include <Format/Details/PatternStorage.hpp>
 #include <stdexcept>
 
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
 #include <unordered_map>
 #else
 #include <map>
@@ -57,7 +57,7 @@ namespace Formatting
                 typedef std::runtime_error                                     ExceptionType;
                 typedef TMutexType                                             MutexType;
 
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
                 typedef std::unordered_map<SizeType, PatternListType>          PatternMapType;
 #else
                 typedef std::map<SizeType, PatternListType>                    PatternMapType;

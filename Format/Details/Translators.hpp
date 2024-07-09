@@ -138,7 +138,7 @@ namespace Formatting
             /// <param name="arg">The argument.</param>
             /// <returns>bool.</returns>
 
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
             static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg) = delete;
 #else
         private:

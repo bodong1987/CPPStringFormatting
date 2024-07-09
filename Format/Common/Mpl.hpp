@@ -33,7 +33,7 @@
 #include <memory>
 #include <string.h>
 #include <cwchar>
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
 #include <type_traits>
 #endif
 
@@ -103,7 +103,7 @@ namespace Formatting
         template < typename T, int Size >
         struct IsArray< T[Size] > : TrueType {};
 
-#if !FL_COMPILER_WITH_CXX11
+#if !FL_COMPILER_IS_GREATER_THAN_CXX11
         /// <summary>
         /// Struct IsScalar
         /// </summary>

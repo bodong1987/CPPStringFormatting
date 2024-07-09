@@ -27,7 +27,7 @@
 
 #include <Format/Common/Build.hpp>
 
-#if !FL_COMPILER_WITH_CXX11
+#if !FL_COMPILER_IS_GREATER_THAN_CXX11
 #include <Format/Common/Mpl.hpp>
 #endif
 
@@ -35,7 +35,7 @@ namespace Formatting
 {
     namespace Details
     {
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
 		enum class EFormatFlag : uint8_t
 #else
 		namespace EFormatFlag
@@ -54,7 +54,7 @@ namespace Formatting
 				Hex,
                 Binary
 			};
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
 		typedef EFormatFlag FormatFlagType;
 #else
 		}
@@ -62,7 +62,7 @@ namespace Formatting
 		typedef EFormatFlag::Enum FormatFlagType;
 #endif
 
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
         enum class EAlignFlag : uint8_t
 #else
 		namespace EAlignFlag
@@ -74,7 +74,7 @@ namespace Formatting
 				Left
 			};
 
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
 		typedef EAlignFlag AlignFlagType;
 #else
 		}
@@ -157,7 +157,7 @@ namespace Formatting
         };
     }
 
-#if !FL_COMPILER_WITH_CXX11
+#if !FL_COMPILER_IS_GREATER_THAN_CXX11
 	namespace Mpl
     {
     	/// <summary>

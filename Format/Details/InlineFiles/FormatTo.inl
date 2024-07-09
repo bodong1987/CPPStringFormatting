@@ -30,7 +30,7 @@
 #error "This is an internally used file, please do not include this file directly" 
 #endif
 
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
 #error "This file is prepared to support versions of the C++ standard earlier than C++11. If your compiler already supports C++11 or newer, you should no longer use this set of code."
 #endif
 

@@ -600,7 +600,7 @@ namespace Formatting
             return str.length();
         }
 
-#if FL_COMPILER_WITH_CXX11
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
         inline const char16_t* PtrOf(const char16_t* rawString)
         {
             return rawString;

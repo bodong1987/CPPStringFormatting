@@ -37,7 +37,7 @@ namespace Formatting
     public:
         Noncopyable() {}  // NOLINT      
         ~Noncopyable() {} // NOLINT
-#if FL_COMPILER_WITH_CXX11    
+#if FL_COMPILER_IS_GREATER_THAN_CXX11    
         Noncopyable(const Noncopyable&) = delete;
         Noncopyable& operator = (const Noncopyable&) = delete;
 #else

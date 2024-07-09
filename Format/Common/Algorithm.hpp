@@ -27,7 +27,7 @@
 
 #include <Format/Common/Build.hpp>
 
-#if !FL_COMPILER_WITH_CXX11
+#if !FL_COMPILER_IS_GREATER_THAN_CXX11
 #include <Format/Common/Mpl.hpp>
 #endif
 
@@ -37,7 +37,7 @@ namespace Formatting
 {
     namespace Algorithm
     {
-#if !FL_COMPILER_WITH_CXX11
+#if !FL_COMPILER_IS_GREATER_THAN_CXX11
         namespace Details
         {
             /// <summary>
@@ -130,7 +130,7 @@ namespace Formatting
         template<typename InputType, typename OutputType>
         inline OutputType MoveArray(InputType start, InputType end, OutputType dest)
         {
-#if !FL_COMPILER_WITH_CXX11
+#if !FL_COMPILER_IS_GREATER_THAN_CXX11
             typedef typename Mpl::IfElse<
                 Mpl::IsSimple<InputType>::Value &&
                 Mpl::IsSame<InputType, OutputType>::Value,
@@ -153,7 +153,7 @@ namespace Formatting
         template<typename InputType, typename OutputType>
         inline OutputType CopyArray(InputType start, InputType end, OutputType dest)
         {
-#if !FL_COMPILER_WITH_CXX11
+#if !FL_COMPILER_IS_GREATER_THAN_CXX11
             typedef typename Mpl::IfElse<
                 Mpl::IsSimple<InputType>::Value &&
                 Mpl::IsSame<InputType, OutputType>::Value,
