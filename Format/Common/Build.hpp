@@ -25,6 +25,7 @@
 */
 #pragma once
 
+// ReSharper disable once CommentTypo
 // NOLINTBEGIN
 #if (defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WINDOWS) || defined(_WIN64))
 #define FL_PLATFORM_WINDOWS   1
@@ -214,4 +215,5 @@ typedef unsigned int long long uint64_t;
 
 #endif
 
+// ReSharper disable once CommentTypo
 // NOLINTEND
