@@ -32,40 +32,9 @@ namespace Formatting
 {
     namespace Details
     {
-        constexpr inline size_t CalculateByteArrayHash(const uint8_t* const start, const size_t length)
+        FL_CONSTEXPR inline size_t CalculateByteArrayHash(const uint8_t* s, size_t count)
         {
-#if FL_PLATFORM_X64
-            FL_STATIC_ASSERT(sizeof(void*) == 8, "This code is for 64-bit pointer.");
-
-            constexpr size_t FNVOffsetBasis = 14695981039346656037ULL;
-            
-            // ReSharper disable once CppTooWideScope
-            constexpr size_t FNVPrime = 1099511628211ULL;
-
-#else
-            FL_STATIC_ASSERT(sizeof(void*) == 4, "This code is for 32-bit pointer.");
-
-            constexpr SizeType FNVOffsetBasis = 2166136261U;
-
-            // ReSharper disable once CppTooWideScope
-            constexpr SizeType FNVPrime = 16777619U;
-#endif
-
-            size_t Value = FNVOffsetBasis;
-            
-            for (size_t Next = 0; Next < length; ++Next)
-            {
-                // fold in another byte
-                Value ^= static_cast<size_t>(start[Next]);
-                Value *= FNVPrime;
-            }
-
-#if FL_PLATFORM_X64
-            FL_STATIC_ASSERT(sizeof(void*) == 8, "This code is for 64-bit pointer.");
-            Value ^= Value >> 32;
-#endif
-            
-            return Value;
+            return count ? (CalculateByteArrayHash(s, count - 1) ^ s[count - 1]) * 16777619u : 2166136261u;
         }
         
 #if FL_COMPILER_IS_GREATER_THAN_CXX11
