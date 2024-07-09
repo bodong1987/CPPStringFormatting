@@ -285,7 +285,7 @@ TEST(Format, TestPointer)
         const int* intPtr = new int[12];
         char szText[64] = {0};
 
-#if FL_PLATFORM_MACOS
+#if FL_COMPILER_GCC
         TCharTraits<char>::StringPrintf(szText, FL_ARRAY_COUNTOF(szText), "0x%016lX", intPtr);
 #else
         TCharTraits<char>::StringPrintf(szText, FL_ARRAY_COUNTOF(szText), "0x%p", intPtr);
@@ -299,10 +299,10 @@ TEST(Format, TestPointer)
     }
 
     {
-        int* intPtr = new int[12];
+        const int* intPtr = new int[12];
         wchar_t szText[64] = {0};
 
-#if FL_PLATFORM_MACOS
+#if FL_COMPILER_GCC
         TCharTraits<wchar_t>::StringPrintf(szText, FL_ARRAY_COUNTOF(szText), L"0x%016lX", intPtr);
 #else
         TCharTraits<wchar_t>::StringPrintf(szText, FL_ARRAY_COUNTOF(szText), L"0x%p", intPtr);

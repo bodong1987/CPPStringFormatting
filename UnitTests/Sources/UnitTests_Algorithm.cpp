@@ -95,7 +95,7 @@ TEST(TCharTraits, StringPrintf)
 
     wchar_t wbuffer[100];
 
-#if FL_PLATFORM_APPLE
+#if FL_COMPILER_GCC
     const wchar_t* wFmt = L"%S %d";
 #else
     const wchar_t* wFmt = L"%s %d";
