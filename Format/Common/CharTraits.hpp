@@ -560,83 +560,83 @@ namespace Formatting
 
     namespace Shims
     {
-        inline const wchar_t* PtrOf(const wchar_t* rawString)
+        inline FL_CONSTEXPR11 const wchar_t* PtrOf(const wchar_t* rawString)
         {
             return rawString;
         }
 
-        inline const char* PtrOf(const char* rawString)
+        inline FL_CONSTEXPR11 const char* PtrOf(const char* rawString)
         {
             return rawString;
         }
 
-        inline size_t LengthOf(const wchar_t* rawString)
+        inline FL_CONSTEXPR17 size_t LengthOf(const wchar_t* rawString)
         {
-            return wcslen(rawString);
+            return std::char_traits<wchar_t>::length(rawString);
         }
 
-        inline size_t LengthOf(const char* rawString)
+        inline FL_CONSTEXPR17 size_t LengthOf(const char* rawString)
         {
-            return strlen(rawString);
+            return std::char_traits<char>::length(rawString);
         }
 
-        inline const char* PtrOf(const std::basic_string<char>& str)
-        {
-            return str.c_str();
-        }
-
-        inline const wchar_t* PtrOf(const std::basic_string<wchar_t>& str)
+        inline FL_CONSTEXPR17 const char* PtrOf(const std::basic_string<char>& str)
         {
             return str.c_str();
         }
 
-        inline size_t LengthOf(const std::basic_string<char>& str)
+        inline FL_CONSTEXPR17 const wchar_t* PtrOf(const std::basic_string<wchar_t>& str)
+        {
+            return str.c_str();
+        }
+
+        inline FL_CONSTEXPR17 size_t LengthOf(const std::basic_string<char>& str)
         {
             return str.length();
         }
 
-        inline size_t LengthOf(const std::basic_string<wchar_t>& str)
+        inline FL_CONSTEXPR17 size_t LengthOf(const std::basic_string<wchar_t>& str)
         {
             return str.length();
         }
 
 #if FL_COMPILER_IS_GREATER_THAN_CXX11
-        inline const char16_t* PtrOf(const char16_t* rawString)
+        inline FL_CONSTEXPR11 const char16_t* PtrOf(const char16_t* rawString)
         {
             return rawString;
         }
 
-        inline size_t LengthOf(const char16_t* rawString)
+        inline FL_CONSTEXPR17 size_t LengthOf(const char16_t* rawString)
         {
             return std::char_traits<char16_t>::length(rawString);
         }
 
-        inline const char16_t* PtrOf(const std::basic_string<char16_t>& str)
+        inline FL_CONSTEXPR17 const char16_t* PtrOf(const std::basic_string<char16_t>& str)
         {
             return str.c_str();
         }
 
-        inline size_t LengthOf(const std::basic_string<char16_t>& str)
+        inline FL_CONSTEXPR17 size_t LengthOf(const std::basic_string<char16_t>& str)
         {
             return str.size();
         }
 
-        inline const char32_t* PtrOf(const char32_t* rawString)
+        inline FL_CONSTEXPR11 const char32_t* PtrOf(const char32_t* rawString)
         {
             return rawString;
         }
 
-        inline size_t LengthOf(const char32_t* rawString)
+        inline FL_CONSTEXPR17 size_t LengthOf(const char32_t* rawString)
         {
             return std::char_traits<char32_t>::length(rawString);
         }
 
-        inline const char32_t* PtrOf(const std::basic_string<char32_t>& str)
+        inline FL_CONSTEXPR17 const char32_t* PtrOf(const std::basic_string<char32_t>& str)
         {
             return str.c_str();
         }
 
-        inline size_t LengthOf(const std::basic_string<char32_t>& str)
+        inline FL_CONSTEXPR17 size_t LengthOf(const std::basic_string<char32_t>& str)
         {
             return str.size();
         }

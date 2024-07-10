@@ -208,7 +208,7 @@
 
 #if FL_COMPILER_IS_GREATER_THAN_CXX11
 #include <cstdint>
-#define FL_CONSTEXPR constexpr
+#define FL_CONSTEXPR11 constexpr
 #else
 typedef char int8_t;
 typedef unsigned char uint8_t;
@@ -227,7 +227,25 @@ typedef unsigned int long long uint64_t;
 #define constexpr const
 #endif
 
-#define FL_CONSTEXPR 
+#define FL_CONSTEXPR11 
+#endif
+
+#if FL_COMPILER_IS_GREATER_THAN_CXX14
+#define FL_CONSTEXPR14 constexpr
+#else
+#define FL_CONSTEXPR14
+#endif
+
+#if FL_COMPILER_IS_GREATER_THAN_CXX17
+#define FL_CONSTEXPR17 constexpr
+#else
+#define FL_CONSTEXPR17
+#endif
+
+#if FL_COMPILER_IS_GREATER_THAN_CXX20
+#define FL_CONSTEXPR20 constexpr
+#else
+#define FL_CONSTEXPR20
 #endif
 
 // ReSharper disable once CommentTypo
