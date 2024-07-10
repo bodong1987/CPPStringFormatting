@@ -214,8 +214,8 @@ C# will throw an exception when encountering an unsupported format identifier, a
 
 ## 性能测试 Performance
 [简单测试 Simple Tests](./PerformanceTests.md)
-通过测试可以发现,CPP String Formatting的速度基本上是C-API的两倍左右,C++ std::format的三倍左右,而且还具备其他优势。  
-Through testing, it can be found that CPP String Formatting is basically about twice as fast as C-API and about three times as fast as C++ std::format, and it also has other advantages.  
+通过测试可以发现, `CPPStringFormatting`的速度基本上是C-API的两倍左右,C++ std::format的三倍左右,而且还具备其他优势。  
+Through testing, it can be found that `CPPStringFormatting` is basically about twice as fast as C-API and about three times as fast as C++ std::format, and it also has other advantages.  
 
 ## 提交错误报告 Bugreport
 直接通过[Issues](https://github.com/bodong1987/CPPStringFormatting/issues)页面提交即可  
