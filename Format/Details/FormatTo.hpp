@@ -52,10 +52,18 @@ namespace Formatting
 #endif
 
             size_t Value = FNVOffsetBasis;
-            
-            for (size_t Next = 0; Next < length; ++Next)
+            size_t Next = 0;    
+
+            for (; Next + sizeof(size_t) <= length; Next += sizeof(size_t))
             {
                 // fold in another byte
+                Value ^= *reinterpret_cast<const size_t* const>(&start[Next]);
+                Value *= FNVPrime;
+            }
+
+            // Process remaining bytes
+            for (; Next < length; ++Next)
+            {
                 Value ^= static_cast<size_t>(start[Next]);
                 Value *= FNVPrime;
             }
