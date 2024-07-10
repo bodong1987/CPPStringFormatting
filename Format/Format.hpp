@@ -25,7 +25,7 @@
 */
 /*
 * This is a library that uses the C# formatted string style to format C++ strings. 
-* It is a type-safe, reentrant, reorderable formatting library. 
+* It is a type-safe, reentrant, reorder able formatting library. 
 * Not all C# format string format descriptors are perfectly supported, it only supports most common formatting methods.
 * see also: 
 * @reference https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings

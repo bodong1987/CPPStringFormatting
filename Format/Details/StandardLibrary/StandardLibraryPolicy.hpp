@@ -78,7 +78,7 @@ namespace Formatting
                 static const PatternListType* Emplace(
                     PatternMapType& storageReference, 
                     SizeType hashKey, 
-#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
                     PatternListType&& patterns
 #else
                     const PatternListType& patterns
@@ -86,7 +86,7 @@ namespace Formatting
                     )
                 {
                     std::pair< typename PatternMapType::iterator, bool> Results = 
-#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
                         storageReference.emplace(std::make_pair(hashKey, std::move(patterns)));
 #else
                         storageReference.insert(std::make_pair(hashKey, patterns));

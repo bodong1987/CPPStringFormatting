@@ -326,7 +326,7 @@ namespace Formatting
 
             HeapValPtr = Allocate(AllocatedCount);
 
-#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
             Algorithm::MoveArray(StackVal, StackVal + Count, HeapValPtr);
 #else
             Algorithm::CopyArray(StackVal, StackVal + Count, HeapValPtr);
@@ -342,7 +342,7 @@ namespace Formatting
 
             assert(DataPtr);
 
-#if FL_COMPILER_HAS_RIGHT_VALUE_REFERENCE
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
             Algorithm::MoveArray(HeapValPtr, HeapValPtr + Count, DataPtr);
 #else
             Algorithm::CopyArray(HeapValPtr, HeapValPtr + Count, DataPtr);

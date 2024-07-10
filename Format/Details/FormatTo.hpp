@@ -61,7 +61,6 @@ namespace Formatting
             }
 
 #if FL_PLATFORM_X64
-            FL_STATIC_ASSERT(sizeof(void*) == 8, "This code is for 64-bit pointer.");
             Value ^= Value >> 32;
 #endif
             
