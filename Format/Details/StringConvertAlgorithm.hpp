@@ -116,10 +116,22 @@ namespace Formatting
             uint64_t UValue = value < 0 ? -value : value;
 
             // Conversion. Number is reversed.
-            do
+            if(base == 10)
             {
-                *Str++ = DigitMap[UValue % base];
-            } while (UValue /= base);
+                do
+                {
+                    const uint64_t OldValue = UValue;
+                    UValue /= 10;
+                    *Str++ = DigitMap[OldValue - UValue * 10]; // Equivalent to OldValue % 10
+                } while (UValue);    
+            }
+            else
+            {
+                do
+                {
+                    *Str++ = DigitMap[UValue % base];
+                } while (UValue /= base);    
+            }
 
             if (value < 0)
             {
@@ -166,10 +178,22 @@ namespace Formatting
             TCharType* Str = buffer;
 
             // Conversion. Number is reversed.
-            do
+            if(base == 10)
             {
-                *Str++ = DigitMap[value % base];
-            } while (value /= base);
+                do
+                {
+                    const uint64_t OldValue = value;
+                    value /= 10;
+                    *Str++ = DigitMap[OldValue - value * 10]; // Equivalent to OldValue % 10
+                } while (value);    
+            }
+            else
+            {
+                do
+                {
+                    *Str++ = DigitMap[value % base];
+                } while (value /= base);    
+            }
 
             *Str = TCharTraits<TCharType>::GetEndFlag();
 
