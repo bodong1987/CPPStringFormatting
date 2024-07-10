@@ -138,20 +138,40 @@ TEST(TAutoString, AddAlignStr)
 {
     TAutoString<char> str;
 
-    str.AddAlignStr("Hello", nullptr, 10, false, ' ');
+    str.AddAlignStr("Hello", strlen("Hello"), 10, false, ' ');
     EXPECT_STREQ(str.CStr(), "Hello     ");
 
-    str.AddAlignStr("World", nullptr, 10, true, '$');
+    str.AddAlignStr("World", strlen("World"), 10, true, '$');
     EXPECT_STREQ(str.CStr(), "Hello     $$$$$World");
     
-    str.AddAlignStr("Hi", nullptr, 5, false, '0');
+    str.AddAlignStr("Hi", strlen("Hi"), 5, false, '0');
     EXPECT_STREQ(str.CStr(), "Hello     $$$$$WorldHi000");
 
-    str.AddAlignStr("HelloWorld", nullptr, 5, true, '0');
+    str.AddAlignStr("HelloWorld", strlen("HelloWorld"), 5, true, '0');
     EXPECT_STREQ(str.CStr(), "Hello     $$$$$WorldHi000HelloWorld");
 
-    str.AddAlignStr("12345", nullptr, 5, true, '0');
+    str.AddAlignStr("12345", strlen("12345"), 5, true, '0');
     EXPECT_STREQ(str.CStr(), "Hello     $$$$$WorldHi000HelloWorld12345");
+}
+
+TEST(TAutoString, AddAlignWStr)
+{
+    TAutoString<wchar_t> str;
+
+    str.AddAlignStr(L"Hello", wcslen(L"Hello"), 10, false, ' ');
+    EXPECT_STREQ(str.CStr(), L"Hello     ");
+
+    str.AddAlignStr(L"World", wcslen(L"World"), 10, true, '$');
+    EXPECT_STREQ(str.CStr(), L"Hello     $$$$$World");
+    
+    str.AddAlignStr(L"Hi", wcslen(L"Hi"), 5, false, '0');
+    EXPECT_STREQ(str.CStr(), L"Hello     $$$$$WorldHi000");
+
+    str.AddAlignStr(L"HelloWorld", wcslen(L"HelloWorld"), 5, true, '0');
+    EXPECT_STREQ(str.CStr(), L"Hello     $$$$$WorldHi000HelloWorld");
+
+    str.AddAlignStr(L"12345", wcslen(L"12345"), 5, true, '0');
+    EXPECT_STREQ(str.CStr(), L"Hello     $$$$$WorldHi000HelloWorld12345");
 }
 
 TEST(TAutoString, Clear)

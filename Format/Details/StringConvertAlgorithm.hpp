@@ -257,6 +257,7 @@ namespace Formatting
                 ++Frace;
             }
 
+            // ReSharper disable once CommentTypo
             /* for very large numbers switch back to native sprintf for exponentials.
             anyone want to write code to replace this? */
             /*

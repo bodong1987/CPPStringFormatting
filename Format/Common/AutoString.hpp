@@ -211,17 +211,16 @@ namespace Formatting
         }
 
     public:
-        void AddAlignStr(const CharType* start, const CharType* end, int alignedLength, bool paddingLeft, CharType fillChar)
+        void AddAlignStr(const CharType* start, const size_t length, const int alignedLength, const bool paddingLeft, const CharType fillChar)
         {
             // get text length
-            const size_t Length = end ? end - start : CharTraits::length(start);
-            const size_t TargetLength = Algorithm::Max(Length, static_cast<size_t>(alignedLength));            
+            const size_t TargetLength = Algorithm::Max(length, static_cast<size_t>(alignedLength));            
 
             if (IsDataOnStack())
             {
                 if (Count + TargetLength <= DEFAULT_LENGTH)
                 {
-                    AppendWithPadding(StackVal, start, Length, TargetLength, paddingLeft, fillChar);
+                    AppendWithPadding(StackVal, start, length, TargetLength, paddingLeft, fillChar);
                 }
                 else
                 {
@@ -236,14 +235,14 @@ namespace Formatting
                         CharTraits::copy(HeapValPtr, StackVal, Count);
                     }
                     
-                    AppendWithPadding(HeapValPtr, start, Length, TargetLength, paddingLeft, fillChar);                    
+                    AppendWithPadding(HeapValPtr, start, length, TargetLength, paddingLeft, fillChar);                    
                 }
             }
             else
             {
                 if (Count + TargetLength < AllocatedCount)
                 {
-                    AppendWithPadding(HeapValPtr, start, Length, TargetLength, paddingLeft, fillChar);
+                    AppendWithPadding(HeapValPtr, start, length, TargetLength, paddingLeft, fillChar);
                 }
                 else
                 {
@@ -261,7 +260,7 @@ namespace Formatting
                     AllocatedCount = NewCount;
                     HeapValPtr = DataPtr;
 
-                    AppendWithPadding(HeapValPtr, start, Length, TargetLength, paddingLeft, fillChar);
+                    AppendWithPadding(HeapValPtr, start, length, TargetLength, paddingLeft, fillChar);
                 }
             }
         }

@@ -72,14 +72,14 @@ namespace Formatting
         protected:
             static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, CharType fillChar = CharTraits::GetSpace())
             {
-                strRef.AddAlignStr(start, start + length, pattern.HasWidth() ? pattern.Width : static_cast<int>(length), pattern.Align != EAlignFlag::Left, fillChar);
+                strRef.AddAlignStr(start, length, pattern.HasWidth() ? pattern.Width : static_cast<int>(length), pattern.Align != EAlignFlag::Left, fillChar);
             }
 
             static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, const int alignSize, bool paddingLeft, CharType fillChar = CharTraits::GetSpace())
             {
                 FL_UNREFERENCED_PARAMETER(pattern);
                 
-                strRef.AddAlignStr(start, start + length, alignSize, paddingLeft, fillChar);
+                strRef.AddAlignStr(start, length, alignSize, paddingLeft, fillChar);
             }
         };
 
