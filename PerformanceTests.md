@@ -220,16 +220,11 @@ int main() {
 Single-threaded tests:
 | Test Type | StandardLibrary::FormatTo (s) | sprintf (s) | std::format (s) |
 |-----------|-----------------------------|-------------|-----------------|
-|           | 2.169015 | 4.241652 | 6.628010 |
+|           | 1.980905 | 4.220767 | 6.664238 |
 
 Multi-threaded(4 threads) tests:
 | Test Type | StandardLibrary::FormatTo (s) | sprintf (s) | std::format (s) |
 |-----------|-----------------------------|-------------|-----------------|
-|           | 2.869486 | 4.631736 | 6.963257 |
+|           | 2.201281 | 4.677478 | 7.111575 |
 
-Average execution time (s):
-| Test Type      | Average Time (s) |
-|----------------|------------------|
-| Single-threaded| 4.346226 |
-| Multi-threaded | 4.821493 |
 
