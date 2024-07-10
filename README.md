@@ -212,6 +212,9 @@ https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-fo
 
 C# will throw an exception when encountering an unsupported format identifier, and CPPStringFormatting will directly output the format character string. In some cases, assert or ignore will be triggered. So when you encounter problems that are inconsistent with expectations, please check whether the format identifier is correct, or whether an unsupported identifier is used.  
 
+## 性能测试 Performance
+[简单测试 Simple Tests](./PerformanceTests.md)
+
 ## 提交错误报告 Bugreport
 直接通过[Issues](https://github.com/bodong1987/CPPStringFormatting/issues)页面提交即可  
 
