@@ -45,10 +45,10 @@ namespace Formatting
 #else
             FL_STATIC_ASSERT(sizeof(void*) == 4, "This code is for 32-bit pointer.");
 
-            constexpr SizeType FNVOffsetBasis = 2166136261U;
+            constexpr size_t FNVOffsetBasis = 2166136261U;
 
             // ReSharper disable once CppTooWideScope
-            constexpr SizeType FNVPrime = 16777619U;
+            constexpr size_t FNVPrime = 16777619U;
 #endif
 
             size_t Value = FNVOffsetBasis;
