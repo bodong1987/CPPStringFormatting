@@ -280,17 +280,17 @@ namespace Formatting
         }
         // NOLINTEND
 
-        static char GetSpace()
+        constexpr static char GetSpace()
         {
             return ' ';
         }
 
-        static char GetZero()
+        constexpr static char GetZero()
         {
             return '0';
         }
 
-        static char GetEndFlag()
+        constexpr static char GetEndFlag()
         {
             return 0;
         }
@@ -542,17 +542,17 @@ namespace Formatting
             return towupper(ch);
         }
 
-        static wchar_t GetSpace()
+        constexpr static wchar_t GetSpace()
         {
             return L' ';
         }
 
-        static wchar_t GetZero()
+        constexpr static wchar_t GetZero()
         {
             return L'0';
         }
 
-        static wchar_t GetEndFlag()
+        constexpr static wchar_t GetEndFlag()
         {
             return 0;
         }

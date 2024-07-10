@@ -69,7 +69,7 @@ namespace Formatting
 
             for (int i = length-1; i >= 0; --i)
             {
-                buffer[i] = (value&1) + '0';
+                buffer[i] = (value&1) + TCharTraits<TCharType>::GetZero();
 
                 value >>= 1;
 
@@ -93,7 +93,7 @@ namespace Formatting
         template < typename TCharType >
         inline size_t Int64ToString(int64_t value, TCharType* buffer, int32_t base, bool upper)
         {
-            constexpr static char DigitMap[] =
+            constexpr static char DigitMapUpper[] =
             {
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'A', 'B', 'C', 'D',
@@ -107,8 +107,10 @@ namespace Formatting
                 'e', 'f'
             };
 
-            assert(base > 0 && static_cast<size_t>(base) <= FL_ARRAY_COUNTOF(DigitMap));
+            assert(base > 0 && static_cast<size_t>(base) <= FL_ARRAY_COUNTOF(DigitMapUpper));
 
+            const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;
+            
             TCharType* Str = buffer;
 
             uint64_t UValue = value < 0 ? -value : value;
@@ -116,7 +118,7 @@ namespace Formatting
             // Conversion. Number is reversed.
             do
             {
-                *Str++ = upper ? DigitMap[UValue % base] : DigitMapLower[UValue % base];
+                *Str++ = DigitMap[UValue % base];
             } while (UValue /= base);
 
             if (value < 0)
@@ -124,7 +126,7 @@ namespace Formatting
                 *Str++ = '-';
             }
 
-            *Str = '\0';
+            *Str = TCharTraits<TCharType>::GetEndFlag();
 
             // Reverse string
             StringReverse<TCharType>(buffer, Str - 1);
@@ -143,7 +145,7 @@ namespace Formatting
         template < typename TCharType >
         inline size_t UInt64ToString(uint64_t value, TCharType* buffer, int32_t base, bool upper)
         {
-            constexpr static char DigitMap[] =
+            constexpr static char DigitMapUpper[] =
             {
                 '0', '1', '2', '3', '4', '5', '6',
                 '7', '8', '9', 'A', 'B', 'C', 'D',
@@ -157,17 +159,19 @@ namespace Formatting
                 'e', 'f'
             };
 
-            assert(base > 0 && static_cast<size_t>(base) <= FL_ARRAY_COUNTOF(DigitMap));
-
+            assert(base > 0 && static_cast<size_t>(base) <= FL_ARRAY_COUNTOF(DigitMapUpper));
+            
+            const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;
+            
             TCharType* Str = buffer;
 
             // Conversion. Number is reversed.
             do
             {
-                *Str++ = upper ? DigitMap[value % base] : DigitMapLower[value % base];
+                *Str++ = DigitMap[value % base];
             } while (value /= base);
 
-            *Str = '\0';
+            *Str = TCharTraits<TCharType>::GetEndFlag();
 
             // Reverse string
             StringReverse<TCharType>(buffer, Str - 1);
@@ -314,7 +318,7 @@ namespace Formatting
                 *Str++ = '-';
             }
 
-            *Str = '\0';
+            *Str = TCharTraits<TCharType>::GetEndFlag();
 
             StringReverse<TCharType>(buffer, Str - 1);
 
