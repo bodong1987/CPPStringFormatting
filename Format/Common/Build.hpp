@@ -132,10 +132,9 @@
 #define _MSVC_LANG 201103
 #elif _MSC_FULL_VER <= 190023918 // before Visual Studio 2015 Update 2, set C++ 14
 #define _MSVC_LANG 201402
-#else // after Visual Studio 2015 Update 3, _MSVC_LANG exists
-#define FL_COMPILER_LANG_VERSION _MSVC_LANG
-#endif
+#endif // after Visual Studio 2015 Update 3, _MSVC_LANG exists
 
+#define FL_COMPILER_LANG_VERSION _MSVC_LANG
 #elif defined(__cplusplus)
 #define FL_COMPILER_LANG_VERSION __cplusplus
 #else // set C++ 98 as default
