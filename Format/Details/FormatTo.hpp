@@ -156,16 +156,56 @@ namespace Formatting
         /// format params to buffer 
         /// </summary>
         /// <param name="sink">The sink.</param>
+        /// <param name="patterns">patterns</param>
+        /// <param name="format">The format.</param>
+        /// <param name="length">format length</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>TAutoString&lt;TCharType&amp;.</returns>
+        template <typename TCharType, typename TPatternStorageType, typename... T>
+        inline TAutoString<TCharType>& FormatTo(TAutoString<TCharType>& sink, const typename TPatternStorageType::PatternListType* patterns, const TCharType* format, const size_t length, const T&... args)
+        {
+            if (patterns == nullptr)
+            {
+                sink.AddStr(format, format + length);
+
+                return sink;
+            }
+            
+            typename TPatternStorageType::PatternIterator Iter(*patterns);
+
+            while (Iter.IsValid())
+            {
+                const typename TPatternStorageType::FormatPattern& Pattern = *Iter;
+
+                if (Pattern.Flag == EFormatFlag::Raw)
+                {
+                    TRawTranslator<TCharType>::Transfer(sink, Pattern, Shims::PtrOf(format));
+                }
+                else
+                {
+                    if (!Utils::DoTransfer<TCharType, typename TPatternStorageType::FormatPattern, T...>(Pattern.Index, 0, sink, Pattern, format, args...))
+                    {
+                        TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
+                    }                    
+                }
+
+                Iter.Next();
+            }
+
+            return sink;
+        }
+
+        /// <summary>
+        /// Formats to.
+        /// format params to buffer 
+        /// </summary>
+        /// <param name="sink">The sink.</param>
         /// <param name="format">The format.</param>
         /// <param name="args">The arguments.</param>
         /// <returns>TAutoString&lt;TCharType&amp;.</returns>
         template <typename TCharType, typename TPatternStorageType, typename TFormatType, typename... T>
         inline TAutoString<TCharType>& FormatTo(TAutoString<TCharType>& sink, const TFormatType& format, const T&... args)
-        {
-            typedef typename TPatternStorageType::FormatPattern    FormatPatternType;
-            typedef typename TPatternStorageType::PatternListType  PatternListType;
-            typedef typename TPatternStorageType::PatternIterator  IteratorType;
-
+        {         
             TPatternStorageType* Storage = TPatternStorageType::GetStorage();
 
             assert(Storage);
@@ -174,7 +214,7 @@ namespace Formatting
             const TCharType* localFormatText = Shims::PtrOf(format);
             const size_t localLength = Shims::LengthOf(format);
             
-            const PatternListType* Patterns = Storage->LookupPatterns(
+            const typename TPatternStorageType::PatternListType* Patterns = Storage->LookupPatterns(
                 localFormatText,
                 localLength,
                 CalculateByteArrayHash(reinterpret_cast<const uint8_t*>(localFormatText), localLength*sizeof(TCharType))
@@ -182,35 +222,7 @@ namespace Formatting
 
             assert(Patterns);
 
-            if (Patterns == nullptr)
-            {
-                sink.AddStr(localFormatText, localFormatText + localLength);
-
-                return sink;
-            }
-
-            IteratorType Iter(*Patterns);
-
-            while (Iter.IsValid())
-            {
-                const FormatPatternType& Pattern = *Iter;
-
-                if (Pattern.Flag == EFormatFlag::Raw)
-                {
-                    TRawTranslator<TCharType>::Transfer(sink, Pattern, Shims::PtrOf(format));
-                }
-                else
-                {
-                    if (!Utils::DoTransfer<TCharType, FormatPatternType, T...>(Pattern.Index, 0, sink, Pattern, Shims::PtrOf(format), args...))
-                    {
-                        TRawTranslator<TCharType>::Transfer(sink, Pattern, Shims::PtrOf(format));
-                    }                    
-                }
-
-                Iter.Next();
-            }
-
-            return sink;
+            return FormatTo<TCharType, TPatternStorageType, T...>(sink, Patterns, localFormatText, localLength, args...);
         }
 #else
 #define _FL_FORMAT_TO_INDEX_ 0
