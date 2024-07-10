@@ -138,11 +138,12 @@
 #elif defined(__cplusplus)
 #define FL_COMPILER_LANG_VERSION __cplusplus
 #else // set C++ 98 as default
-#define FL_COMPILER_LANG_VERSION 1
+#define FL_COMPILER_LANG_VERSION 199711
 #pragma message("No valid C++ standard identification flag found, default to C++98 standard")
 #endif
 
-// is greater than
+// is greater than ?
+// Checks whether the current C++ standard is a later version
 #define FL_COMPILER_IS_GREATER_THAN_CXX23 (FL_COMPILER_LANG_VERSION >= 202101)
 #define FL_COMPILER_IS_GREATER_THAN_CXX20 (FL_COMPILER_LANG_VERSION >= 202002)
 #define FL_COMPILER_IS_GREATER_THAN_CXX17 (FL_COMPILER_LANG_VERSION >= 201703)
@@ -150,6 +151,8 @@
 #define FL_COMPILER_IS_GREATER_THAN_CXX11 (FL_COMPILER_LANG_VERSION >= 201103)
 #define FL_COMPILER_IS_GREATER_TAHN_CXX98 (FL_COMPILER_LANG_VERSION >= 199711)
 
+// is C++ xx ?
+// Check whether the current C++ standard specifies a certain version
 #define FL_COMPILER_IS_CXX23 (FL_COMPILER_LANG_VERSION >= 202101)
 #define FL_COMPILER_IS_CXX20 (FL_COMPILER_LANG_VERSION >= 202002 && FL_COMPILER_LANG_VERSION < 202101)
 #define FL_COMPILER_IS_CXX17 (FL_COMPILER_LANG_VERSION >= 201703 && FL_COMPILER_LANG_VERSION < 202002)
