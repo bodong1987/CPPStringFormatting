@@ -123,10 +123,22 @@
 #endif
 
 #if FL_COMPILER_MSVC
+// @reference https://www.cnblogs.com/bodong/p/18293350
+// Each version of Visual Studio does not have complete support for the C++ standard,
+// so simply judging the feature support of the C++ standard through these version numbers is incomplete.
+#if _MSC_FULL_VER <= 150030729 // before Visual Studio 2008 sp1, set C++ 98
+#define _MSVC_LANG 199711
+#elif _MSC_FULL_VER <= 180021114 // before Visual Studio 2013 Nobemver CTP, set C++ 11
+#define _MSVC_LANG 201103
+#elif _MSC_FULL_VER <= 190023918 // before Visual Studio 2015 Update 2, set C++ 14
+#define _MSVC_LANG 201402
+#else // after Visual Studio 2015 Update 3, _MSVC_LANG exists
 #define FL_COMPILER_LANG_VERSION _MSVC_LANG
+#endif
+
 #elif defined(__cplusplus)
 #define FL_COMPILER_LANG_VERSION __cplusplus
-#else
+#else // set C++ 98 as default
 #define FL_COMPILER_LANG_VERSION 1
 #pragma message("No valid C++ standard identification flag found, default to C++98 standard")
 #endif
