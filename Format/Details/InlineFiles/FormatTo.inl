@@ -37,8 +37,14 @@
 #define _FL_TEMPLATE_PARAMETERS_( d, i ) \
     FL_PP_COMMA_IF(i) typename FL_PP_CAT( T, i )
 
+#define _FL_TEMPLATE_PARAMETER_TYPES( d, i ) \
+    FL_PP_COMMA_IF(i) FL_PP_CAT( T, i )
+
 #define _FL_REAL_AGUMENTS_( d, i ) \
     FL_PP_COMMA_IF(i) const FL_PP_CAT(T,i)& FL_PP_CAT(arg,i)
+
+#define _FL_REAL_AGUMENT_ARGS_( d, i ) \
+    FL_PP_COMMA_IF(i) FL_PP_CAT(arg,i)
 
 #define _FL_TRANSFER_BODY_( d, i ) \
     case i: \
@@ -62,6 +68,68 @@
 #define FL_PP_COMMA_IF(...) 
 #define FL_PP_REPEAT(n,m,d)
 #endif
+
+/*
+* base iterate function 
+* used to generate the real function for Format...
+* need provide pattern list...
+*/
+template < 
+    typename TCharType,
+    typename TPatternStorageType
+    FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
+    FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TEMPLATE_PARAMETERS_, )
+>
+inline TAutoString<TCharType>& FormatTo( 
+    TAutoString<TCharType>& sink, 
+    const typename TPatternStorageType::PatternListType* patterns,
+    const TCharType* format,
+    const size_t length
+    FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
+    FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_REAL_AGUMENTS_, )
+    )
+{
+    if (patterns == nullptr)
+    {
+        sink.AddStr(format, format + length);
+        return sink;
+    }
+
+    // walk though all patterns, and use TTranslator::Transfer to convert target type to string
+    typename TPatternStorageType::PatternIterator Iter(*patterns);
+
+    while (Iter.IsValid())
+    {
+        const typename TPatternStorageType::FormatPattern& Pattern = *Iter;
+
+        if (Pattern.Flag == EFormatFlag::Raw)
+        {
+            TRawTranslator<TCharType>::Transfer(sink, Pattern, Shims::PtrOf(format));
+        }
+        else
+        {
+            switch (Pattern.Index)
+            {
+                /*
+                // if you get a compile error with Transfer function can't visit
+                // it means that you have transfer an unsupported parameter to format pipeline
+                // you can do them to fix this error:
+                //    1. change your code, convert it to the support type
+                //    2. make a specialization of TTranslator for your type.
+                */
+                FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TRANSFER_BODY_, );
+            default:
+                TRawTranslator<TCharType>::Transfer(sink, Pattern, Shims::PtrOf(format));
+                break;
+            }
+        }
+
+        Iter.Next();
+    } 
+
+    return sink;
+}
+
 
 /*
 * base iterate function 
@@ -100,51 +168,23 @@ inline TAutoString<TCharType>& FormatTo(
 
     assert(Patterns);
 
-    if (Patterns)
-    {
-        // walk though all patterns, and use TTranslator::Transfer to convert target type to string
-        IteratorType Iter(*Patterns);
-
-        while (Iter.IsValid())
-        {
-            const FormatPatternType& Pattern = *Iter;
-
-            if (Pattern.Flag == EFormatFlag::Raw)
-            {
-                TRawTranslator<TCharType>::Transfer(sink, Pattern, Shims::PtrOf(format));
-            }
-            else
-            {
-                switch (Pattern.Index)
-                {
-                    /*
-                    // if you get a compile error with Transfer function can't visit
-                    // it means that you have transfer an unsupported parameter to format pipeline
-                    // you can do them to fix this error:
-                    //    1. change your code, convert it to the support type
-                    //    2. make a specialization of TTranslator for your type.
-                    */
-                    FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TRANSFER_BODY_, );
-                default:
-                    TRawTranslator<TCharType>::Transfer(sink, Pattern, Shims::PtrOf(format));
-                    break;
-                }
-            }
-
-            Iter.Next();
-        }
-    }
-    else
-    {
-        const TCharType* rawFormat = Shims::PtrOf(format);
-        const size_t rawLength = Shims::LengthOf(format);
-        sink.AddStr(rawFormat, rawFormat + rawLength);
-    }    
-
-    return sink;
+    return FormatTo<
+                TCharType, 
+                TPatternStorageType
+                FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
+                FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TEMPLATE_PARAMETER_TYPES, )
+    >(
+        sink, 
+        Patterns, 
+        localFormatText, 
+        localLength
+        FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
+        FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_REAL_AGUMENT_ARGS_, )
+    );
 }
 
-
+#undef _FL_REAL_AGUMENT_ARGS_
+#undef _FL_TEMPLATE_PARAMETER_TYPES
 #undef _FL_TEMPLATE_PARAMETERS_
 #undef _FL_REAL_AGUMENTS_
 #undef _FL_TRANSFER_BODY_
