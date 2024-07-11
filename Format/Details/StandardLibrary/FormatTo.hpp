@@ -266,8 +266,8 @@ namespace Formatting
                     } \
             >::GetPatterns(), \
             format, \
-            Formatting::Details::CalculateConstexprStringLength(format) __VA_OPT__(,) \
-            __VA_ARGS__ \
+            Formatting::Details::CalculateConstexprStringLength(format), \
+            ##__VA_ARGS__ \
         )
     #define FL_STD_FORMAT_TO(sink, format, ...) \
         Formatting::StandardLibrary::Details::FormatTo( \
@@ -285,8 +285,8 @@ namespace Formatting
                     } \
             >::GetPatterns(), \
             format, \
-            Formatting::Details::CalculateConstexprStringLength(format) __VA_OPT__(,) \
-            __VA_ARGS__ \
+            Formatting::Details::CalculateConstexprStringLength(format), \
+            ##__VA_ARGS__ \
         )
 #else
     #define FL_STD_FORMAT Formatting::StandardLibrary::Format
