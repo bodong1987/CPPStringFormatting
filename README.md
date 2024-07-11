@@ -213,9 +213,24 @@ https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-fo
 C# will throw an exception when encountering an unsupported format identifier, and CPPStringFormatting will directly output the format character string. In some cases, assert or ignore will be triggered. So when you encounter problems that are inconsistent with expectations, please check whether the format identifier is correct, or whether an unsupported identifier is used.  
 
 ## 性能测试 Performance
-[简单测试 Simple Tests](./PerformanceTests.md)
+项目针对C++ 20作了相应的优化，如果你开启了C++ 20支持，那么你将获得更快的格式化速度。可以通过查看和使用FL_STD_FORMAT、FL_STD_FORMAT_TO宏来获得这个性能提升。
 通过测试可以发现, `CPPStringFormatting`的速度基本上是C-API的两倍左右,C++ std::format的三倍左右,而且还具备其他优势。  
+The project has been optimized for C++ 20. If you enable C++ 20 support, you will get faster formatting speed. This performance improvement can be obtained by viewing and using the FL_STD_FORMAT and FL_STD_FORMAT_TO macros.    
 Through testing, it can be found that `CPPStringFormatting` is basically about twice as fast as C-API and about three times as fast as C++ std::format, and it also has other advantages.  
+
+Single-threaded tests:
+| Test Type | StandardLibrary::FormatTo (s) | StandardLibrary::FormatTo Macros (s) | sprintf (s) | std::format (s) |
+|-----------|-----------------------------|-------------|-----------------|-------------|
+|           | 1.932490 | 1.673594 | 4.224794 | 6.534288 |
+
+Multi-threaded(4 threads) tests:
+| Test Type | StandardLibrary::FormatTo (s) | StandardLibrary::FormatTo Macros (s) |sprintf (s) | std::format (s) |
+|-----------|-----------------------------|-------------|-----------------|-------------|
+|           | 2.183000 | 1.939027 | 4.591618 | 7.097521 |
+
+关于测试细节请看这里：  
+For test details please see here:  
+[简单测试 Simple Tests](./PerformanceTests.md)  
 
 ## 提交错误报告 Bugreport
 直接通过[Issues](https://github.com/bodong1987/CPPStringFormatting/issues)页面提交即可  
