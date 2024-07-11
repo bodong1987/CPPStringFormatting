@@ -266,8 +266,8 @@ namespace Formatting
                     } \
             >::GetPatterns(), \
             format, \
-            Formatting::Details::CalculateConstexprStringLength(format), \
-            ##__VA_ARGS__ \
+            Formatting::Details::CalculateConstexprStringLength(format), /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
+            ##__VA_ARGS__ /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
         )
     #define FL_STD_FORMAT_TO(sink, format, ...) \
         Formatting::StandardLibrary::Details::FormatTo( \
@@ -285,8 +285,8 @@ namespace Formatting
                     } \
             >::GetPatterns(), \
             format, \
-            Formatting::Details::CalculateConstexprStringLength(format), \
-            ##__VA_ARGS__ \
+            Formatting::Details::CalculateConstexprStringLength(format), /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
+            ## __VA_ARGS__ /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
         )
 #else
     #define FL_STD_FORMAT Formatting::StandardLibrary::Format
