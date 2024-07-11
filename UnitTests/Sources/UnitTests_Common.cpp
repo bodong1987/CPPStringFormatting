@@ -81,6 +81,27 @@ TEST(TAutoArray, ExpandHeapSpace)
     }
 }
 
+TEST(TAutoArray, Shrink)
+{
+    TAutoArray<int, 0xF> array;
+    for (int i = 0; i < 100; ++i)
+    {
+        array.AddItem(i);
+    }
+    EXPECT_EQ(array.GetLength(), 100);
+    size_t initialAllocatedCount = array.GetAllocatedCount();
+    EXPECT_GT(initialAllocatedCount, 100);
+
+    array.Shrink();
+    EXPECT_EQ(array.GetLength(), 100);
+    EXPECT_EQ(array.GetAllocatedCount(), 100);
+
+    for (int i = 0; i < 100; ++i)
+    {
+        EXPECT_EQ(array[i], i);
+    }
+}
+
 TEST(TAutoString, DefaultConstructor)
 {
     TAutoString<char> str;

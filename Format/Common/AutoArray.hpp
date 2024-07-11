@@ -320,6 +320,35 @@ namespace Formatting
             return GetDataPtr()[index];
         }
 
+        void Shrink()
+		{
+		    if(AllocatedCount <= Count || HeapValPtr == nullptr)
+		    {
+		        return;
+		    }
+
+		    T* DataPtr = Allocate(Count);
+		    assert(DataPtr);
+
+		    if(ExtraLength > 0)
+		    {
+		        memset(DataPtr + Count, 0, ExtraLength*sizeof(T));
+		    }
+
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
+		    Algorithm::MoveArray(HeapValPtr, HeapValPtr + Count, DataPtr);
+#else
+		    Algorithm::CopyArray(HeapValPtr, HeapValPtr + Count, DataPtr);
+#endif
+
+		    ReleaseHeapData();
+
+		    assert(HeapValPtr == nullptr);
+
+		    HeapValPtr = DataPtr;
+		    AllocatedCount = Count;
+		}
+
     protected:
         void  InitialMoveDataToHeap()
         {
