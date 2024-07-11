@@ -289,8 +289,8 @@ namespace Formatting
             __VA_ARGS__ \
         )
 #else
-    #define Formatting::StandardLibrary::Format
-    #define Formatting::StandardLibrary::Details::FormatTo
+    #define FL_STD_FORMAT Formatting::StandardLibrary::Format
+    #define FL_STD_FORMAT_TO Formatting::StandardLibrary::Details::FormatTo
 #endif
 #endif
     }
