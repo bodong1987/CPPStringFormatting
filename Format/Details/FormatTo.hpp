@@ -32,6 +32,7 @@ namespace Formatting
 {
     namespace Details
     {
+        // calculate byte array hash code
         constexpr inline size_t CalculateByteArrayHash(const uint8_t* const start, const size_t length)
         {
 #if FL_PLATFORM_X64
@@ -73,6 +74,14 @@ namespace Formatting
 #endif
             
             return Value;
+        }
+
+        // calculate constexpr string length
+        // 
+        template < typename TCharType>
+        constexpr inline size_t CalculateConstexprStringLength(const TCharType* str)
+        {
+            return (str && str[0] != TCharTraits<TCharType>::GetEndFlag()) ? (CalculateConstexprStringLength(&str[1]) + 1) : 0;
         }
         
 #if FL_COMPILER_IS_GREATER_THAN_CXX11

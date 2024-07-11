@@ -48,6 +48,14 @@ namespace Formatting
                 return ParsePatterns(formatStart, length, patterns);
             }
 
+            static PatternListType Parse(const CharType* const formatStart, const SizeType length)
+            {
+                PatternListType Patterns;
+                TPatternParser Parser;
+                Parser(formatStart, length, Patterns);
+
+                return Patterns;
+            }
         protected:
 #if FL_COMPILER_IS_GREATER_THAN_CXX11
             enum class EParseState : uint8_t
