@@ -223,7 +223,7 @@ namespace Formatting
         }
 #endif
 
-        bool  IsDataOnStack() const
+        inline bool  IsDataOnStack() const   // NOLINT(modernize-use-nodiscard)
         {
             return HeapValPtr == nullptr;
         }
@@ -284,7 +284,7 @@ namespace Formatting
             return IsDataOnStack() ? StackVal : HeapValPtr;
         }
 
-        const T* GetDataPtr() const
+        const T* GetDataPtr() const  // NOLINT(modernize-use-nodiscard)
         {
             return IsDataOnStack() ? StackVal : HeapValPtr;
         }
@@ -294,12 +294,12 @@ namespace Formatting
             return IsDataOnStack() ? StackVal + Count : HeapValPtr + Count;
         }
 
-        const T* GetUnusedPtr() const
+        const T* GetUnusedPtr() const  // NOLINT(modernize-use-nodiscard)
         {
             return IsDataOnStack() ? StackVal + Count : HeapValPtr + Count;
         }
 
-        size_t GetCapacity() const
+        size_t GetCapacity() const  // NOLINT(modernize-use-nodiscard)
         {
             return IsDataOnStack() ?
                 DEFAULT_LENGTH - Count :

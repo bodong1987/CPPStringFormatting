@@ -229,17 +229,18 @@ namespace Formatting
         {
             // get text length
             const size_t TargetLength = Algorithm::Max(length, static_cast<size_t>(alignedLength));            
-
+            const size_t NewCount = Count + TargetLength;
+            
             if (IsDataOnStack())
             {
-                if (Count + TargetLength <= DEFAULT_LENGTH)
+                if (NewCount <= DEFAULT_LENGTH)
                 {
                     AppendWithPadding(StackVal, start, length, TargetLength, paddingLeft, fillChar);
                 }
                 else
                 {
                     assert(!HeapValPtr);
-                    AllocatedCount = (size_t)((Count + TargetLength) * 1.5f); // NOLINT
+                    AllocatedCount = NewCount + NewCount/2; 
                     HeapValPtr = Allocate(AllocatedCount);
 
                     assert(HeapValPtr);
@@ -254,14 +255,14 @@ namespace Formatting
             }
             else
             {
-                if (Count + TargetLength < AllocatedCount)
+                if (NewCount < AllocatedCount)
                 {
                     AppendWithPadding(HeapValPtr, start, length, TargetLength, paddingLeft, fillChar);
                 }
                 else
                 {
-                    const size_t NewCount = (size_t)((Count + TargetLength)*1.5f); // NOLINT
-                    CharType* DataPtr = Allocate(NewCount);
+                    const size_t NewAllocatedCount = NewCount + NewCount/2;
+                    CharType* DataPtr = Allocate(NewAllocatedCount);
                     assert(DataPtr);
 
                     if (Count > 0)
@@ -271,7 +272,7 @@ namespace Formatting
 
                     ReleaseHeapData();
 
-                    AllocatedCount = NewCount;
+                    AllocatedCount = NewAllocatedCount;
                     HeapValPtr = DataPtr;
 
                     AppendWithPadding(HeapValPtr, start, length, TargetLength, paddingLeft, fillChar);
@@ -279,7 +280,7 @@ namespace Formatting
             }
         }
 
-        const TCharType* CStr() const
+        const TCharType* CStr() const  // NOLINT(modernize-use-nodiscard)
         {
             return GetDataPtr();
         }
@@ -301,7 +302,7 @@ namespace Formatting
             }
         }
 
-        bool IsEmpty() const
+        bool IsEmpty() const  // NOLINT(modernize-use-nodiscard)
         {
             return Count == 0;
         }        
