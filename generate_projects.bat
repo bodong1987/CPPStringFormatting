@@ -1,15 +1,27 @@
 @echo off
 setlocal
 
-REM check command line arguments
+REM set default values
 set PAUSE=YES
 set CPP_STD=14
 
-REM check command line arguments
-set PAUSE=YES
-for %%a in (%*) do (
-    if "%%a"=="--nopause" set PAUSE=NO
+:next_arg
+if "%~1"=="" goto args_done
+if "%~1"=="--nopause" (
+    set PAUSE=NO
+    shift
+    goto next_arg
 )
+if "%~1"=="--cppstd" (
+    shift
+    set CPP_STD=%~2
+    shift
+    goto next_arg
+)
+shift
+goto next_arg
+
+:args_done
 
 echo Pause = %PAUSE%
 echo C++ Standard = C++ %CPP_STD%

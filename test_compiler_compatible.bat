@@ -1,9 +1,6 @@
 @echo off
 setlocal
 
-REM call generate_projects.bat
-call generate_projects.bat --nopause
-
 REM set build folder
 set PROJECT_ROOT=%~dp0
 set BUILD_DIR=%PROJECT_ROOT%Build
@@ -26,32 +23,37 @@ exit /b 1
 :found
 echo Found msbuild.exe at %MSBUILD_EXE%
 
+echo generate projects with C++ 14
+REM call generate_projects.bat
+call generate_projects.bat --nopause --cppstd 14
+
 REM compile with different C++ standards
-echo Compiling with C++14...
-"%MSBUILD_EXE%" %BUILD_DIR%\vs2022_x64\CPPStringFormatting.sln /p:PlatformToolset=v143 /p:CppStandard=14 /t:Rebuild
+echo Compiling with C++ 14...
+"%MSBUILD_EXE%" %BUILD_DIR%\vs2022_x64\CPPStringFormatting.sln /p:PlatformToolset=v143
 if %errorlevel% neq 0 (
-    echo Failed to compile with C++14
+    echo Failed to compile with C++ 14
     exit /b %errorlevel%
 )
 
-echo Compiling with C++17...
-"%MSBUILD_EXE%" %BUILD_DIR%\vs2022_x64\CPPStringFormatting.sln /p:PlatformToolset=v143 /p:CppStandard=17 /t:Rebuild
+echo generate projects with C++ 17
+REM call generate_projects.bat
+call generate_projects.bat --nopause --cppstd 17
+
+echo Compiling with C++ 17...
+"%MSBUILD_EXE%" %BUILD_DIR%\vs2022_x64\CPPStringFormatting.sln /p:PlatformToolset=v143
 if %errorlevel% neq 0 (
-    echo Failed to compile with C++17
+    echo Failed to compile with C++ 17
     exit /b %errorlevel%
 )
 
-echo Compiling with C++20...
-"%MSBUILD_EXE%" %BUILD_DIR%\vs2022_x64\CPPStringFormatting.sln /p:PlatformToolset=v143 /p:CppStandard=20 /t:Rebuild
-if %errorlevel% neq 0 (
-    echo Failed to compile with C++20
-    exit /b %errorlevel%
-)
+echo generate projects with C++ 20
+REM call generate_projects.bat
+call generate_projects.bat --nopause --cppstd 20
 
-echo Compiling with latest C++ standard...
-"%MSBUILD_EXE%" %BUILD_DIR%\vs2022_x64\CPPStringFormatting.sln /p:PlatformToolset=v143 /p:CppStandard=latest /t:Rebuild
+echo Compiling with C++ 20...
+"%MSBUILD_EXE%" %BUILD_DIR%\vs2022_x64\CPPStringFormatting.sln /p:PlatformToolset=v143
 if %errorlevel% neq 0 (
-    echo Failed to compile with latest C++ standard
+    echo Failed to compile with C++ 20
     exit /b %errorlevel%
 )
 
