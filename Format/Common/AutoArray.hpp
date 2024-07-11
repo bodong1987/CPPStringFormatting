@@ -62,16 +62,14 @@ namespace Formatting
             {
             }
                         
-            bool IsValid() const
+            bool IsValid() const  // NOLINT(modernize-use-nodiscard)
             {
                 return Index < Ref.GetLength();
             }
                         
-            bool Next()
+            void Next()
             {
                 ++Index;
-
-                return IsValid();
             }
                         
             const T& operator *() const
