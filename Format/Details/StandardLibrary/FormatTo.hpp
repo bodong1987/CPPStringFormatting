@@ -115,6 +115,68 @@ namespace Formatting
                         
             sink.assign(Sink.CStr(), Sink.GetLength());
         }
+
+#if FL_COMPILER_IS_GREATER_THAN_CXX20
+        namespace Details
+        {
+            template <typename TCharType>
+            inline std::basic_string<TCharType> Format(const typename Formatting::Details::StandardLibrary::TStandardPolicy<TCharType, Formatting::Details::StandardLibrary::DefaultMutexType>::PatternListType* patterns, const TCharType* format, const size_t length)
+            {
+                typedef TAutoString<TCharType> SinkType;
+                typedef Formatting::Details::TGlobalPatternStorage< Formatting::Details::StandardLibrary::TStandardPolicy<TCharType, Formatting::Details::StandardLibrary::DefaultMutexType> > GlobalPatternStorageType;
+                
+                SinkType Sink;
+                Formatting::Details::FormatTo<TCharType, typename GlobalPatternStorageType::PatternListType>(Sink, patterns, format, length);
+
+                return std::basic_string<TCharType>(Sink.CStr(), Sink.GetLength());
+            }
+
+            template <typename TCharType, typename T0, typename... T>
+            inline std::basic_string<TCharType> Format(const typename Formatting::Details::StandardLibrary::TStandardPolicy<TCharType, Formatting::Details::StandardLibrary::DefaultMutexType>::PatternListType* patterns, const TCharType* format, const size_t length, const T0& arg0, T... args)
+            {
+                typedef TAutoString<TCharType> SinkType;
+                typedef Formatting::Details::TGlobalPatternStorage< Formatting::Details::StandardLibrary::TStandardPolicy<TCharType, Formatting::Details::StandardLibrary::DefaultMutexType> > GlobalPatternStorageType;
+            
+                SinkType Sink;
+                Formatting::Details::FormatTo<TCharType, typename GlobalPatternStorageType::PatternListType, T0, T...>(Sink, patterns, format, length, arg0, args...);
+
+                return std::basic_string<TCharType>(Sink.CStr(), Sink.GetLength());
+            }
+
+            template <typename TCharType>
+            inline std::basic_string<TCharType>& FormatTo(std::basic_string<TCharType>& sink, const typename Formatting::Details::StandardLibrary::TStandardPolicy<TCharType, Formatting::Details::StandardLibrary::DefaultMutexType>::PatternListType* patterns, const TCharType* format, const size_t length)
+            {
+                typedef TAutoString<TCharType> SinkType;
+                typedef Formatting::Details::TGlobalPatternStorage< Formatting::Details::StandardLibrary::TStandardPolicy<TCharType, Formatting::Details::StandardLibrary::DefaultMutexType> > GlobalPatternStorageType;
+
+                sink.clear();
+                
+                SinkType Sink;
+                Formatting::Details::FormatTo<TCharType, typename GlobalPatternStorageType::PatternListType>(Sink, patterns, format, length);
+
+                sink.assign(Sink.CStr(), Sink.GetLength());
+
+                return sink;
+            }
+
+            template <typename TCharType, typename T0, typename... T>
+            inline std::basic_string<TCharType>& FormatTo(std::basic_string<TCharType>& sink, const typename Formatting::Details::StandardLibrary::TStandardPolicy<TCharType, Formatting::Details::StandardLibrary::DefaultMutexType>::PatternListType* patterns, const TCharType* format, const size_t length, const T0& arg0, T... args)
+            {
+                typedef TAutoString<TCharType> SinkType;
+                typedef Formatting::Details::TGlobalPatternStorage< Formatting::Details::StandardLibrary::TStandardPolicy<TCharType, Formatting::Details::StandardLibrary::DefaultMutexType> > GlobalPatternStorageType;
+
+                sink.clear();
+                
+                SinkType Sink;
+                Formatting::Details::FormatTo<TCharType, typename GlobalPatternStorageType::PatternListType, T0, T...>(Sink, patterns, format, length, arg0, args...);
+
+                sink.assign(Sink.CStr(), Sink.GetLength());
+
+                return sink;
+            }
+        }
+#endif
+        
 #else
 #define _FL_TEMPLATE_PARAMETERS_( d, i ) \
     FL_PP_COMMA_IF(i) typename FL_PP_CAT(T, i)
@@ -185,6 +247,51 @@ namespace Formatting
 #undef _FL_REAL_AGUMENTS_
 #undef _FL_EXPORT_FOR_STRING
 #undef _FL_FORMAL_AGUMENTS_
+#endif
+
+#ifndef FL_DISABLE_STANDARD_LIBARY_MACROS
+#if FL_COMPILER_IS_GREATER_THAN_CXX20
+    #define FL_STD_FORMAT(format, ...) \
+        Formatting::StandardLibrary::Details::Format( \
+                Formatting::Details::TPatternListProvider< \
+                    Formatting::Details::StandardLibrary::TStandardPolicy< \
+                        std::remove_const_t<std::remove_pointer_t<std::decay_t<decltype(format)>>>, \
+                        Formatting::Details::StandardLibrary::DefaultMutexType \
+                    >, \
+                    [] \
+                    { \
+                        static_assert(std::is_same_v<std::decay_t<decltype(format)>, const char*> || std::is_same_v<std::decay_t<decltype(format)>, const wchar_t*>, "FL_STD_FORMAT only support constexpr const TCharType*"); \
+                        /*typedef char FL_STD_FORMAT_can_only_support_constexpr_string_format_type[Formatting::Details::CalculateConstexprStringLength(format)];*/ \
+                        return format; \
+                    } \
+            >::GetPatterns(), \
+            format, \
+            Formatting::Details::CalculateConstexprStringLength(format), \
+            __VA_ARGS__ \
+        )
+    #define FL_STD_FORMAT_TO(sink, format, ...) \
+        Formatting::StandardLibrary::Details::FormatTo( \
+                sink, \
+                Formatting::Details::TPatternListProvider< \
+                    Formatting::Details::StandardLibrary::TStandardPolicy< \
+                        std::remove_const_t<std::remove_pointer_t<std::decay_t<decltype(format)>>>, \
+                        Formatting::Details::StandardLibrary::DefaultMutexType \
+                    >, \
+                    [] \
+                    { \
+                        static_assert(std::is_same_v<std::decay_t<decltype(format)>, const char*> || std::is_same_v<std::decay_t<decltype(format)>, const wchar_t*>, "FL_STD_FORMAT only support constexpr const TCharType*"); \
+                        /*typedef char FL_STD_FORMAT_can_only_support_constexpr_string_format_type[Formatting::Details::CalculateConstexprStringLength(format)];*/ \
+                        return format; \
+                    } \
+            >::GetPatterns(), \
+            format, \
+            Formatting::Details::CalculateConstexprStringLength(format), \
+            __VA_ARGS__ \
+        )
+#else
+    #define Formatting::StandardLibrary::Format
+    #define Formatting::StandardLibrary::Details::FormatTo
+#endif
 #endif
     }
 }

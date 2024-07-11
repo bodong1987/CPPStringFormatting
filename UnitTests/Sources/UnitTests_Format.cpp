@@ -43,6 +43,63 @@ TEST(Format, STL_Char_Format)
     //StandardLibrary::Format("{0}", std::wstring(L"x"));
 }
 
+#ifndef FL_DISABLE_STANDARD_LIBARY_MACROS
+TEST(Format, STL_Char_Format_FL_STD_FORMAT)
+{
+    const std::string r2 = FL_STD_FORMAT("{0}--#--{1,8}--#--{2}", 100, -40.2f, " String ");
+    EXPECT_EQ(r2, "100--#--  -40.20--#-- String ");
+    
+    const std::string r3 = FL_STD_FORMAT("{0}--#--{1,8}--#--{1}", 100, -40.2f);
+    EXPECT_EQ(r3, "100--#--  -40.20--#---40.20");
+    
+    const std::string r4 = FL_STD_FORMAT("{0}--#--{1,8}--#--{3}", 100, -40.2f, std::string("xxx"));
+    EXPECT_EQ(r4, "100--#--  -40.20--#--{3}");
+    
+    const std::string r5 = FL_STD_FORMAT("{0}", char('c'), short(2));
+    EXPECT_EQ(r5, "c");
+    
+    const std::string r6 = FL_STD_FORMAT("0x{0:x}", 100, (unsigned long)(100));
+    EXPECT_EQ(r6, "0x64");
+
+    FL_CONSTEXPR20 const char* fmt = "0x{0:x}";
+    const std::string r7 = FL_STD_FORMAT(fmt, 100, (unsigned long)(100));
+    EXPECT_EQ(r6, "0x64");
+
+    // can't compile 
+    // const char* fmt = "0x{0:x}";
+    // const std::string r7 = FL_STD_FORMAT(fmt, 100, (unsigned long)(100));
+    // EXPECT_EQ(r6, "0x64");
+}
+#endif
+
+#ifndef FL_DISABLE_STANDARD_LIBARY_MACROS
+TEST(Format, STL_Char_FormatTo_FL_STD_FORMAT_TO)
+{
+    std::string v;
+
+    // can't compile
+    // const std::string i1 = "Hello CppMiniToolkit {0}";
+    // FL_STD_FORMAT_TO(v, i1.c_str(), 1024);
+    // EXPECT_EQ(v, "Hello CppMiniToolkit 1024");
+
+    FL_STD_FORMAT_TO(v, "{0}--#--{1,8}--#--{2}", 100, -40.2f, " String ");
+    EXPECT_EQ(v, "100--#--  -40.20--#-- String ");
+
+    FL_STD_FORMAT_TO(v, "{0}--#--{1,8}--#--{1}", 100, -40.2f);
+    EXPECT_EQ(v, "100--#--  -40.20--#---40.20");
+
+    FL_STD_FORMAT_TO(v, "{0}--#--{1,8}--#--{3}", 100, -40.2f, std::string("xxx"));
+    EXPECT_EQ(v, "100--#--  -40.20--#--{3}");
+
+    FL_STD_FORMAT_TO(v, "{0}", char('c'), short(2));
+    EXPECT_EQ(v, "c");
+
+    FL_STD_FORMAT_TO(v, "0x{0:x}", 100, (unsigned long)(100));
+    EXPECT_EQ(v, "0x64");
+}
+#endif
+
+
 TEST(Format, STL_Char_FormatTo)
 {
     std::string v;
@@ -103,6 +160,43 @@ TEST(Format, STL_WChar_FormatTo)
     StandardLibrary::FormatTo(v, L"\u4F60\u597D : {0}", L"\u4E2D\u6587");
     EXPECT_EQ(v, L"\u4F60\u597D : \u4E2D\u6587");
 }
+
+#ifndef FL_DISABLE_STANDARD_LIBARY_MACROS
+TEST(Format, STL_WChar_Format_FL_STD_FORMAT)
+{
+    const std::wstring r7 = FL_STD_FORMAT(L"Test{1}, {2:f4}, {0}, {0,4}", L" X ", 20, -10.005f);
+    EXPECT_EQ(r7, L"Test20, -10.0050,  X ,   X ");
+
+    const std::wstring r8 = FL_STD_FORMAT(L"Test{1}, {2:f4}, {0}, {0,4}");
+    EXPECT_EQ(r8, L"Test{1}, {2:f4}, {0}, {0,4}");
+
+    // can't compile
+    // const std::wstring r9 = FL_STD_FORMAT(std::wstring(L"Test{1}, {2:f4}, {0}, {0,4}"), L" X ", 20, -10.005f);
+    // EXPECT_EQ(r9, L"Test20, -10.0050,  X ,   X ");
+
+    const std::wstring r11 = FL_STD_FORMAT(L"\u4F60\u597D : {0}", L"\u4E2D\u6587");
+    EXPECT_EQ(r11, L"\u4F60\u597D : \u4E2D\u6587");
+}
+
+TEST(Format, STL_WChar_FormatTo_FL_STD_FORMAT_TO)
+{
+    std::wstring v;
+
+    FL_STD_FORMAT_TO(v, L"Test{1}, {2:f4}, {0}, {0,4}", L" X ", 20, -10.005f);
+    EXPECT_EQ(v, L"Test20, -10.0050,  X ,   X ");
+
+    // test invalid param
+    FL_STD_FORMAT_TO(v, L"Test{1}, {2:f4}, {0}, {0,4}");
+    EXPECT_EQ(v, L"Test{1}, {2:f4}, {0}, {0,4}");
+
+    // gen compile error
+    // FL_STD_FORMAT_TO(v, std::wstring(L"Test{1}, {2:f4}, {0}, {0,4}"), L" X ", 20, -10.005f);
+    // EXPECT_EQ(v, L"Test20, -10.0050,  X ,   X ");
+
+    FL_STD_FORMAT_TO(v, L"\u4F60\u597D : {0}", L"\u4E2D\u6587");
+    EXPECT_EQ(v, L"\u4F60\u597D : \u4E2D\u6587");
+}
+#endif
 
 TEST(Format, TestSingleArg)
 {
