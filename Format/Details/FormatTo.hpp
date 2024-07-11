@@ -161,8 +161,8 @@ namespace Formatting
         /// <param name="length">format length</param>
         /// <param name="args">The arguments.</param>
         /// <returns>TAutoString&lt;TCharType&amp;.</returns>
-        template <typename TCharType, typename TPatternStorageType, typename... T>
-        inline TAutoString<TCharType>& FormatTo(TAutoString<TCharType>& sink, const typename TPatternStorageType::PatternListType* patterns, const TCharType* format, const size_t length, const T&... args)
+        template <typename TCharType, typename TPatternListType, typename... T>
+        inline TAutoString<TCharType>& FormatTo(TAutoString<TCharType>& sink, const TPatternListType* patterns, const TCharType* format, const size_t length, const T&... args)
         {
             if (patterns == nullptr)
             {
@@ -171,19 +171,19 @@ namespace Formatting
                 return sink;
             }
             
-            typename TPatternStorageType::PatternIterator Iter(*patterns);
+            typename TPatternListType::ConstIterator Iter(*patterns);
 
             while (Iter.IsValid())
             {
-                const typename TPatternStorageType::FormatPattern& Pattern = *Iter;
+                const typename TPatternListType::ConstIterator::ValueType& Pattern = *Iter;
 
                 if (Pattern.Flag == EFormatFlag::Raw)
                 {
-                    TRawTranslator<TCharType>::Transfer(sink, Pattern, Shims::PtrOf(format));
+                    TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
                 }
                 else
                 {
-                    if (!Utils::DoTransfer<TCharType, typename TPatternStorageType::FormatPattern, T...>(Pattern.Index, 0, sink, Pattern, format, args...))
+                    if (!Utils::DoTransfer<TCharType, typename TPatternListType::ConstIterator::ValueType, T...>(Pattern.Index, 0, sink, Pattern, format, args...))
                     {
                         TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
                     }                    
@@ -222,7 +222,7 @@ namespace Formatting
 
             assert(Patterns);
 
-            return FormatTo<TCharType, TPatternStorageType, T...>(sink, Patterns, localFormatText, localLength, args...);
+            return FormatTo<TCharType, typename TPatternStorageType::PatternListType, T...>(sink, Patterns, localFormatText, localLength, args...);
         }
 #else
 #define _FL_FORMAT_TO_INDEX_ 0

@@ -44,6 +44,7 @@ namespace Formatting
     {
     public:
         typedef TAutoArray<T, DefaultLength, ExtraLength>   SelfType; // NOLINT
+        typedef T                                           ValueType; // NOLINT
 
         enum
         {            
@@ -52,7 +53,9 @@ namespace Formatting
                 
         class ConstIterator : Noncopyable
         {
-        public:            
+        public:
+            typedef T       ValueType;
+            
             ConstIterator(const SelfType& referenceTarget) :
                 Ref(referenceTarget),
                 Index(referenceTarget.GetLength() > 0 ? 0 : -1)
