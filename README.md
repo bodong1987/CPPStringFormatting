@@ -11,7 +11,7 @@ This project supports almost all common mainstream compilations, whether with or
 This is a pure C++ header file project, clone the project, then add the project root directory to the header file search path and include `Format/Format.hpp`.  
 
 ## 如何测试？ How to Test?
-请先Clone本项目，然后使用CMake生成项目即可测试。
+请先Clone本项目，然后使用CMake生成项目即可测试。如果你安装CMake时将其添加到了命令行，在Windows下还可以直接使用`generate_projects.bat`来生成项目。  
 需要注意的一点是本项目依赖于googletests，所以你在clone之后，需要使用如下指令确保googletests的submodule正确被拉取下来了，否则CMake生成项目时会出错。  
 
 ```bat
@@ -19,7 +19,7 @@ git submodule init
 git submodule update
 ```
 
-Please clone this project first, and then use CMake to generate the project for testing.
+Please clone this project first, and then use CMake to generate the project for testing. If you added it to the command line when installing CMake, you can also use `generate_projects.bat` directly to generate projects under Windows.  
 One thing to note is that this project depends on googletests, so after cloning, you need to use the following instructions to ensure that the submodule of googletests is correctly pulled down, otherwise CMake will make an error when generating the project.  
 
 另外如果你想要测试的C++编译器版本很早，比如不支持C++ 11的`Visual Studio 2008`，那么你可能需要手动将googletests切换到更早的tag上，比如`1.8.x`。  
