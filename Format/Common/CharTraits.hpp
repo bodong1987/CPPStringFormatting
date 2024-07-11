@@ -580,22 +580,22 @@ namespace Formatting
             return std::char_traits<char>::length(rawString);
         }
 
-        inline FL_CONSTEXPR17 const char* PtrOf(const std::basic_string<char>& str)
+        inline FL_CONSTEXPR20 const char* PtrOf(const std::basic_string<char>& str)
         {
             return str.c_str();
         }
 
-        inline FL_CONSTEXPR17 const wchar_t* PtrOf(const std::basic_string<wchar_t>& str)
+        inline FL_CONSTEXPR20 const wchar_t* PtrOf(const std::basic_string<wchar_t>& str)
         {
             return str.c_str();
         }
 
-        inline FL_CONSTEXPR17 size_t LengthOf(const std::basic_string<char>& str)
+        inline FL_CONSTEXPR20 size_t LengthOf(const std::basic_string<char>& str)
         {
             return str.length();
         }
 
-        inline FL_CONSTEXPR17 size_t LengthOf(const std::basic_string<wchar_t>& str)
+        inline FL_CONSTEXPR20 size_t LengthOf(const std::basic_string<wchar_t>& str)
         {
             return str.length();
         }
@@ -611,12 +611,12 @@ namespace Formatting
             return std::char_traits<char16_t>::length(rawString);
         }
 
-        inline FL_CONSTEXPR17 const char16_t* PtrOf(const std::basic_string<char16_t>& str)
+        inline FL_CONSTEXPR20 const char16_t* PtrOf(const std::basic_string<char16_t>& str)
         {
             return str.c_str();
         }
 
-        inline FL_CONSTEXPR17 size_t LengthOf(const std::basic_string<char16_t>& str)
+        inline FL_CONSTEXPR20 size_t LengthOf(const std::basic_string<char16_t>& str)
         {
             return str.size();
         }
@@ -631,12 +631,12 @@ namespace Formatting
             return std::char_traits<char32_t>::length(rawString);
         }
 
-        inline FL_CONSTEXPR17 const char32_t* PtrOf(const std::basic_string<char32_t>& str)
+        inline FL_CONSTEXPR20 const char32_t* PtrOf(const std::basic_string<char32_t>& str)
         {
             return str.c_str();
         }
 
-        inline FL_CONSTEXPR17 size_t LengthOf(const std::basic_string<char32_t>& str)
+        inline FL_CONSTEXPR20 size_t LengthOf(const std::basic_string<char32_t>& str)
         {
             return str.size();
         }

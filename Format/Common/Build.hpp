@@ -233,21 +233,21 @@ typedef unsigned int long long uint64_t;
 #if FL_COMPILER_IS_GREATER_THAN_CXX14
 #define FL_CONSTEXPR14 constexpr
 #else
-#define FL_CONSTEXPR14 FL_CONSTEXPR11
+#define FL_CONSTEXPR14 
 #endif
 
 #if FL_COMPILER_IS_GREATER_THAN_CXX17
 #define FL_CONSTEXPR17 constexpr
 #else
-#define FL_CONSTEXPR17 FL_CONSTEXPR14
+#define FL_CONSTEXPR17 
 #endif
 
 #if FL_COMPILER_IS_GREATER_THAN_CXX20
 #define FL_CONSTEXPR20 constexpr
 #define FL_CONSTEVAL consteval
 #else
-#define FL_CONSTEXPR20 FL_CONSTEXPR17
-#define FL_CONSTEVAL constexpr
+#define FL_CONSTEXPR20 
+#define FL_CONSTEVAL 
 #endif
 
 // ReSharper disable once CommentTypo
