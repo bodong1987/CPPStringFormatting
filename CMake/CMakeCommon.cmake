@@ -17,9 +17,11 @@ macro(SOURCE_GROUP_BY_DIR source_files)
 	endforeach(sgbd_file)
 endmacro(SOURCE_GROUP_BY_DIR)
 
-# Enable C++ 11
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Enable C++ 14
+if (MSVC AND NOT DEFINED CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)    
+endif()
 
 # use unicode by default
 add_definitions(-DUNICODE -D_UNICODE)
