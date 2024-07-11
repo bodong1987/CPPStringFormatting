@@ -101,7 +101,42 @@ TEST(Format, STL_WChar_FormatTo)
     StandardLibrary::FormatTo(v, L"\u4F60\u597D : {0}", L"\u4E2D\u6587");
     EXPECT_EQ(v, L"\u4F60\u597D : \u4E2D\u6587");
 }
+```  
+项目为C++ 20做了针对性优化，如果你开启了C++ 20支持，那么你可以考虑使用下面的宏，这样将获得更快的执行速度：  
+The project has been specifically optimized for C++20. If you enable C++20 support, you may consider using the following macros, which will result in faster execution:  
+
+```C++
+#ifndef FL_DISABLE_STANDARD_LIBARY_MACROS
+TEST(Format, STL_Char_Format_FL_STD_FORMAT)
+{
+    const std::string r2 = FL_STD_FORMAT("{0}--#--{1,8}--#--{2}", 100, -40.2f, " String ");
+    EXPECT_EQ(r2, "100--#--  -40.20--#-- String ");
+    
+    const std::string r3 = FL_STD_FORMAT("{0}--#--{1,8}--#--{1}", 100, -40.2f);
+    EXPECT_EQ(r3, "100--#--  -40.20--#---40.20");
+    
+    const std::string r4 = FL_STD_FORMAT("{0}--#--{1,8}--#--{3}", 100, -40.2f, std::string("xxx"));
+    EXPECT_EQ(r4, "100--#--  -40.20--#--{3}");
+    
+    const std::string r5 = FL_STD_FORMAT("{0}", char('c'), short(2));
+    EXPECT_EQ(r5, "c");
+    
+    const std::string r6 = FL_STD_FORMAT("0x{0:x}", 100, (unsigned long)(100));
+    EXPECT_EQ(r6, "0x64");
+
+    FL_CONSTEXPR20 const char* fmt = "0x{0:x}";
+    const std::string r7 = FL_STD_FORMAT(fmt, 100, (unsigned long)(100));
+    EXPECT_EQ(r6, "0x64");
+
+    // can't compile 
+    // const char* fmt = "0x{0:x}";
+    // const std::string r7 = FL_STD_FORMAT(fmt, 100, (unsigned long)(100));
+    // EXPECT_EQ(r6, "0x64");
+}
+#endif
 ```
+需要注意的是，使用这个宏，只有常量表达式的字符串可以作为格式化字符串，因为内部使用了一些编译期手段来优化。  
+It should be noted that when using this macro, only the string of a constant expression can be used as a format string, because some compile-time means are used internally for optimization.  
 
 ## 如何集成？ How to integrated
 想要将格式化库适配你自己的字符串类或者使用你自己的容器类来接管格式化库内部的容器，那么你只需要做三件事：
