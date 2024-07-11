@@ -107,7 +107,7 @@ namespace Formatting
             {
                 assert(pattern.Len > 0 && "invalid parameters!!!");
 
-                strRef.AddStr(&format[pattern.Start], &format[pattern.Start] + pattern.Len);
+                strRef.AddStr(&format[pattern.Start], pattern.Len);
 
                 return true;
             }

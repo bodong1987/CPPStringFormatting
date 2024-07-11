@@ -181,7 +181,7 @@ namespace Formatting
         {
             if (patterns == nullptr)
             {
-                sink.AddStr(format, format + length);
+                sink.AddStr(format, length);
 
                 return sink;
             }

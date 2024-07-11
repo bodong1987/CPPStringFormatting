@@ -103,17 +103,32 @@ namespace Formatting
                 HeapValPtr[Count] = 0;
             }
         }
-                        
-        void AddStr(const CharType* start, const CharType* end = nullptr)
-        {
-            const size_t Length = end ? end - start : CharTraits::length(start);
 
+        void AddStr(const CharType* str)
+        {
+            if(str == nullptr)
+            {
+                return;
+            }
+
+            AddStr(str, CharTraits::length(str));
+        }
+                        
+        void AddStr(const CharType* str, const size_t length)
+        {
+            if(str == nullptr || length == 0)
+            {
+                return;
+            }
+            
+            const size_t NewCount = Count + length;
+            
             if (IsDataOnStack())
             {
-                if (Count + Length <= DEFAULT_LENGTH)
+                if (NewCount <= DEFAULT_LENGTH)
                 {
-                    CharTraits::copy(StackVal + Count, start, Length);
-                    Count += Length;
+                    CharTraits::copy(StackVal + Count, str, length);
+                    Count = NewCount;
 
                     StackVal[Count] = 0;
                 }
@@ -121,7 +136,7 @@ namespace Formatting
                 {
                     assert(!HeapValPtr);
 
-                    AllocatedCount = static_cast<size_t>((Count + Length) * 1.5); // NOLINT
+                    AllocatedCount = NewCount + NewCount/2; 
                     HeapValPtr = Allocate(AllocatedCount);
                     assert(HeapValPtr);
 
@@ -130,27 +145,26 @@ namespace Formatting
                         CharTraits::copy(HeapValPtr, StackVal, Count);
                     }
 
-                    CharTraits::copy(HeapValPtr + Count, start, Length);
-
-                    Count += Length;
+                    CharTraits::copy(HeapValPtr + Count, str, length);
+                    Count = NewCount;
 
                     HeapValPtr[Count] = 0;
                 }
             }
             else
             {
-                if (Count + Length <= AllocatedCount)
+                if (NewCount <= AllocatedCount)
                 {
-                    CharTraits::copy(HeapValPtr + Count, start, Length);
-                    Count += Length;
+                    CharTraits::copy(HeapValPtr + Count, str, length);                    
+                    Count = NewCount;
 
                     HeapValPtr[Count] = 0;
                 }
                 else
                 {
-                    size_t NewCount = static_cast<size_t>((Count + Length) * 1.5); // NOLINT
+                    size_t NewAllocatedCount = NewCount + NewCount/2;
 
-                    CharType* DataPtr = Allocate(NewCount);
+                    CharType* DataPtr = Allocate(NewAllocatedCount);
 
                     if (Count > 0)
                     {
@@ -161,11 +175,11 @@ namespace Formatting
 
                     assert(HeapValPtr == nullptr);
 
-                    CharTraits::copy(DataPtr + Count, start, Length);
+                    CharTraits::copy(DataPtr + Count, str, length);
 
-                    Count += Length;
+                    Count = NewCount;
 
-                    AllocatedCount = NewCount;
+                    AllocatedCount = NewAllocatedCount;
                     HeapValPtr = DataPtr;
 
                     HeapValPtr[Count] = 0;

@@ -43,7 +43,7 @@ namespace Formatting
 
             static bool Transfer(typename Super::StringType& s, const typename Super::FormatPattern& /*Pattern*/, const std::basic_string<TCharType>& arg)
             {
-                s.AddStr(arg.c_str(), arg.c_str() + arg.size());
+                s.AddStr(arg.c_str(), arg.size());
 
                 return true;
             }

@@ -146,11 +146,11 @@ TEST(TAutoString, AddLongStr)
     str.AddStr(", ");
     str.AddStr("World");
 
-    std::string longStr(1024, 'A');
-    std::string longStr2(2048, 'B');
+    const std::string longStr(1024, 'A');
+    const std::string longStr2(2048, 'B');
 
-    str.AddStr(longStr.c_str());
-    str.AddStr(longStr2.c_str());
+    str.AddStr(longStr.c_str(), longStr.length());
+    str.AddStr(longStr2.c_str(), longStr2.length());
     
     EXPECT_STREQ(str.CStr(), (std::string("Hello, World") + longStr + longStr2).c_str());
 }

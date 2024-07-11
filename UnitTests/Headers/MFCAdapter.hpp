@@ -109,7 +109,7 @@ namespace Formatting
 
             static bool Transfer(Super::StringType& s, const Super::FormatPattern& /*Pattern*/, const CString& arg)
             {
-                s.AddStr(arg.GetString(), arg.GetString() + arg.GetLength());
+                s.AddStr(arg.GetString(), arg.GetLength());
 
                 return true;
             }
