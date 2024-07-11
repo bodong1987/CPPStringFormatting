@@ -290,7 +290,7 @@ namespace Formatting
         )
 #else
     #define FL_STD_FORMAT Formatting::StandardLibrary::Format
-    #define FL_STD_FORMAT_TO Formatting::StandardLibrary::Details::FormatTo
+    #define FL_STD_FORMAT_TO Formatting::StandardLibrary::FormatTo
 #endif
 #endif
     }
