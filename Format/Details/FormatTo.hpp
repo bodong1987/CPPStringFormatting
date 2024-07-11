@@ -76,14 +76,20 @@ namespace Formatting
             return Value;
         }
 
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
         // calculate constexpr string length
         // 
         template < typename TCharType>
-        constexpr inline size_t CalculateConstexprStringLength(const TCharType* str)
+        FL_CONSTEVAL inline size_t CalculateConstexprStringLength(const TCharType* str)
         {
+#if FL_COMPILER_IS_GREATER_THAN_CXX17
+            return std::char_traits<TCharType>::length(str);
+#else
             return (str && str[0] != TCharTraits<TCharType>::GetEndFlag()) ? (CalculateConstexprStringLength(&str[1]) + 1) : 0;
+#endif
         }
-        
+#endif
+
 #if FL_COMPILER_IS_GREATER_THAN_CXX11
         namespace Utils
         {
