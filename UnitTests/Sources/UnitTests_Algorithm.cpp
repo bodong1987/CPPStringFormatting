@@ -75,6 +75,14 @@ TEST(Algorithm, TestInt64ToString)
     EXPECT_STREQ(text, "-1234567890123456789");
 }
 
+TEST(Algorithm, TestInt64ToStringW)
+{
+    wchar_t buffer[24];
+    const wchar_t* text = Details::IntegerToString<wchar_t, int64_t, 10>(-1234567890123456789LL, buffer, FL_ARRAY_COUNTOF(buffer), false);
+    EXPECT_EQ(wcslen(text), 20);
+    EXPECT_STREQ(text, L"-1234567890123456789");
+}
+
 TEST(Algorithm, TestUInt64ToString)
 {
     char buffer[24];
@@ -84,11 +92,41 @@ TEST(Algorithm, TestUInt64ToString)
     EXPECT_STREQ(text, "1234567890123456789");
 }
 
+TEST(Algorithm, TestUInt64ToStringW)
+{
+    wchar_t buffer[24];
+    
+    const wchar_t* text = Details::IntegerToString<wchar_t, int64_t, 10>(1234567890123456789LL, buffer, FL_ARRAY_COUNTOF(buffer), false);
+    EXPECT_EQ(wcslen(text), 19);    
+    EXPECT_STREQ(text, L"1234567890123456789");
+}
+
 TEST(Algorithm, TestDoubleToString)
 {
     char buffer[32];
-    EXPECT_EQ(Details::DoubleToString<char>(123.456, buffer, sizeof(buffer), 3), 7);
-    EXPECT_STREQ(buffer, "123.456");
+    const char* const Result = Details::DoubleToString<char>(123.456, buffer, FL_ARRAY_COUNTOF(buffer), 3);
+    const size_t length = buffer + FL_ARRAY_COUNTOF(buffer) - Result - 1;
+    EXPECT_EQ(length, 7);
+    EXPECT_STREQ(Result, "123.456");
+}
+
+TEST(Algorithm, TestDoubleToStringW)
+{
+    wchar_t buffer[32];
+    const wchar_t* const Result = Details::DoubleToString<wchar_t>(123.456, buffer, FL_ARRAY_COUNTOF(buffer), 3);
+    const size_t length = buffer + FL_ARRAY_COUNTOF(buffer) - Result - 1;
+    EXPECT_EQ(length, 7);
+    EXPECT_STREQ(Result, L"123.456");
+}
+
+TEST(Algorithm, TestDoubleToStringGreaterThanThresMax)
+{
+    constexpr static double ThresMax = (double)(0x7FFFFFFF) + 0.123456;  // NOLINT
+    char buffer[64];
+    const char* const Result = Details::DoubleToString<char>(ThresMax, buffer, FL_ARRAY_COUNTOF(buffer), 3);
+    const size_t length = buffer + FL_ARRAY_COUNTOF(buffer) - Result - 1;
+    EXPECT_EQ(length, 12);
+    EXPECT_STREQ(Result, "2.147484e+09");
 }
 
 TEST(TCharTraits, StringPrintf)

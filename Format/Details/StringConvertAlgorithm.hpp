@@ -32,7 +32,7 @@
 #include <Format/Common/Build.hpp>
 #include <Format/Common/CharTraits.hpp>
 #include <Format/Common/Mpl.hpp>
-#include <cassert>
+#include "Format/Common/Algorithm.hpp"
 
 namespace Formatting
 {
@@ -114,9 +114,8 @@ namespace Formatting
 
                     const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;
                     const bool IsNegativeNumber = value < 0;
-                    TCharType* const EndPos = buffer + length;
             
-                    TCharType* Str = EndPos - 1;
+                    TCharType* Str = buffer + length - 1;
                     *Str-- = TCharTraits<TCharType>::GetEndFlag();
 
                     typename Mpl::UnsignedTypeOf<TIntegerType>::Type UValue = IsNegativeNumber ? -value : value;
@@ -161,9 +160,8 @@ namespace Formatting
                     FL_STATIC_ASSERT(Base > 0 && static_cast<size_t>(Base) <= FL_ARRAY_COUNTOF(DigitMapUpper), "Invalid operation");
 
                     const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;                    
-                    TCharType* const EndPos = buffer + length;
-            
-                    TCharType* Str = EndPos - 1;
+                    
+                    TCharType* Str = buffer + length - 1;
                     *Str-- = TCharTraits<TCharType>::GetEndFlag();
 
                     // Conversion. Number is reversed.
@@ -202,14 +200,12 @@ namespace Formatting
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="buffer">The buffer.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="length">The size.</param>
         /// <param name="precision">The precision.</param>
         /// <returns>size_t.</returns>
         template < typename TCharType >
-        inline size_t DoubleToString(double value, TCharType* buffer, size_t size, int32_t precision)
+        inline const TCharType* DoubleToString(double value, TCharType* buffer, const size_t length, int32_t precision)
         {
-            double Diff = 0.0; // NOLINT
-            
             constexpr static double Pow10[] =
             {
                 1, 10, 100, 1000, 10000, 100000, 1000000,
@@ -223,42 +219,75 @@ namespace Formatting
             */
             if (!(value == value)) // NOLINT
             {
-                buffer[0] = 'n'; buffer[1] = 'a'; buffer[2] = 'n'; buffer[3] = '\0';
+                TCharType* nanStr = buffer + length - 1;
+                *nanStr-- = TCharTraits<TCharType>::GetEndFlag();
+                *nanStr-- = 'n';
+                *nanStr-- = 'a';
+                *nanStr = 'n';
 
-                return 3;
+                return nanStr;
             }
 
+            // check if it is a negative value
+            const bool IsNegativeValue = value < 0;
+
+            /* we'll work in positive values and deal with the
+            negative sign issue later */            
+            if (IsNegativeValue)
+            {
+                value = -value;
+            }
+            
             /* if input is larger than ThresMax, revert to exponential */
             constexpr static double ThresMax = (double)(0x7FFFFFFF);  // NOLINT
             
-            TCharType* Str = buffer;
-
-            if (precision < 0)
+            // ReSharper disable once CommentTypo
+            /* for very large numbers switch back to native sprintf for exponentials.
+                anyone want to write code to replace this? */
+            /*
+                normal printf behavior is to print EVERY Whole number digit
+                which can be 100s of characters overflowing your buffers == bad
+            */
+            if (value > ThresMax)
             {
-                precision = 0;
-            }
-            else if (precision > 9)
-            {
-                /* precision of >= 10 can lead to overflow errors */
-                precision = 9;
-            }
+                // format by sprintf
+                TCharType TempBuffer[64];
+                const int32_t Result = TCharTraits<TCharType>::StringPrintf(
+                    TempBuffer,
+                    FL_ARRAY_COUNTOF(TempBuffer),
+                    TCharTraits<TCharType>::StaticEFormat(),
+                    IsNegativeValue ? -value : value
+                    );
 
-            /* we'll work in positive values and deal with the
-            negative sign issue later */
-            int32_t Neg = 0;
-            if (value < 0)
-            {
-                Neg = 1;
-                value = -value;
-            }
+                TCharType* const TargetPos = buffer + length - (Result + 1);  
 
+                TCharTraits<TCharType>::copy(TargetPos, TempBuffer, Result + 1);
+
+                return TargetPos;
+            }
+            
+            // Ensure precision is within a reasonable range
+            // precision of >= 10 can lead to overflow errors 
+            precision = Algorithm::Clamp(precision, 0, 9);
+
+            // write reverse order
+            TCharType* Str = buffer + length - 1;
+            *Str-- = TCharTraits<TCharType>::GetEndFlag();
+
+            // Get the integer part
             int32_t Whole = static_cast<int32_t>(value);
+
+            // Calculate the fractional part
             const double tmp = (value - Whole) * Pow10[precision];
-            unsigned Frace = static_cast<unsigned>(tmp);
 
-            Diff = tmp - Frace;
+            // Get the fractional part
+            uint32_t Frace = static_cast<uint32_t>(tmp);
 
-            if (Diff > 0.5)
+            // Calculate the difference
+            double DiffValue = tmp - Frace;
+
+            // Handle rounding 
+            if (DiffValue > 0.5)
             {
                 ++Frace;
                 /* handle rollover, e.g.  case 0.99 with precision 1 is 1.0  */
@@ -268,60 +297,46 @@ namespace Formatting
                     ++Whole;
                 }
             }
-            else if (Diff == 0.5 && ((Frace == 0) || (Frace & 1))) // NOLINT
+            // If exactly halfway, round up according to the rules
+            else if (DiffValue == 0.5 && ((Frace == 0) || (Frace & 1))) // NOLINT
             {
                 /* if halfway, round up if odd, OR
                 if last digit is 0.  That last part is strange */
                 ++Frace;
             }
 
-            // ReSharper disable once CommentTypo
-            /* for very large numbers switch back to native sprintf for exponentials.
-            anyone want to write code to replace this? */
-            /*
-            normal printf behavior is to print EVERY Whole number digit
-            which can be 100s of characters overflowing your buffers == bad
-            */
-
-            if (value > ThresMax)
+            // Handle the case where precision is not 0
+            if (precision != 0)
             {
-                const int32_t Result = TCharTraits<TCharType>::StringPrintf(
-                    buffer,
-                    size,
-                    TCharTraits<TCharType>::StaticEFormat(),
-                    Neg ? -value : value);
+                int32_t Count = precision;
+                
+                // now do fractional part, as an unsigned number
+                do
+                {
+                    --Count;
+                    *Str-- = static_cast<TCharType>(TCharTraits<TCharType>::GetZero() + (Frace % 10)); // NOLINT
+                } while (Frace /= 10);
+                
+                // add extra 0s
+                while (Count-- > 0) *Str-- = TCharTraits<TCharType>::GetZero();
 
-                return Result;
+                // add decimal
+                *Str-- = '.';
             }
-
-            if (precision == 0)
+            else
             {
-                Diff = value - Whole;
-                if (Diff > 0.5)
-                { /*NOLINT(bugprone-branch-clone)*/
+                DiffValue = value - Whole;
+                if (DiffValue > 0.5)
+                {   /*NOLINT(bugprone-branch-clone)*/
                     /* greater than 0.5, round up, e.g. 1.6 -> 2 */
                     ++Whole;
                 }
-                else if (Diff == 0.5 && (Whole & 1)) // NOLINT
+                else if (DiffValue == 0.5 && (Whole & 1)) // NOLINT
                 {
                     /* exactly 0.5 and ODD, then round up */
                     /* 1.5 -> 2, but 2.5 -> 2 */
                     ++Whole;
                 }
-            }
-            else
-            {
-                int32_t Count = precision;
-                // now do fractional part, as an unsigned number
-                do
-                {
-                    --Count;
-                    *Str++ = static_cast<TCharType>(48 + (Frace % 10)); // NOLINT
-                } while (Frace /= 10);
-                // add extra 0s
-                while (Count-- > 0) *Str++ = '0';
-                // add decimal
-                *Str++ = '.';
             }
 
             // do Whole part
@@ -329,19 +344,16 @@ namespace Formatting
             // Conversion. Number is reversed.
             do
             {
-                *Str++ = static_cast<TCharType>(48 + (Whole % 10)); // NOLINT
+                *Str-- = static_cast<TCharType>(TCharTraits<TCharType>::GetZero() + (Whole % 10)); // NOLINT
             } while (Whole /= 10);
 
-            if (Neg)
+            if (IsNegativeValue)
             {
-                *Str++ = '-';
+                *Str = '-';
+                return Str;
             }
-
-            *Str = TCharTraits<TCharType>::GetEndFlag();
-
-            StringReverse<TCharType>(buffer, Str - 1);
-
-            return Str - buffer;
+            
+            return Str + 1;
         }
     }
 }

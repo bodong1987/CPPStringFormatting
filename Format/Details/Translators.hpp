@@ -248,14 +248,16 @@ namespace Formatting
                 {
                     CharType TempBuf[64];
 
-                    SizeType length = DoubleToString<CharType>(
+                    const CharType* const Result = DoubleToString<CharType>(
                         arg,
                         TempBuf,
                         FL_ARRAY_COUNTOF(TempBuf),
                         pattern.HasPrecision() ? pattern.Precision : (pattern.Flag == EFormatFlag::FixedPoint ? DefaultFixedPointPrecision : DefaultPrecision) // NOLINT
                     );
 
-                    Super::AppendString(strRef, pattern, TempBuf, length);
+                    const SizeType length = TempBuf + FL_ARRAY_COUNTOF(TempBuf) - Result - 1;
+
+                    Super::AppendString(strRef, pattern, Result, length);
 
                     return true;
                 }
@@ -663,7 +665,7 @@ namespace Formatting
 #define FL_CONVERT_TRANSLATOR(Type, BaseType, baseTranslatorType, ImplType) \
     template < typename TCharType > \
     class TTranslator< TCharType, Type > : \
-        public baseTranslatorType< TCharType, BaseType > \
+        public baseTranslatorType< TCharType, BaseType > /*NOLINT(bugprone-macro-parentheses)*/ \
     { \
     public: \
         typedef TTranslator< TCharType, BaseType >  Super; \
@@ -678,9 +680,9 @@ namespace Formatting
         FL_CONVERT_TRANSLATOR(int16_t, int16_t, TTranslatorBase, TIntegerTranslatorImpl);
         FL_CONVERT_TRANSLATOR(int32_t, int32_t, TTranslatorBase, TIntegerTranslatorImpl);        
         FL_CONVERT_TRANSLATOR(long, int64_t, TTranslatorBase, TIntegerTranslatorImpl);                
-        FL_CONVERT_TRANSLATOR(uint8_t, uint8_t, TTranslatorBase,TIntegerTranslatorImpl);        
-        FL_CONVERT_TRANSLATOR(uint16_t, uint16_t, TTranslatorBase,TIntegerTranslatorImpl);
-        FL_CONVERT_TRANSLATOR(uint32_t, uint32_t, TTranslatorBase,TIntegerTranslatorImpl);        
+        FL_CONVERT_TRANSLATOR(uint8_t, uint8_t, TTranslatorBase, TIntegerTranslatorImpl);        
+        FL_CONVERT_TRANSLATOR(uint16_t, uint16_t, TTranslatorBase, TIntegerTranslatorImpl);
+        FL_CONVERT_TRANSLATOR(uint32_t, uint32_t, TTranslatorBase, TIntegerTranslatorImpl);        
         FL_CONVERT_TRANSLATOR(unsigned long, uint64_t, TTranslatorBase, TIntegerTranslatorImpl);
 
         FL_CONVERT_TRANSLATOR(long double, double, TTranslator, TDoubleTranslatorImpl);
