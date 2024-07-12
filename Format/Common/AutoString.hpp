@@ -188,7 +188,14 @@ namespace Formatting
         }
 
     private:
-        void AppendWithPadding(CharType* bufferPtr, const CharType* start, const size_t length, const size_t targetLength, const bool paddingLeft, const CharType fillChar)
+        void AppendWithPadding(
+            CharType* bufferPtr,
+            const CharType* start,
+            const size_t length,
+            const size_t targetLength,
+            const bool paddingLeft,
+            const CharType fillChar
+            )
         {
             const int PaddingCount = static_cast<int>(targetLength - length);
             CharType* const StartPos = bufferPtr + Count;
@@ -219,7 +226,12 @@ namespace Formatting
         }
 
     public:
-        void AddAlignStr(const CharType* start, const size_t length, const int alignedLength, const bool paddingLeft, const CharType fillChar)
+        void AddAlignStr(
+            const CharType* start,
+            const size_t length,
+            const int alignedLength,
+            const bool paddingLeft,
+            const CharType fillChar)
         {
             // get text length
             const size_t TargetLength = Algorithm::Max(length, static_cast<size_t>(alignedLength));            
