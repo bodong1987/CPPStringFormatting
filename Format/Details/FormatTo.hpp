@@ -93,12 +93,12 @@ namespace Formatting
 #if FL_COMPILER_IS_GREATER_THAN_CXX11
         namespace Utils
         {
-            template <typename TCharType, typename TPatternType, typename T0, typename... T>
+            template <typename TCharType, typename TPatternType, int32_t Index, typename T0, typename... T>
             struct DoTransferHelper
             {
-                static bool DoTransfer(int32_t targetIndex, int32_t currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format, const T0& arg0, const T&... args)
+                static bool DoTransfer(TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format, const T0& arg0, const T&... args)
                 {
-                    if (targetIndex == currentIndex)
+                    if (pattern.Index == Index)
                     {
                         typedef typename Mpl::IfElse<
                             Mpl::IsArray<T0>::Value,
@@ -114,16 +114,16 @@ namespace Formatting
                         return true;
                     }
 
-                    return DoTransferHelper<TCharType, TPatternType, T...>::DoTransfer(targetIndex, currentIndex + 1, sink, pattern, format, args...);
+                    return DoTransferHelper<TCharType, TPatternType, Index + 1, T...>::DoTransfer(sink, pattern, format, args...);
                 }
             };
 
-            template <typename TCharType, typename TPatternType, typename T0>
-            struct DoTransferHelper<TCharType, TPatternType, T0>
+            template <typename TCharType, typename TPatternType, int32_t Index, typename T0>
+            struct DoTransferHelper<TCharType, TPatternType, Index, T0>
             {
-                static bool DoTransfer(int32_t targetIndex, int32_t currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format, const T0& arg0)
+                static bool DoTransfer(TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format, const T0& arg0)
                 {
-                    if (targetIndex == currentIndex)
+                    if (pattern.Index == Index)
                     {
                         typedef typename Mpl::IfElse<
                             Mpl::IsArray<T0>::Value,
@@ -150,18 +150,15 @@ namespace Formatting
                 }
             };
 
-            template <typename TCharType, typename TPatternType, typename T0, typename... T>
-            inline bool DoTransfer(int32_t targetIndex, int32_t currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format, const T0& arg0, const T&... args)
+            template <typename TCharType, typename TPatternType, int32_t Index, typename T0, typename... T>
+            inline bool DoTransfer(TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format, const T0& arg0, const T&... args)
             {
-                return DoTransferHelper<TCharType, TPatternType, T0, T...>::DoTransfer(targetIndex, currentIndex, sink, pattern, format, arg0, args...);
+                return DoTransferHelper<TCharType, TPatternType, Index, T0, T...>::DoTransfer(sink, pattern, format, arg0, args...);
             }
 
-            template <typename TCharType, typename TPatternType>
-            inline bool DoTransfer(int32_t targetIndex, int32_t currentIndex, TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format)
+            template <typename TCharType, typename TPatternType, int32_t Index>
+            inline bool DoTransfer(TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format)
             {
-                FL_UNREFERENCED_PARAMETER(targetIndex);
-                FL_UNREFERENCED_PARAMETER(currentIndex);
-                
                 return TRawTranslator<TCharType>::Transfer(sink, pattern, format);
             }
         }
@@ -198,7 +195,7 @@ namespace Formatting
                 }
                 else
                 {
-                    if (!Utils::DoTransfer<TCharType, typename TPatternListType::ConstIterator::ValueType, T...>(Pattern.Index, 0, sink, Pattern, format, args...))
+                    if (!Utils::DoTransfer<TCharType, typename TPatternListType::ConstIterator::ValueType, 0, T...>(sink, Pattern, format, args...))
                     {
                         TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
                     }                    
