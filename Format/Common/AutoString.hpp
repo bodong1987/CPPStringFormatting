@@ -188,40 +188,34 @@ namespace Formatting
         }
 
     private:
-        void AppendWithPadding(CharType* bufferPtr, const CharType* start, const size_t length, const size_t targetLength, bool paddingLeft, CharType fillChar)
+        void AppendWithPadding(CharType* bufferPtr, const CharType* start, const size_t length, const size_t targetLength, const bool paddingLeft, const CharType fillChar)
         {
-            const bool bNeedPadding = targetLength > length;
             const int PaddingCount = static_cast<int>(targetLength - length);
-
+            CharType* const StartPos = bufferPtr + Count;
+            
             assert(bufferPtr);
-            assert(start);
+            assert(start);            
 
-            if (bNeedPadding)
+            if (PaddingCount > 0)
             {
                 if (paddingLeft)
                 {
-                    CharTraits::Fill(bufferPtr + Count, fillChar, PaddingCount);
-                    CharTraits::copy(bufferPtr + Count + PaddingCount, start, length);
+                    CharTraits::Fill(StartPos, fillChar, PaddingCount);
+                    CharTraits::copy(StartPos + PaddingCount, start, length);
                 }
                 else
                 {
-                    CharTraits::copy(bufferPtr + Count, start, length);
-                    CharTraits::Fill(bufferPtr + Count + length, fillChar, PaddingCount);
+                    CharTraits::copy(StartPos, start, length);
+                    CharTraits::Fill(StartPos + length, fillChar, PaddingCount);
                 }
-
-                assert(PaddingCount + length == targetLength);
-
-                Count += targetLength;
-
-                bufferPtr[Count] = TCharTraits<CharType>::GetEndFlag();
             }
             else
             {
-                CharTraits::copy(bufferPtr + Count, start, length);
-                Count += length;
-
-                bufferPtr[Count] = TCharTraits<CharType>::GetEndFlag();
+                CharTraits::copy(StartPos, start, length);                
             }
+
+            Count += targetLength;
+            bufferPtr[Count] = TCharTraits<CharType>::GetEndFlag();
         }
 
     public:
