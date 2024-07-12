@@ -28,6 +28,7 @@
 #include <Format/Common/Build.hpp>
 #include <Format/Common/Noncopyable.hpp>
 #include <Format/Common/Algorithm.hpp>
+#include <cassert>
 
 namespace Formatting
 {

@@ -27,7 +27,6 @@
 
 #include <Format/Common/AutoArray.hpp>
 #include <Format/Common/CharTraits.hpp>
-#include <cassert>
 
 namespace Formatting
 {
