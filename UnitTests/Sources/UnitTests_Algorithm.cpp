@@ -1,4 +1,5 @@
-﻿#include <Format/Common/Build.hpp>
+﻿// ReSharper disable CppUseStdSize
+#include <Format/Common/Build.hpp>
 
 #if FL_PLATFORM_WINDOWS
 #pragma warning(push)
@@ -68,16 +69,19 @@ TEST(Algorithm, TestIntegerToBinaryString)
 
 TEST(Algorithm, TestInt64ToString)
 {
-    char buffer[21];
-    EXPECT_EQ(Details::Int64ToString<char>(1234567890123456789LL, buffer, 10, false), 19);
-    EXPECT_STREQ(buffer, "1234567890123456789");
+    char buffer[24];
+    const char* text = Details::IntegerToString<char, int64_t, 10>(-1234567890123456789LL, buffer, FL_ARRAY_COUNTOF(buffer), false);
+    EXPECT_EQ(strlen(text), 20);
+    EXPECT_STREQ(text, "-1234567890123456789");
 }
 
 TEST(Algorithm, TestUInt64ToString)
 {
-    char buffer[21];
-    EXPECT_EQ(Details::UInt64ToString<char>(1234567890123456789ULL, buffer, 10, false), 19);
-    EXPECT_STREQ(buffer, "1234567890123456789");
+    char buffer[24];
+    
+    const char* text = Details::IntegerToString<char, int64_t, 10>(1234567890123456789LL, buffer, FL_ARRAY_COUNTOF(buffer), false);
+    EXPECT_EQ(strlen(text), 19);    
+    EXPECT_STREQ(text, "1234567890123456789");
 }
 
 TEST(Algorithm, TestDoubleToString)

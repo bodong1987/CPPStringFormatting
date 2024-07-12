@@ -31,6 +31,7 @@
 
 #include <Format/Common/Build.hpp>
 #include <Format/Common/CharTraits.hpp>
+#include <Format/Common/Mpl.hpp>
 #include <cassert>
 
 namespace Formatting
@@ -82,125 +83,118 @@ namespace Formatting
             return length;
         }
 
+        namespace  Utils
+        {
+            template <typename TCharType, typename TIntegerType, int32_t Base, bool IsSignedInteger>
+            class IntegerToStringHelper
+            {                
+            };
+
+            template <typename TCharType, typename TIntegerType, int32_t Base>
+            class IntegerToStringHelper<TCharType, TIntegerType, Base, true>
+            {
+            public:                
+                inline static const TCharType* Convert(TIntegerType value, TCharType* const buffer, const size_t length, const bool upper)
+                {
+                    constexpr static char DigitMapUpper[] =
+                    {
+                        '0', '1', '2', '3', '4', '5', '6',
+                        '7', '8', '9', 'A', 'B', 'C', 'D',
+                        'E', 'F'
+                    };
+
+                    constexpr static char DigitMapLower[] =
+                    {
+                        '0', '1', '2', '3', '4', '5', '6',
+                        '7', '8', '9', 'a', 'b', 'c', 'd',
+                        'e', 'f'
+                    };
+
+                    FL_STATIC_ASSERT(Base > 0 && static_cast<size_t>(Base) <= FL_ARRAY_COUNTOF(DigitMapUpper), "Invalid operation");
+
+                    const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;
+                    const bool IsNegativeNumber = value < 0;
+                    TCharType* const EndPos = buffer + length;
+            
+                    TCharType* Str = EndPos - 1;
+                    *Str-- = TCharTraits<TCharType>::GetEndFlag();
+
+                    typename Mpl::UnsignedTypeOf<TIntegerType>::Type UValue = IsNegativeNumber ? -value : value;
+
+                    // Conversion. Number is reversed.
+                    do
+                    {
+                        *Str-- = DigitMap[UValue % Base];
+                    } while (UValue /= Base);    
+
+                    if (IsNegativeNumber)
+                    {
+                        *Str = '-';
+                        
+                        return Str;
+                    }
+            
+                    return Str + 1;
+                }
+            };
+
+            template <typename TCharType, typename TIntegerType, int32_t Base>
+            class IntegerToStringHelper<TCharType, TIntegerType, Base, false>
+            {
+            public:                
+                inline static const TCharType* Convert(TIntegerType value, TCharType* const buffer, const size_t length, const bool upper)
+                {
+                    constexpr static char DigitMapUpper[] =
+                    {
+                        '0', '1', '2', '3', '4', '5', '6',
+                        '7', '8', '9', 'A', 'B', 'C', 'D',
+                        'E', 'F'
+                    };
+
+                    constexpr static char DigitMapLower[] =
+                    {
+                        '0', '1', '2', '3', '4', '5', '6',
+                        '7', '8', '9', 'a', 'b', 'c', 'd',
+                        'e', 'f'
+                    };
+
+                    FL_STATIC_ASSERT(Base > 0 && static_cast<size_t>(Base) <= FL_ARRAY_COUNTOF(DigitMapUpper), "Invalid operation");
+
+                    const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;                    
+                    TCharType* const EndPos = buffer + length;
+            
+                    TCharType* Str = EndPos - 1;
+                    *Str-- = TCharTraits<TCharType>::GetEndFlag();
+
+                    // Conversion. Number is reversed.
+                    do
+                    {
+                        *Str-- = DigitMap[value % Base];
+                    } while (value /= Base);    
+            
+                    return Str + 1;
+                }
+            };
+            
+        }
+
         /// <summary>
         /// Int64 to string.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="buffer">The buffer.</param>
-        /// <param name="base">The base.</param>
+        /// <param name="length">buffer length</param>
         /// <param name="upper">The upper.</param>
         /// <returns>size_t.</returns>
-        template < typename TCharType >
-        inline size_t Int64ToString(int64_t value, TCharType* buffer, int32_t base, bool upper)
+        template < typename TCharType, typename TIntegerType, int32_t Base>
+        inline const TCharType* IntegerToString(TIntegerType value, TCharType* const buffer, const size_t length, const bool upper)
         {
-            constexpr static char DigitMapUpper[] =
-            {
-                '0', '1', '2', '3', '4', '5', '6',
-                '7', '8', '9', 'A', 'B', 'C', 'D',
-                'E', 'F'
-            };
-
-            constexpr static char DigitMapLower[] =
-            {
-                '0', '1', '2', '3', '4', '5', '6',
-                '7', '8', '9', 'a', 'b', 'c', 'd',
-                'e', 'f'
-            };
-
-            assert(base > 0 && static_cast<size_t>(base) <= FL_ARRAY_COUNTOF(DigitMapUpper));
-
-            const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;
-            
-            TCharType* Str = buffer;
-
-            uint64_t UValue = value < 0 ? -value : value;
-
-            // Conversion. Number is reversed.
-            if(base == 10)
-            {
-                do
-                {
-                    const uint64_t OldValue = UValue;
-                    UValue /= 10;
-                    *Str++ = DigitMap[OldValue - UValue * 10]; // Equivalent to OldValue % 10
-                } while (UValue);    
-            }
-            else
-            {
-                do
-                {
-                    *Str++ = DigitMap[UValue % base];
-                } while (UValue /= base);    
-            }
-
-            if (value < 0)
-            {
-                *Str++ = '-';
-            }
-
-            *Str = TCharTraits<TCharType>::GetEndFlag();
-
-            // Reverse string
-            StringReverse<TCharType>(buffer, Str - 1);
-
-            return Str - buffer;
-        }
-
-        /// <summary>
-        /// uint64 to string.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="buffer">The buffer.</param>
-        /// <param name="base">The base.</param>
-        /// <param name="upper">The upper.</param>
-        /// <returns>size_t.</returns>
-        template < typename TCharType >
-        inline size_t UInt64ToString(uint64_t value, TCharType* buffer, int32_t base, bool upper)
-        {
-            constexpr static char DigitMapUpper[] =
-            {
-                '0', '1', '2', '3', '4', '5', '6',
-                '7', '8', '9', 'A', 'B', 'C', 'D',
-                'E', 'F'
-            };
-
-            constexpr static char DigitMapLower[] =
-            {
-                '0', '1', '2', '3', '4', '5', '6',
-                '7', '8', '9', 'a', 'b', 'c', 'd',
-                'e', 'f'
-            };
-
-            assert(base > 0 && static_cast<size_t>(base) <= FL_ARRAY_COUNTOF(DigitMapUpper));
-            
-            const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;
-            
-            TCharType* Str = buffer;
-
-            // Conversion. Number is reversed.
-            if(base == 10)
-            {
-                do
-                {
-                    const uint64_t OldValue = value;
-                    value /= 10;
-                    *Str++ = DigitMap[OldValue - value * 10]; // Equivalent to OldValue % 10
-                } while (value);    
-            }
-            else
-            {
-                do
-                {
-                    *Str++ = DigitMap[value % base];
-                } while (value /= base);    
-            }
-
-            *Str = TCharTraits<TCharType>::GetEndFlag();
-
-            // Reverse string
-            StringReverse<TCharType>(buffer, Str - 1);
-
-            return Str - buffer;
+            return Utils::IntegerToStringHelper<TCharType, TIntegerType, Base, Mpl::IsSigned<TIntegerType>::Value>::Convert(
+                    value,
+                    buffer,
+                    length,
+                    upper
+                );
         }
 
         /// <summary>

@@ -103,6 +103,48 @@ namespace Formatting
         template < typename T, int Size >
         struct IsArray< T[Size] > : TrueType {};
 
+        template <typename T>
+        struct IsSigned : FalseType {};
+
+        template <>
+        struct IsSigned<int8_t> : TrueType{};
+
+        template <>
+        struct IsSigned<int16_t> : TrueType{};
+
+        template <>
+        struct IsSigned<int32_t> : TrueType{};
+
+        template <>
+        struct IsSigned<int64_t> : TrueType{};
+
+        template <typename TIntegerType>
+        struct UnsignedTypeOf{};
+
+        template <>
+        struct UnsignedTypeOf<int8_t>
+        {
+            typedef uint8_t Type;
+        };
+
+        template <>
+        struct UnsignedTypeOf<int16_t>
+        {
+            typedef uint16_t Type;
+        };
+
+        template <>
+        struct UnsignedTypeOf<int32_t>
+        {
+            typedef uint32_t Type;
+        };
+
+        template <>
+        struct UnsignedTypeOf<int64_t>
+        {
+            typedef uint64_t Type;
+        };
+
 #if !FL_COMPILER_IS_GREATER_THAN_CXX11
         /// <summary>
         /// Struct IsScalar
