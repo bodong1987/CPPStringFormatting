@@ -611,22 +611,6 @@ namespace Formatting
                 return true;
             }
         };
-
-#if FL_COMPILER_IS_GREATER_THAN_CXX20
-        template <typename TPolicy, auto PatternListProviderLambdaType>
-        class TPatternListProvider : Noncopyable
-        {
-        public:
-            static const typename TPolicy::PatternListType* GetPatterns()
-            {
-                constexpr const typename TPolicy::CharType* text = PatternListProviderLambdaType();
-                
-                static const auto Patterns = TPatternParser<TPolicy>::Parse(text, TCharTraits<typename TPolicy::CharType>::length(text));
-                
-                return &Patterns;
-            }
-        };
-#endif        
     }
 }
 

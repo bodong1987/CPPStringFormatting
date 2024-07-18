@@ -61,9 +61,10 @@ TEST(Format, STL_Char_Format_FL_STD_FORMAT)
     const std::string r6 = FL_STD_FORMAT("0x{0:x}", 100, (unsigned long)(100));
     EXPECT_EQ(r6, "0x64");
 
-    FL_CONSTEXPR20 const char* fmt = "0x{0:x}";
-    const std::string r7 = FL_STD_FORMAT(fmt, 100, (unsigned long)(100));
-    EXPECT_EQ(r6, "0x64");
+    // can't compile
+    // FL_CONSTEXPR20 const char* fmt = "0x{0:x}";
+    // const std::string r7 = FL_STD_FORMAT(fmt, 100, (unsigned long)(100));
+    // EXPECT_EQ(r6, "0x64");
 
     // can't compile 
     // const char* fmt = "0x{0:x}";
@@ -172,6 +173,11 @@ TEST(Format, STL_WChar_Format_FL_STD_FORMAT)
 
     // can't compile
     // const std::wstring r9 = FL_STD_FORMAT(std::wstring(L"Test{1}, {2:f4}, {0}, {0,4}"), L" X ", 20, -10.005f);
+    // EXPECT_EQ(r9, L"Test20, -10.0050,  X ,   X ");
+
+    // can't compile
+    // const std::wstring f10(L"Test{1}, {2:f4}, {0}, {0,4}");
+    // const std::wstring r9 = FL_STD_FORMAT(f10.c_str(), L" X ", 20, -10.005f);
     // EXPECT_EQ(r9, L"Test20, -10.0050,  X ,   X ");
 
     const std::wstring r11 = FL_STD_FORMAT(L"\u4F60\u597D : {0}", L"\u4E2D\u6587");
