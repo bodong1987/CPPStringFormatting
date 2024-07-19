@@ -177,13 +177,40 @@ namespace Formatting
         }
 
         /// <summary>
-        /// Int64 to string.
+        /// Calculate the formated string length 
+        /// </summary>
+        /// <param name="result">formated string text position</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="length">buffer length</param>
+        /// <returns>return the result string start position</returns>
+        template <typename TCharType>
+        constexpr inline size_t CalculateConvertedStringLength(const TCharType* const result, const TCharType* const buffer, const size_t length)
+        {
+            const size_t Result = buffer + length - result - 1;
+            return Result;
+        }
+
+        /// <summary>
+        /// Calculate the formated string length 
+        /// </summary>
+        /// <param name="result">formated string text position</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <returns>return the result string start position</returns>
+        template <typename TCharType, int32_t N>
+        constexpr inline size_t CalculateConvertedStringLength(const TCharType* const result, const TCharType (&buffer)[N])
+        {
+            const size_t Result = buffer + N - result - 1;            
+            return Result;
+        }
+        
+        /// <summary>
+        /// Integer to string.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="buffer">The buffer.</param>
         /// <param name="length">buffer length</param>
         /// <param name="upper">The upper.</param>
-        /// <returns>size_t.</returns>
+        /// <returns>return the result string start position</returns>
         template < typename TCharType, typename TIntegerType, int32_t Base>
         inline const TCharType* IntegerToString(TIntegerType value, TCharType* const buffer, const size_t length, const bool upper)
         {
@@ -196,13 +223,34 @@ namespace Formatting
         }
 
         /// <summary>
+        /// Integer to string.
+        /// the result position should be same with buffer
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="length">buffer length</param>
+        /// <param name="upper">The upper.</param>
+        /// <returns>return the result string start position</returns>
+        template < typename TCharType, typename TIntegerType, int32_t Base>
+        inline const TCharType* IntegerToStringMoved(TIntegerType value, TCharType* const buffer, const size_t length, const bool upper)
+        {
+            const TCharType* Result = IntegerToString<TCharType, TIntegerType, int32_t>(value, buffer, length, upper);
+            const size_t ResultLength = CalculateConvertedStringLength(Result, buffer, length);
+            
+            memmove(buffer, Result, ResultLength * sizeof(TCharType));
+            buffer[ResultLength] = TCharTraits<TCharType>::GetEndFlag();
+
+            return buffer;
+        }
+
+        /// <summary>
         /// Doubles to string.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="buffer">The buffer.</param>
         /// <param name="length">The size.</param>
         /// <param name="precision">The precision.</param>
-        /// <returns>size_t.</returns>
+        /// <returns>the formatted string.</returns>
         template < typename TCharType >
         inline const TCharType* DoubleToString(double value, TCharType* buffer, const size_t length, int32_t precision)
         {
@@ -354,6 +402,27 @@ namespace Formatting
             }
             
             return Str + 1;
+        }
+
+        /// <summary>
+        /// Doubles to string.
+        /// The result string should be same with buffer
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="length">The size.</param>
+        /// <param name="precision">The precision.</param>
+        /// <returns>the formatted string.</returns>
+        template < typename TCharType >
+        inline const TCharType* DoubleToStringMoved(double value, TCharType* buffer, const size_t length, int32_t precision)
+        {
+            const TCharType* Result = DoubleToString<TCharType>(value, buffer, length, precision);
+            const size_t ResultLength = CalculateConvertedStringLength(Result, buffer, length);
+            
+            memmove(buffer, Result, ResultLength * sizeof(TCharType));
+            buffer[ResultLength] = TCharTraits<TCharType>::GetEndFlag();
+
+            return buffer;
         }
     }
 }
