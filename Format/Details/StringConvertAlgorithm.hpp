@@ -234,7 +234,7 @@ namespace Formatting
         template < typename TCharType, typename TIntegerType, int32_t Base>
         inline const TCharType* IntegerToStringMoved(TIntegerType value, TCharType* const buffer, const size_t length, const bool upper)
         {
-            const TCharType* Result = IntegerToString<TCharType, TIntegerType, int32_t>(value, buffer, length, upper);
+            const TCharType* Result = IntegerToString<TCharType, TIntegerType, Base>(value, buffer, length, upper);
             const size_t ResultLength = CalculateConvertedStringLength(Result, buffer, length);
             
             memmove(buffer, Result, ResultLength * sizeof(TCharType));
