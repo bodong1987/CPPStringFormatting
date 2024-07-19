@@ -85,7 +85,7 @@ namespace Formatting
 
         namespace  Utils
         {
-            template <typename TCharType, typename TIntegerType, int32_t Base, bool IsSignedInteger>
+            template <typename TCharType, typename TIntegerType, int32_t Base, bool IsSignedInteger>  // NOLINT
             class IntegerToStringHelper
             {                
             };

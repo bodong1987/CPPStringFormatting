@@ -103,7 +103,7 @@ namespace Formatting
         template < typename T, int Size >
         struct IsArray< T[Size] > : TrueType {};
 
-        template <typename T>
+        template <typename T> // NOLINT
         struct IsSigned : FalseType {};
 
         template <>
@@ -118,7 +118,7 @@ namespace Formatting
         template <>
         struct IsSigned<int64_t> : TrueType{};
 
-        template <typename TIntegerType>
+        template <typename TIntegerType> // NOLINT
         struct UnsignedTypeOf{};
 
         template <>

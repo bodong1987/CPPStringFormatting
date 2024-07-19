@@ -169,7 +169,7 @@ namespace Formatting
                 return DoTransferHelper<TCharType, TPatternType, Index, T0, T...>::DoTransfer(sink, pattern, format, arg0, args...);
             }
 
-            template <typename TCharType, typename TPatternType, int32_t Index>
+            template <typename TCharType, typename TPatternType, int32_t Index>  // NOLINT
             inline bool DoTransfer(TAutoString<TCharType>& sink, const TPatternType& pattern, const TCharType* format)
             {
                 return TRawTranslator<TCharType>::Transfer(sink, pattern, format);
