@@ -1,0 +1,30 @@
+include_directories(		
+		${CMAKE_CURRENT_SOURCE_DIR}/../
+	)
+
+file( GLOB_RECURSE ROOT_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../Format/*.h* ${CMAKE_CURRENT_SOURCE_DIR}/../Format/*.inl )
+
+SOURCE_GROUP_BY_DIR(ROOT_HEADER_FILES)
+
+file( GLOB_RECURSE TEST_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Sources/*.c* ${CMAKE_CURRENT_SOURCE_DIR}/Headers/*.h* )
+SOURCE_GROUP_BY_DIR(TEST_SOURCE_FILES)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Headers/)
+
+# Add subdirectories
+add_subdirectory(External/googletest)
+
+add_definitions(-DUNICODE -D_UNICODE)
+
+set(OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/$<CONFIG>)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
+
+add_executable(UnitTests ${ROOT_HEADER_FILES} ${TEST_SOURCE_FILES})
+target_link_libraries(UnitTests gtest gtest_main)
+
+# Enable MFC if on Windows and using Visual Studio
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(CMAKE_MFC_FLAG 2)	
+endif()
