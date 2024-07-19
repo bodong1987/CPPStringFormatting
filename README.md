@@ -1,14 +1,14 @@
 # CPPStringFormatting
-这是一个使用C#格式化字符串风格来格式化C++字符串的库，它是类型安全的、多线程安全、可乱序、高效的的格式化库。
+这是一个使用C#格式化字符串风格来格式化C++字符串的库，它是类型安全的、多线程安全、可乱序、高效的的格式化库。  
 This is a library that uses the C# formatted string style to format C++ strings. It is a type-efficient, multi-thread-safe, reorderable formatting library.
 
 本项目支持几乎常见所有主流编译，无论有无C++ 11支持都可以。我使用Visual Studio 2008/2010/2022、CodeBlock with gcc、xcode 15对项目进行了测试，并通过了测试。  
 This project supports almost all common mainstream compilations, whether with or without C++11 support. I tested the project using Visual Studio 2008/2010/2022, CodeBlock with gcc, xcode 15 and it passed.  
 
 ## 如何使用？ How to use?
-这是一个纯C++头文件项目，clone项目，然后将项目根目录添加到头文件搜索路径中并包含`Format/Format.hpp`即可。  
+这是一个纯C++头文件项目，clone项目，然后将项目根目录添加到头文件搜索路径中并包含`Format/Format.hpp`即可。如果你是要配合C++标准库使用，那么直接包含头文件`Format/StandardLibraryAdapter.hpp`也是可以的。  
 
-This is a pure C++ header file project, clone the project, then add the project root directory to the header file search path and include `Format/Format.hpp`.  
+This is a pure C++ header file project, clone the project, then add the project root directory to the header file search path and include `Format/Format.hpp`.If you want to use it with the C++ standard library, you can also directly include the header file `Format/StandardLibraryAdapter.hpp`.    
 
 ## 如何测试？ How to Test?
 请先Clone本项目，然后使用CMake生成项目即可测试。如果你安装CMake时将其添加到了命令行，在Windows下还可以直接使用`generate_projects.bat`来生成项目。  
@@ -245,9 +245,9 @@ https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-fo
 | Percision  | &#x2714;            
 | Width      | &#x2714;          
 
-遇到不支持的格式标志符时C#会抛出异常，CPPStringFormatting会直接输出格式符字符串，一些情况会触发assert或忽略。因此当你遇到与预期不一致的问题时，请检查格式标志符是否正确，或者是否使用了不被支持的标志符。  
+遇到不支持的格式标志符时C#会抛出异常，CPPStringFormatting会直接输出格式化字符串，一些情况会触发assert或忽略。因此当你遇到与预期不一致的问题时，请检查格式标志符是否正确，或者是否使用了不被支持的标志符。  
 
-C# will throw an exception when encountering an unsupported format identifier, and CPPStringFormatting will directly output the format character string. In some cases, assert or ignore will be triggered. So when you encounter problems that are inconsistent with expectations, please check whether the format identifier is correct, or whether an unsupported identifier is used.  
+C# will throw an exception when encountering an unsupported format identifier, and CPPStringFormatting will directly output the format string. In some cases, assert or ignore will be triggered. So when you encounter problems that are inconsistent with expectations, please check whether the format identifier is correct, or whether an unsupported identifier is used.  
 
 ## 性能测试 Performance
 使用CMake生成了项目后，你可以启动Benchmark项目来进行性能测试。性能测试基于Celero，所以目前这个项目无法支持C++ 11之前的版本了。不同的C++标准版本的性能是有差异的，一般来说C++版本越新，性能会更高。
