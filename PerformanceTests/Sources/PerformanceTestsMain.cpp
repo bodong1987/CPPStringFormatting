@@ -100,7 +100,7 @@ void run_single_thread_tests(int iterations)
     double standard_library_macros_time = std::chrono::duration<double>(end - start).count();
 
     std::cout << std::fixed << std::setprecision(6);
-    std::cout << "|           | " << standard_library_time << " | " << standard_library_macros_time << " |\n";
+    std::cout << "|           | " << standard_library_time << "                      | " << standard_library_macros_time << "                             |\n";
 }
 
 void run_multi_thread_tests(int iterations, int thread_count) 
@@ -144,12 +144,17 @@ void run_multi_thread_tests(int iterations, int thread_count)
     threads.clear();
 
     std::cout << std::fixed << std::setprecision(6);
-    std::cout << "|           | " << standard_library_time << " | " << standard_library_macros_time << " |\n";
+    std::cout << "|           | " << standard_library_time << "                      | " << standard_library_macros_time << "                             |\n";
 }
 
 int main() 
 {
+#if FL_DEBUG
+    FL_CONSTEXPR11 const int iterations = 50000;
+#else
     FL_CONSTEXPR11 const int iterations = 500000;
+#endif
+
     FL_CONSTEXPR11 const int thread_count = 4;
 
     std::cout << "Single-threaded tests:\n";
