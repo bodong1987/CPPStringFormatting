@@ -250,5 +250,21 @@ typedef unsigned int long long uint64_t;
 #define FL_CONSTEVAL 
 #endif
 
+#if FL_COMPILER_IS_GREATER_THAN_CXX23
+#define FL_CXX_STANDARD "C++ 23"
+#elif FL_COMPILER_IS_CXX20
+#define FL_CXX_STANDARD "C++ 20"
+#elif FL_COMPILER_IS_CXX17
+#define FL_CXX_STANDARD "C++ 17"
+#elif FL_COMPILER_IS_CXX14
+#define FL_CXX_STANDARD "C++ 14"
+#elif FL_COMPILER_IS_CXX11
+#define FL_CXX_STANDARD "C++ 11"
+#elif FL_COMPILER_IS_CXX98
+#define FL_CXX_STANDARD "C++ 98"
+#else
+#error "can't find C++ compiler version."
+#endif
+
 // ReSharper disable once CommentTypo
 // NOLINTEND

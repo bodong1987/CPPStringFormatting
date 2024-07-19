@@ -28,6 +28,7 @@
 #include <cstddef>
 #include <cstdarg>
 #include <string>
+#include <cstring>
 
 #include <Format/Common/Build.hpp>
 

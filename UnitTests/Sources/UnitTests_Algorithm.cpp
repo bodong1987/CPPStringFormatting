@@ -73,50 +73,68 @@ TEST(Algorithm, TestInt64ToString)
     const char* text = Details::IntegerToString<char, int64_t, 10>(-1234567890123456789LL, buffer, FL_ARRAY_COUNTOF(buffer), false);
     EXPECT_EQ(strlen(text), 20);
     EXPECT_STREQ(text, "-1234567890123456789");
-}
 
-TEST(Algorithm, TestInt64ToStringW)
-{
-    wchar_t buffer[24];
-    const wchar_t* text = Details::IntegerToString<wchar_t, int64_t, 10>(-1234567890123456789LL, buffer, FL_ARRAY_COUNTOF(buffer), false);
-    EXPECT_EQ(wcslen(text), 20);
-    EXPECT_STREQ(text, L"-1234567890123456789");
+    text = Details::IntegerToStringMoved<char, int64_t, 10>(-1234567890123456789LL, buffer, FL_ARRAY_COUNTOF(buffer), false);
+
+    EXPECT_EQ(reinterpret_cast<size_t>(text),reinterpret_cast<size_t>(buffer));
+    EXPECT_EQ(strlen(text), 20);
+    EXPECT_STREQ(text, "-1234567890123456789");    
 }
 
 TEST(Algorithm, TestUInt64ToString)
 {
     char buffer[24];
-    
-    const char* text = Details::IntegerToString<char, int64_t, 10>(1234567890123456789LL, buffer, FL_ARRAY_COUNTOF(buffer), false);
+    const char* text = Details::IntegerToString<char, uint64_t, 10>(1234567890123456789ULL, buffer, FL_ARRAY_COUNTOF(buffer), false);
     EXPECT_EQ(strlen(text), 19);    
     EXPECT_STREQ(text, "1234567890123456789");
+
+    const char* MovedText = Details::IntegerToStringMoved<char, uint64_t, 10>(1234567890123456789ULL, buffer, FL_ARRAY_COUNTOF(buffer), false);
+    EXPECT_EQ(reinterpret_cast<size_t>(MovedText), reinterpret_cast<size_t>(buffer));
+    EXPECT_EQ(strlen(MovedText), 19);
+    EXPECT_STREQ(MovedText, "1234567890123456789");
 }
 
 TEST(Algorithm, TestUInt64ToStringW)
 {
     wchar_t buffer[24];
-    
-    const wchar_t* text = Details::IntegerToString<wchar_t, int64_t, 10>(1234567890123456789LL, buffer, FL_ARRAY_COUNTOF(buffer), false);
+    const wchar_t* text = Details::IntegerToString<wchar_t, uint64_t, 10>(1234567890123456789ULL, buffer, FL_ARRAY_COUNTOF(buffer), false);
     EXPECT_EQ(wcslen(text), 19);    
     EXPECT_STREQ(text, L"1234567890123456789");
+
+    const wchar_t* MovedText = Details::IntegerToStringMoved<wchar_t, uint64_t, 10>(1234567890123456789ULL, buffer, FL_ARRAY_COUNTOF(buffer), false);
+    EXPECT_EQ(reinterpret_cast<size_t>(MovedText), reinterpret_cast<size_t>(buffer));
+    EXPECT_EQ(wcslen(MovedText), 19);
+    EXPECT_STREQ(MovedText, L"1234567890123456789");
 }
 
 TEST(Algorithm, TestDoubleToString)
 {
     char buffer[32];
     const char* const Result = Details::DoubleToString<char>(123.456, buffer, FL_ARRAY_COUNTOF(buffer), 3);
-    const size_t length = buffer + FL_ARRAY_COUNTOF(buffer) - Result - 1;
+    const size_t length = Details::CalculateConvertedStringLength(Result, buffer);
     EXPECT_EQ(length, 7);
     EXPECT_STREQ(Result, "123.456");
+
+    const char* const MovedResult = Details::DoubleToStringMoved<char>(123.456, buffer, FL_ARRAY_COUNTOF(buffer), 3);
+    const size_t MovedLength = strlen(MovedResult);
+    EXPECT_EQ(MovedLength, 7);
+    EXPECT_EQ(reinterpret_cast<size_t>(MovedResult), reinterpret_cast<size_t>(buffer));
+    EXPECT_STREQ(MovedResult, "123.456");
 }
 
 TEST(Algorithm, TestDoubleToStringW)
 {
     wchar_t buffer[32];
     const wchar_t* const Result = Details::DoubleToString<wchar_t>(123.456, buffer, FL_ARRAY_COUNTOF(buffer), 3);
-    const size_t length = buffer + FL_ARRAY_COUNTOF(buffer) - Result - 1;
+    const size_t length = Details::CalculateConvertedStringLength(Result, buffer);
     EXPECT_EQ(length, 7);
     EXPECT_STREQ(Result, L"123.456");
+
+    const wchar_t* const MovedResult = Details::DoubleToStringMoved<wchar_t>(123.456, buffer, FL_ARRAY_COUNTOF(buffer), 3);
+    const size_t MovedLength = wcslen(MovedResult);
+    EXPECT_EQ(MovedLength, 7);
+    EXPECT_EQ(reinterpret_cast<size_t>(MovedResult), reinterpret_cast<size_t>(buffer));
+    EXPECT_STREQ(MovedResult, L"123.456");
 }
 
 TEST(Algorithm, TestDoubleToStringGreaterThanThresMax)
@@ -124,12 +142,17 @@ TEST(Algorithm, TestDoubleToStringGreaterThanThresMax)
     constexpr static double ThresMax = (double)(0x7FFFFFFF) + 0.123456;  // NOLINT
     char buffer[64];
     const char* const Result = Details::DoubleToString<char>(ThresMax, buffer, FL_ARRAY_COUNTOF(buffer), 3);
-    const size_t length = buffer + FL_ARRAY_COUNTOF(buffer) - Result - 1;
+    const size_t length = Details::CalculateConvertedStringLength(Result, buffer);
 
     // this is not stable on all platforms, so...
     //EXPECT_EQ(length, 12);
     //EXPECT_STREQ(Result, "2.147484e+09");
     EXPECT_TRUE(strstr(Result, "e+") != nullptr);
+
+    const char* const MovedResult = Details::DoubleToStringMoved<char>(ThresMax, buffer, FL_ARRAY_COUNTOF(buffer), 3);
+    const size_t MovedLength = strlen(MovedResult);
+    EXPECT_TRUE(strstr(MovedResult, "e+") != nullptr);
+    EXPECT_EQ(reinterpret_cast<size_t>(MovedResult), reinterpret_cast<size_t>(buffer));
 }
 
 TEST(TCharTraits, StringPrintf)

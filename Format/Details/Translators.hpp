@@ -255,7 +255,7 @@ namespace Formatting
                         pattern.HasPrecision() ? pattern.Precision : (pattern.Flag == EFormatFlag::FixedPoint ? DefaultFixedPointPrecision : DefaultPrecision) // NOLINT
                     );
 
-                    const SizeType length = TempBuf + FL_ARRAY_COUNTOF(TempBuf) - Result - 1;
+                    const SizeType length = CalculateConvertedStringLength(Result, TempBuf);
 
                     Super::AppendString(strRef, pattern, Result, length);
 
@@ -278,7 +278,7 @@ namespace Formatting
                             pattern.bUpper
                             );
                     
-                    const SizeType length = PrecisionBuf + FL_ARRAY_COUNTOF(PrecisionBuf) - PrecisionText - 1;
+                    const SizeType length = CalculateConvertedStringLength(PrecisionText, PrecisionBuf);
                     
                     TCharTraits<CharType>::copy(FmtBuf + 2, PrecisionText, length);
 
@@ -404,7 +404,7 @@ namespace Formatting
                         IntegerToString<CharType, ParameterType, 16>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.bUpper) :
                         IntegerToString<CharType, ParameterType, 10>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.bUpper);                    
 
-                    const SizeType length = TempBuf + FL_ARRAY_COUNTOF(TempBuf) - Result - 1;
+                    const SizeType length = CalculateConvertedStringLength(Result, TempBuf);
 
                     if (pattern.HasPrecision() && pattern.Precision > length)
                     {
@@ -572,7 +572,7 @@ namespace Formatting
                         IntegerToString<CharType, size_t, 16>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.bUpper) :
                         IntegerToString<CharType, size_t, 10>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.bUpper);
                 
-                const SizeType length = TempBuf + FL_ARRAY_COUNTOF(TempBuf) - Result - 1;                
+                const SizeType length = CalculateConvertedStringLength(Result, TempBuf);                
 
                 if (pattern.HasPrecision() && pattern.Precision > length)
                 {

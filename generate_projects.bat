@@ -48,6 +48,20 @@ if %errorlevel% neq 0 (
     exit /b %errorlevel%
 )
 
+REM check for VS2008
+echo Checking for Visual Studio 2008...
+set "VS2008_PATH=C:\Program Files (x86)\Microsoft Visual Studio 9.0"
+if exist "%VS2008_PATH%" (
+    echo Visual Studio 2008 found. Generating Visual Studio 2008 project...
+    cmake -G "Visual Studio 9 2008" -S %PROJECT_ROOT% -B %BUILD_DIR%\vs2008 -DCMAKE_CXX_STANDARD=%CPP_STD%
+    if %errorlevel% neq 0 (
+        echo Failed to generate VS2008 project
+        exit /b %errorlevel%
+    )
+) else (
+    echo Visual Studio 2008 not found. Skipping VS2008 project generation.
+)
+
 REM check Code::Blocks exists
 echo Checking for Code::Blocks...
 set "CODEBLOCKS_PATH_X86=C:\Program Files (x86)\CodeBlocks\codeblocks.exe"
