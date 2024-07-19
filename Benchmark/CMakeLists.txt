@@ -8,10 +8,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Include parent directory
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../)
 
-# Recursively get header files
-file(GLOB_RECURSE ROOT_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../Format/*.h* ${CMAKE_CURRENT_SOURCE_DIR}/../Format/*.inl)
-SOURCE_GROUP_BY_DIR(ROOT_HEADER_FILES)
-
 # Recursively get source files
 file(GLOB_RECURSE TEST_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Sources/*.c*)
 SOURCE_GROUP_BY_DIR(TEST_SOURCE_FILES)
@@ -32,7 +28,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
 
 # Add executable
-add_executable(Benchmark ${ROOT_HEADER_FILES} ${TEST_SOURCE_FILES})
+add_executable(Benchmark ${TEST_SOURCE_FILES})
 
 # Set Celero library output directory
 set(CELERO_OUTPUT_DIR ${CMAKE_BINARY_DIR}/Benchmark/External/Celero/$<CONFIG>)

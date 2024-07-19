@@ -6,3 +6,4 @@ project(CPPStringFormatting)
 
 add_subdirectory(UnitTests)
 add_subdirectory(Benchmark)
+add_subdirectory(PerformanceTests)
