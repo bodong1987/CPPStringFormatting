@@ -80,7 +80,12 @@ namespace Formatting
         // calculate constexpr string length
         // 
         template < typename TCharType>
-        FL_CONSTEVAL inline size_t CalculateConstexprStringLength(const TCharType* str)
+#if FL_COMPILER_IS_GREATER_THAN_CXX20
+        consteval
+#else
+        constexpr
+#endif
+        inline size_t CalculateConstexprStringLength(const TCharType* str)
         {
 #if FL_COMPILER_IS_GREATER_THAN_CXX17
             return std::char_traits<TCharType>::length(str);
