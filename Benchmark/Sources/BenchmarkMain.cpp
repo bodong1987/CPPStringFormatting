@@ -148,32 +148,64 @@ constexpr int IterationsCount = 100;
 constexpr int IterationsCount = 10000;
 #endif
 
-BASELINE(CPPFormatLibraryBenchmark, Baseline, SamplesCount, IterationsCount)
+BASELINE(StringFormat, Baseline, SamplesCount, IterationsCount)
 {
     test_c_sprintf();    
 }
 
 #if FL_COMPILER_IS_GREATER_THAN_CXX20
-BENCHMARK(CPPFormatLibraryBenchmark, StdFormat, SamplesCount, IterationsCount)
+BENCHMARK(StringFormat, StdFormat, SamplesCount, IterationsCount)
 {
     test_std_format();
 }
 #endif
 
 
-BENCHMARK(CPPFormatLibraryBenchmark, Common, SamplesCount, IterationsCount)
+BENCHMARK(StringFormat, Common, SamplesCount, IterationsCount)
 {
     test_cpp_format_library_common();
 }
 
-BENCHMARK(CPPFormatLibraryBenchmark, Optimized, SamplesCount, IterationsCount)
+BENCHMARK(StringFormat, Optimized, SamplesCount, IterationsCount)
 {
     test_cpp_format_library_optimized();
 }
+
+char GCommonAlgorithmBuffer[0xFF];
+
+void test_formatting_numeric_to_string()
+{    
+    Formatting::Details::IntegerToString<char, int64_t, 10>(-1234567890123456789LL, GCommonAlgorithmBuffer, FL_ARRAY_COUNTOF(GCommonAlgorithmBuffer), false);
+    Formatting::Details::IntegerToString<char, uint64_t, 10>(1234567890123456789ULL, GCommonAlgorithmBuffer, FL_ARRAY_COUNTOF(GCommonAlgorithmBuffer), false);
+    Formatting::Details::DoubleToString<char>(123.456, GCommonAlgorithmBuffer, FL_ARRAY_COUNTOF(GCommonAlgorithmBuffer), 2);
+}
+
+void test_c_sprintf_numeric_to_string()
+{
+    Formatting::TCharTraits<char>::StringPrintf(GCommonAlgorithmBuffer, FL_ARRAY_COUNTOF(GCommonAlgorithmBuffer), "%lld", -1234567890123456789LL);
+    Formatting::TCharTraits<char>::StringPrintf(GCommonAlgorithmBuffer, FL_ARRAY_COUNTOF(GCommonAlgorithmBuffer), "%llu", 1234567890123456789ULL);
+    Formatting::TCharTraits<char>::StringPrintf(GCommonAlgorithmBuffer, FL_ARRAY_COUNTOF(GCommonAlgorithmBuffer), "%.2f", 123.456);
+}
+
+BASELINE(Algorithm, StringPrintf, SamplesCount, IterationsCount)
+{
+    test_c_sprintf_numeric_to_string();
+}
+
+BENCHMARK(Algorithm, Formmating, SamplesCount, IterationsCount)
+{
+    test_formatting_numeric_to_string();
+}
+
 
 int main(int argc, char** argv)
 {    
     std::cout << "C++ Version:" << FL_CXX_STANDARD << std::endl;  // NOLINT(performance-avoid-endl)
 
-    celero::Run(argc, argv);
+    char* StepArgv[] = { argv[0], "-g", "Algorithm"};
+    char* StepArgv2[] = { argv[0], "-g", "StringFormat" };
+
+    celero::Run(FL_ARRAY_COUNTOF(StepArgv), StepArgv);
+
+    celero::Run(FL_ARRAY_COUNTOF(StepArgv2), StepArgv2);
 }
