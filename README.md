@@ -102,8 +102,8 @@ TEST(Format, STL_WChar_FormatTo)
     EXPECT_EQ(v, L"\u4F60\u597D : \u4E2D\u6587");
 }
 ```  
-项目为C++ 20做了针对性优化，如果你开启了C++ 20支持，那么你可以考虑使用下面的宏，这样将获得更快的执行速度：  
-The project has been specifically optimized for C++20. If you enable C++20 support, you may consider using the following macros, which will result in faster execution:  
+项目为C++ 11做了针对性优化，如果你开启了C++ 11支持，那么你可以考虑使用下面的宏，这样将获得更快的执行速度：  
+The project has been specifically optimized for C++ 11. If you enable C++ 11 support, you may consider using the following macros, which will result in faster execution:  
 
 ```C++
 #ifndef FL_DISABLE_STANDARD_LIBARY_MACROS
@@ -124,9 +124,10 @@ TEST(Format, STL_Char_Format_FL_STD_FORMAT)
     const std::string r6 = FL_STD_FORMAT("0x{0:x}", 100, (unsigned long)(100));
     EXPECT_EQ(r6, "0x64");
 
-    FL_CONSTEXPR20 const char* fmt = "0x{0:x}";
-    const std::string r7 = FL_STD_FORMAT(fmt, 100, (unsigned long)(100));
-    EXPECT_EQ(r6, "0x64");
+    // can't compile
+    // FL_CONSTEXPR20 const char* fmt = "0x{0:x}";
+    // const std::string r7 = FL_STD_FORMAT(fmt, 100, (unsigned long)(100));
+    // EXPECT_EQ(r6, "0x64");
 
     // can't compile 
     // const char* fmt = "0x{0:x}";
@@ -135,8 +136,9 @@ TEST(Format, STL_Char_Format_FL_STD_FORMAT)
 }
 #endif
 ```
-需要注意的是，使用这个宏，只有常量表达式的字符串可以作为格式化字符串，因为内部使用了一些编译期手段来优化。  
-It should be noted that when using this macro, only the string of a constant expression can be used as a format string, because some compile-time means are used internally for optimization.  
+注意：使用宏时格式化字符串只能是字符串常量，无论是constexpr表达式还是`static const char*`等都不被支持。这是因为该宏会在原地创建一个格式化字符串的静态TFormatPattern，只有使用这种方式才能保证TFormatPattern不会被错误的应用到错误的参数上。  
+Note: When using macros, the formatted string can only be string constants. Neither constexpr expressions nor `static const char*` are supported. This is because this macro will create a static TFormatPattern of the formatted string in place. Only by using this method can we ensure that TFormatPattern will not be mistakenly applied to the wrong parameters.
+  
 
 ## 如何集成？ How to integrated
 想要将格式化库适配你自己的字符串类或者使用你自己的容器类来接管格式化库内部的容器，那么你只需要做三件事：
@@ -248,24 +250,9 @@ https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-fo
 C# will throw an exception when encountering an unsupported format identifier, and CPPStringFormatting will directly output the format character string. In some cases, assert or ignore will be triggered. So when you encounter problems that are inconsistent with expectations, please check whether the format identifier is correct, or whether an unsupported identifier is used.  
 
 ## 性能测试 Performance
-项目针对C++ 20作了相应的优化，如果你开启了C++ 20支持，那么你将获得更快的格式化速度。可以通过查看和使用FL_STD_FORMAT、FL_STD_FORMAT_TO宏来获得这个性能提升。
-通过测试可以发现, `CPPStringFormatting`的速度基本上是C-API的两倍左右,C++ std::format的三倍左右,而且还具备其他优势。  
-The project has been optimized for C++ 20. If you enable C++ 20 support, you will get faster formatting speed. This performance improvement can be obtained by viewing and using the FL_STD_FORMAT and FL_STD_FORMAT_TO macros.    
-Through testing, it can be found that `CPPStringFormatting` is basically about twice as fast as C-API and about three times as fast as C++ std::format, and it also has other advantages.  
+使用CMake生成了项目后，你可以启动Benchmark项目来进行性能测试。性能测试基于Celero，所以目前这个项目无法支持C++ 11之前的版本了。不同的C++标准版本的性能是有差异的，一般来说C++版本越新，性能会更高。
 
-Single-threaded tests:
-| Test Type | StandardLibrary::FormatTo (s) | StandardLibrary::FormatTo Macros (s) | sprintf (s) | std::format (s) |
-|-----------|-----------------------------|-------------|-----------------|-------------|
-|           | 1.932490 | 1.673594 | 4.224794 | 6.534288 |
-
-Multi-threaded(4 threads) tests:
-| Test Type | StandardLibrary::FormatTo (s) | StandardLibrary::FormatTo Macros (s) |sprintf (s) | std::format (s) |
-|-----------|-----------------------------|-------------|-----------------|-------------|
-|           | 2.183000 | 1.939027 | 4.591618 | 7.097521 |
-
-关于测试细节请看这里：  
-For test details please see here:  
-[简单测试 Simple Tests](./PerformanceTests.md)  
+After using CMake to generate the project, you can start the Benchmark project for performance testing. The performance test is based on Celero, so this project currently cannot support versions before C++ 11. The performance of different C++ standard versions is different. Generally speaking, the newer the C++ version, the higher the performance will be.  
 
 ## 提交错误报告 Bugreport
 直接通过[Issues](https://github.com/bodong1987/CPPStringFormatting/issues)页面提交即可  

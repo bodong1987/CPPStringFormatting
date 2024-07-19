@@ -251,11 +251,11 @@ namespace Formatting
                 typedef typename std::remove_const<typename std::remove_pointer<typename std::decay<decltype(format)>::type>::type>::type CharType; \
                 static const auto S_Patterns = \
                     Formatting::Details::TPatternParser< \
-                        Details::StandardLibrary::TStandardPolicy< \
+                        Formatting::Details::StandardLibrary::TStandardPolicy< \
                             CharType, \
                             Formatting::Details::StandardLibrary::DefaultMutexType \
                         > \
-                    >::Parse(format, Shims::LengthOf(format)); \
+                    >::Parse(format, Formatting::Shims::LengthOf(format)); \
                 return &S_Patterns; \
             }(), \
             Formatting::Shims::PtrOf(format), \
@@ -270,11 +270,11 @@ namespace Formatting
                 typedef typename std::remove_const<typename std::remove_pointer<typename std::decay<decltype(format)>::type>::type>::type CharType; \
                 static const auto S_Patterns = \
                     Formatting::Details::TPatternParser< \
-                        Details::StandardLibrary::TStandardPolicy< \
+                        Formatting::Details::StandardLibrary::TStandardPolicy< \
                             CharType, \
                             Formatting::Details::StandardLibrary::DefaultMutexType \
                         > \
-                    >::Parse(format, Shims::LengthOf(format)); \
+                    >::Parse(format, Formatting::Shims::LengthOf(format)); \
                 return &S_Patterns; \
             }(), \
             Formatting::Shims::PtrOf(format), \
