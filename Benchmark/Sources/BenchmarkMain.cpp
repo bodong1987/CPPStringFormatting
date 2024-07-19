@@ -173,23 +173,7 @@ BENCHMARK(CPPFormatLibraryBenchmark, Optimized, SamplesCount, IterationsCount)
 
 int main(int argc, char** argv)
 {    
-#if FL_COMPILER_IS_CXX23
-    FL_CONSTEXPR11 const char* CppStandardVersion = "C++ 23";
-#elif FL_COMPILER_IS_CXX20
-    FL_CONSTEXPR11 const char* CppStandardVersion = "C++ 20";
-#elif FL_COMPILER_IS_CXX17
-    FL_CONSTEXPR11 const char* CppStandardVersion = "C++ 17";
-#elif FL_COMPILER_IS_CXX14
-    FL_CONSTEXPR11 auto CppStandardVersion = "C++ 14";
-#elif FL_COMPILER_IS_CXX11
-    FL_CONSTEXPR11 const char* CppStandardVersion = "C++ 11";
-#elif FL_COMPILER_IS_CXX98
-    FL_CONSTEXPR11 const char* CppStandardVersion = "C++ 98";
-#else
-    #error "can't find C++ compiler version."
-#endif
-
-    std::cout << "C++ Version:" << CppStandardVersion << std::endl;  // NOLINT(performance-avoid-endl)
+    std::cout << "C++ Version:" << FL_CXX_STANDARD << std::endl;  // NOLINT(performance-avoid-endl)
 
     celero::Run(argc, argv);
 }
