@@ -259,7 +259,10 @@ namespace Formatting
                 return &S_Patterns; \
             }(), \
             Formatting::Shims::PtrOf(format), \
-            Formatting::Details::CalculateConstexprStringLength(format), /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
+            [](){ \
+                constexpr size_t hash = Formatting::Details::CalculateConstexprStringLength(format); \
+                return hash; \
+            }(), /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
             ##__VA_ARGS__ /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
             )
         
@@ -278,7 +281,10 @@ namespace Formatting
                 return &S_Patterns; \
             }(), \
             Formatting::Shims::PtrOf(format), \
-            Formatting::Details::CalculateConstexprStringLength(format), /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
+            [](){ \
+                constexpr size_t hash = Formatting::Details::CalculateConstexprStringLength(format); \
+                return hash; \
+            }(), /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
             ## __VA_ARGS__ /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
         )
 #else

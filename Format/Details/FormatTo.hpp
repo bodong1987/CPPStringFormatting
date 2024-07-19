@@ -90,7 +90,15 @@ namespace Formatting
 #if FL_COMPILER_IS_GREATER_THAN_CXX17
             return std::char_traits<TCharType>::length(str);
 #else
-            return (str && str[0] != TCharTraits<TCharType>::GetEndFlag()) ? (CalculateConstexprStringLength(&str[1]) + 1) : 0;
+            size_t Count = 0;
+            while (*str != TCharType())
+            {
+                ++Count;
+                ++str;
+            }
+
+            return Count;
+            // return (str && str[0] != TCharTraits<TCharType>::GetEndFlag()) ? (CalculateConstexprStringLength(&str[1]) + 1) : 0;
 #endif
         }
 #endif
