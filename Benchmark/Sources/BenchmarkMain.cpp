@@ -150,7 +150,7 @@ constexpr int IterationsCount = 10000;
 
 BASELINE(StringFormat, Baseline, SamplesCount, IterationsCount)
 {
-    test_c_sprintf();    
+    test_c_sprintf();
 }
 
 #if FL_COMPILER_IS_GREATER_THAN_CXX20
@@ -174,7 +174,7 @@ BENCHMARK(StringFormat, Optimized, SamplesCount, IterationsCount)
 char GCommonAlgorithmBuffer[0xFF];
 
 void test_formatting_numeric_to_string()
-{    
+{
     Formatting::Details::IntegerToString<char, int64_t, 10>(-1234567890123456789LL, GCommonAlgorithmBuffer, FL_ARRAY_COUNTOF(GCommonAlgorithmBuffer), false);
     Formatting::Details::IntegerToString<char, uint64_t, 10>(1234567890123456789ULL, GCommonAlgorithmBuffer, FL_ARRAY_COUNTOF(GCommonAlgorithmBuffer), false);
     Formatting::Details::DoubleToString<char>(123.456, GCommonAlgorithmBuffer, FL_ARRAY_COUNTOF(GCommonAlgorithmBuffer), 2);
@@ -197,15 +197,16 @@ BENCHMARK(Algorithm, Formmating, SamplesCount, IterationsCount)
     test_formatting_numeric_to_string();
 }
 
+#pragma message(FL_CXX_STANDARD)
 
 int main(int argc, char** argv)
-{    
+{
     std::cout << "C++ Version:" << FL_CXX_STANDARD << std::endl;  // NOLINT(performance-avoid-endl)
 
-    char* StepArgv[] = { argv[0], "-g", "Algorithm"};
-    char* StepArgv2[] = { argv[0], "-g", "StringFormat" };
+    const char* StepArgv[] = { argv[0], "-g", "Algorithm"};
+    const char* StepArgv2[] = { argv[0], "-g", "StringFormat" };
 
-    celero::Run(FL_ARRAY_COUNTOF(StepArgv), StepArgv);
+    celero::Run(FL_ARRAY_COUNTOF(StepArgv), (char**)StepArgv);
 
-    celero::Run(FL_ARRAY_COUNTOF(StepArgv2), StepArgv2);
+    celero::Run(FL_ARRAY_COUNTOF(StepArgv2), (char**)StepArgv2);
 }

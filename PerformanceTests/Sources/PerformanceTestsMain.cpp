@@ -6,6 +6,8 @@
 #error "Need C++ 11"
 #endif
 
+#pragma message(FL_CXX_STANDARD)
+
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -130,7 +132,9 @@ void run_single_thread_tests(int iterations)
 
 void run_multi_thread_tests(int iterations, int thread_count)
 {
-    auto run_test = [iterations](auto test_function)
+    typedef void (*TestFunctionType)(int);
+
+    auto run_test = [iterations](TestFunctionType test_function)
         {
             for (int i = 0; i < iterations; ++i)
             {

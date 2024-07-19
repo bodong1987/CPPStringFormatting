@@ -33,13 +33,13 @@ namespace Formatting
     namespace Details
     {
         // calculate byte array hash code
-        constexpr inline size_t CalculateByteArrayHash(const uint8_t* const start, const size_t length)
+        FL_CONSTEXPR14 inline size_t CalculateByteArrayHash(const uint8_t* const start, const size_t length)
         {
 #if FL_PLATFORM_X64
             FL_STATIC_ASSERT(sizeof(void*) == 8, "This code is for 64-bit pointer.");
 
             constexpr size_t FNVOffsetBasis = 14695981039346656037ULL;
-            
+
             // ReSharper disable once CppTooWideScope
             constexpr size_t FNVPrime = 1099511628211ULL;
 
@@ -53,7 +53,7 @@ namespace Formatting
 #endif
 
             size_t Value = FNVOffsetBasis;
-            size_t Next = 0;    
+            size_t Next = 0;
 
             for (; Next + sizeof(size_t) <= length; Next += sizeof(size_t))
             {
@@ -72,13 +72,13 @@ namespace Formatting
 #if FL_PLATFORM_X64
             Value ^= Value >> 32;
 #endif
-            
+
             return Value;
         }
 
 #if FL_COMPILER_IS_GREATER_THAN_CXX11
         // calculate constexpr string length
-        // 
+        //
         template < typename TCharType>
 #if FL_COMPILER_IS_GREATER_THAN_CXX20
         consteval
@@ -89,7 +89,7 @@ namespace Formatting
         {
 #if FL_COMPILER_IS_GREATER_THAN_CXX17
             return std::char_traits<TCharType>::length(str);
-#else
+#elif FL_COMPILER_IS_GREATER_THAN_CXX14
             size_t Count = 0;
             while (*str != TCharType())
             {
@@ -98,7 +98,8 @@ namespace Formatting
             }
 
             return Count;
-            // return (str && str[0] != TCharTraits<TCharType>::GetEndFlag()) ? (CalculateConstexprStringLength(&str[1]) + 1) : 0;
+#else
+            return (str && str[0] != TCharTraits<TCharType>::GetEndFlag()) ? (CalculateConstexprStringLength(&str[1]) + 1) : 0;
 #endif
         }
 #endif
@@ -143,7 +144,7 @@ namespace Formatting
                             const typename Mpl::RemoveArray<T0>::Type*,
                             T0
                         >::Type TransferType;
-                                                
+
                         /*
                         // if you get a compile error with Transfer function can't visit
                         // it means that you have transfer an unsupported parameter to format pipeline
@@ -178,7 +179,7 @@ namespace Formatting
 
         /// <summary>
         /// Formats to.
-        /// format params to buffer 
+        /// format params to buffer
         /// </summary>
         /// <param name="sink">The sink.</param>
         /// <param name="patterns">patterns</param>
@@ -195,7 +196,7 @@ namespace Formatting
 
                 return sink;
             }
-            
+
             typename TPatternListType::ConstIterator Iter(*patterns);
 
             while (Iter.IsValid())
@@ -211,7 +212,7 @@ namespace Formatting
                     if (!Utils::DoTransfer<TCharType, typename TPatternListType::ConstIterator::ValueType, 0, T...>(sink, Pattern, format, args...))
                     {
                         TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
-                    }                    
+                    }
                 }
 
                 Iter.Next();
@@ -222,7 +223,7 @@ namespace Formatting
 
         /// <summary>
         /// Formats to.
-        /// format params to buffer 
+        /// format params to buffer
         /// </summary>
         /// <param name="sink">The sink.</param>
         /// <param name="format">The format.</param>
@@ -230,7 +231,7 @@ namespace Formatting
         /// <returns>TAutoString&lt;TCharType&amp;.</returns>
         template <typename TCharType, typename TPatternStorageType, typename TFormatType, typename... T>
         inline TAutoString<TCharType>& FormatTo(TAutoString<TCharType>& sink, const TFormatType& format, const T&... args)
-        {         
+        {
             TPatternStorageType* Storage = TPatternStorageType::GetStorage();
 
             assert(Storage);
@@ -238,7 +239,7 @@ namespace Formatting
             // find patterns first
             const TCharType* localFormatText = Shims::PtrOf(format);
             const size_t localLength = Shims::LengthOf(format);
-            
+
             const typename TPatternStorageType::PatternListType* Patterns = Storage->LookupPatterns(
                 localFormatText,
                 localLength,

@@ -87,13 +87,13 @@ namespace Formatting
         {
             template <typename TCharType, typename TIntegerType, int32_t Base, bool IsSignedInteger>  // NOLINT
             class IntegerToStringHelper
-            {                
+            {
             };
 
             template <typename TCharType, typename TIntegerType, int32_t Base>
             class IntegerToStringHelper<TCharType, TIntegerType, Base, true>
             {
-            public:                
+            public:
                 inline static const TCharType* Convert(TIntegerType value, TCharType* const buffer, const size_t length, const bool upper)
                 {
                     constexpr static char DigitMapUpper[] =
@@ -114,7 +114,7 @@ namespace Formatting
 
                     const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;
                     const bool IsNegativeNumber = value < 0;
-            
+
                     TCharType* Str = buffer + length - 1;
                     *Str-- = TCharTraits<TCharType>::GetEndFlag();
 
@@ -124,15 +124,15 @@ namespace Formatting
                     do
                     {
                         *Str-- = DigitMap[UValue % Base];
-                    } while (UValue /= Base);    
+                    } while (UValue /= Base);
 
                     if (IsNegativeNumber)
                     {
                         *Str = '-';
-                        
+
                         return Str;
                     }
-            
+
                     return Str + 1;
                 }
             };
@@ -140,7 +140,7 @@ namespace Formatting
             template <typename TCharType, typename TIntegerType, int32_t Base>
             class IntegerToStringHelper<TCharType, TIntegerType, Base, false>
             {
-            public:                
+            public:
                 inline static const TCharType* Convert(TIntegerType value, TCharType* const buffer, const size_t length, const bool upper)
                 {
                     constexpr static char DigitMapUpper[] =
@@ -159,8 +159,8 @@ namespace Formatting
 
                     FL_STATIC_ASSERT(Base > 0 && static_cast<size_t>(Base) <= FL_ARRAY_COUNTOF(DigitMapUpper), "Invalid operation");
 
-                    const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;                    
-                    
+                    const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;
+
                     TCharType* Str = buffer + length - 1;
                     *Str-- = TCharTraits<TCharType>::GetEndFlag();
 
@@ -168,16 +168,16 @@ namespace Formatting
                     do
                     {
                         *Str-- = DigitMap[value % Base];
-                    } while (value /= Base);    
-            
+                    } while (value /= Base);
+
                     return Str + 1;
                 }
             };
-            
+
         }
 
         /// <summary>
-        /// Calculate the formated string length 
+        /// Calculate the formated string length
         /// </summary>
         /// <param name="result">formated string text position</param>
         /// <param name="buffer">The buffer.</param>
@@ -186,12 +186,11 @@ namespace Formatting
         template <typename TCharType>
         constexpr inline size_t CalculateConvertedStringLength(const TCharType* const result, const TCharType* const buffer, const size_t length)
         {
-            const size_t Result = buffer + length - result - 1;
-            return Result;
+            return buffer + length - result - 1;
         }
 
         /// <summary>
-        /// Calculate the formated string length 
+        /// Calculate the formated string length
         /// </summary>
         /// <param name="result">formated string text position</param>
         /// <param name="buffer">The buffer.</param>
@@ -199,10 +198,9 @@ namespace Formatting
         template <typename TCharType, int32_t N>
         constexpr inline size_t CalculateConvertedStringLength(const TCharType* const result, const TCharType (&buffer)[N])
         {
-            const size_t Result = buffer + N - result - 1;            
-            return Result;
+            return buffer + N - result - 1;
         }
-        
+
         /// <summary>
         /// Integer to string.
         /// </summary>
@@ -236,7 +234,7 @@ namespace Formatting
         {
             const TCharType* Result = IntegerToString<TCharType, TIntegerType, Base>(value, buffer, length, upper);
             const size_t ResultLength = CalculateConvertedStringLength(Result, buffer, length);
-            
+
             memmove(buffer, Result, ResultLength * sizeof(TCharType));
             buffer[ResultLength] = TCharTraits<TCharType>::GetEndFlag();
 
@@ -280,15 +278,15 @@ namespace Formatting
             const bool IsNegativeValue = value < 0;
 
             /* we'll work in positive values and deal with the
-            negative sign issue later */            
+            negative sign issue later */
             if (IsNegativeValue)
             {
                 value = -value;
             }
-            
+
             /* if input is larger than ThresMax, revert to exponential */
             constexpr static double ThresMax = (double)(0x7FFFFFFF);  // NOLINT
-            
+
             // ReSharper disable once CommentTypo
             /* for very large numbers switch back to native sprintf for exponentials.
                 anyone want to write code to replace this? */
@@ -307,15 +305,15 @@ namespace Formatting
                     IsNegativeValue ? -value : value
                     );
 
-                TCharType* const TargetPos = buffer + length - (Result + 1);  
+                TCharType* const TargetPos = buffer + length - (Result + 1);
 
                 TCharTraits<TCharType>::copy(TargetPos, TempBuffer, Result + 1);
 
                 return TargetPos;
             }
-            
+
             // Ensure precision is within a reasonable range
-            // precision of >= 10 can lead to overflow errors 
+            // precision of >= 10 can lead to overflow errors
             precision = Algorithm::Clamp(precision, 0, 9);
 
             // write reverse order
@@ -334,7 +332,7 @@ namespace Formatting
             // Calculate the difference
             double DiffValue = tmp - Frace;
 
-            // Handle rounding 
+            // Handle rounding
             if (DiffValue > 0.5)
             {
                 ++Frace;
@@ -357,14 +355,14 @@ namespace Formatting
             if (precision != 0)
             {
                 int32_t Count = precision;
-                
+
                 // now do fractional part, as an unsigned number
                 do
                 {
                     --Count;
                     *Str-- = static_cast<TCharType>(TCharTraits<TCharType>::GetZero() + (Frace % 10)); // NOLINT
                 } while (Frace /= 10);
-                
+
                 // add extra 0s
                 while (Count-- > 0) *Str-- = TCharTraits<TCharType>::GetZero();
 
@@ -400,7 +398,7 @@ namespace Formatting
                 *Str = '-';
                 return Str;
             }
-            
+
             return Str + 1;
         }
 
@@ -418,7 +416,7 @@ namespace Formatting
         {
             const TCharType* Result = DoubleToString<TCharType>(value, buffer, length, precision);
             const size_t ResultLength = CalculateConvertedStringLength(Result, buffer, length);
-            
+
             memmove(buffer, Result, ResultLength * sizeof(TCharType));
             buffer[ResultLength] = TCharTraits<TCharType>::GetEndFlag();
 
