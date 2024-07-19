@@ -83,7 +83,7 @@ namespace Formatting
         {
             typedef TAutoString<TCharType> SinkType;
             typedef Details::TGlobalPatternStorage< Details::StandardLibrary::TStandardPolicy<TCharType, Details::StandardLibrary::DefaultMutexType> >    GlobalPatternStorageType;
-            
+
             SinkType Sink;
             Details::FormatTo<TCharType, GlobalPatternStorageType, const TCharType*, T0, T...>(Sink, format, arg0, args...);
 
@@ -101,7 +101,7 @@ namespace Formatting
 
             return std::basic_string<TCharType>(Sink.CStr(), Sink.GetLength());
         }
-                
+
         template <typename TCharType, typename TFormatType, typename T0, typename... T>
         inline void FormatTo(std::basic_string<TCharType>& sink, const TFormatType& format, const T0& arg0, T... args)
         {
@@ -112,7 +112,7 @@ namespace Formatting
 
             SinkType Sink;
             Details::FormatTo<TCharType, GlobalPatternStorageType, TFormatType, T0, T...>(Sink, format, arg0, args...);
-                        
+
             sink.assign(Sink.CStr(), Sink.GetLength());
         }
 
@@ -121,7 +121,7 @@ namespace Formatting
         {
             typedef TAutoString<TCharType> SinkType;
             typedef Details::TGlobalPatternStorage< Details::StandardLibrary::TStandardPolicy<TCharType, Details::StandardLibrary::DefaultMutexType> > GlobalPatternStorageType;
-            
+
             SinkType Sink;
             Details::FormatTo<TCharType, typename GlobalPatternStorageType::PatternListType>(Sink, patterns, format, length);
 
@@ -133,7 +133,7 @@ namespace Formatting
         {
             typedef TAutoString<TCharType> SinkType;
             typedef Details::TGlobalPatternStorage< Details::StandardLibrary::TStandardPolicy<TCharType, Details::StandardLibrary::DefaultMutexType> > GlobalPatternStorageType;
-        
+
             SinkType Sink;
             Details::FormatTo<TCharType, typename GlobalPatternStorageType::PatternListType, T0, T...>(Sink, patterns, format, length, arg0, args...);
 
@@ -147,7 +147,7 @@ namespace Formatting
             typedef Details::TGlobalPatternStorage< Details::StandardLibrary::TStandardPolicy<TCharType, Details::StandardLibrary::DefaultMutexType> > GlobalPatternStorageType;
 
             sink.clear();
-            
+
             SinkType Sink;
             Details::FormatTo<TCharType, typename GlobalPatternStorageType::PatternListType>(Sink, patterns, format, length);
 
@@ -163,14 +163,14 @@ namespace Formatting
             typedef Details::TGlobalPatternStorage< Details::StandardLibrary::TStandardPolicy<TCharType, Details::StandardLibrary::DefaultMutexType> > GlobalPatternStorageType;
 
             sink.clear();
-            
+
             SinkType Sink;
             Details::FormatTo<TCharType, typename GlobalPatternStorageType::PatternListType, T0, T...>(Sink, patterns, format, length, arg0, args...);
 
             sink.assign(Sink.CStr(), Sink.GetLength());
 
             return sink;
-        }        
+        }
 #else
 #define _FL_TEMPLATE_PARAMETERS_( d, i ) \
     FL_PP_COMMA_IF(i) typename FL_PP_CAT(T, i)
@@ -229,7 +229,7 @@ namespace Formatting
         Details::FormatTo< wchar_t, Details::StandardLibrary::STLGlobalPatternStorageW, const wchar_t*, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, Shims::PtrOf(format), FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
         sink.append(Results.CStr(), Results.GetLength()); \
     }
-        
+
         // #pragma message( FL_PP_TEXT((_FL_EXPORT_FOR_STRING(1))) )
 
         //        _FL_EXPORT_FOR_STRING(1)
@@ -260,12 +260,12 @@ namespace Formatting
             }(), \
             Formatting::Shims::PtrOf(format), \
             [](){ \
-                constexpr size_t hash = Formatting::Details::CalculateConstexprStringLength(format); \
+                FL_CONSTEXPR14 size_t hash = Formatting::Details::CalculateConstexprStringLength(format); \
                 return hash; \
             }(), /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
             ##__VA_ARGS__ /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
             )
-        
+
     #define FL_STD_FORMAT_TO(sink, format, ...) \
         Formatting::StandardLibrary::FormatTo( \
             sink, \
@@ -282,7 +282,7 @@ namespace Formatting
             }(), \
             Formatting::Shims::PtrOf(format), \
             [](){ \
-                constexpr size_t hash = Formatting::Details::CalculateConstexprStringLength(format); \
+                FL_CONSTEXPR14 size_t hash = Formatting::Details::CalculateConstexprStringLength(format); \
                 return hash; \
             }(), /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\
             ## __VA_ARGS__ /*NOLINT(clang-diagnostic-gnu-zero-variadic-macro-arguments)*/\

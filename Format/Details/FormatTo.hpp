@@ -83,13 +83,13 @@ namespace Formatting
 #if FL_COMPILER_IS_GREATER_THAN_CXX20
         consteval
 #else
-        constexpr
+        FL_CONSTEXPR14
 #endif
         inline size_t CalculateConstexprStringLength(const TCharType* str)
         {
 #if FL_COMPILER_IS_GREATER_THAN_CXX17
             return std::char_traits<TCharType>::length(str);
-#elif FL_COMPILER_IS_GREATER_THAN_CXX14
+#else
             size_t Count = 0;
             while (*str != TCharType())
             {
@@ -98,9 +98,7 @@ namespace Formatting
             }
 
             return Count;
-#else
-            return (str && str[0] != TCharTraits<TCharType>::GetEndFlag()) ? (CalculateConstexprStringLength(&str[1]) + 1) : 0;
-#endif
+#endif // FL_COMPILER_IS_GREATER_THAN_CXX17
         }
 #endif
 
