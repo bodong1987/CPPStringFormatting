@@ -105,7 +105,7 @@ namespace Formatting
 				Index(static_cast<ByteType>(-1)),
 				Precision(static_cast<ByteType>(-1)),
 				Width(static_cast<ByteType>(-1)),
-                bUpper(false)
+                IsUpper(false)
             {
             }
                         
@@ -154,7 +154,7 @@ namespace Formatting
             ByteType         Index;
             ByteType         Precision;
             ByteType         Width;
-            bool             bUpper; // NOLINT
+            bool             IsUpper;
         };
     }
 

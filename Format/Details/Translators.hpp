@@ -265,7 +265,7 @@ namespace Formatting
                 }
                 else if (pattern.Flag == EFormatFlag::Exponent)
                 {
-                    const CharType eFlagChar = pattern.bUpper ? 'E' : 'e';
+                    const CharType eFlagChar = pattern.IsUpper ? 'E' : 'e';
 
                     // add %.
                     CharType FmtBuf[16];
@@ -277,7 +277,7 @@ namespace Formatting
                         IntegerToString<TCharType, int, 10>(
                             pattern.HasPrecision() ? pattern.Precision : DefaultExponentPrecision, PrecisionBuf,
                             FL_ARRAY_COUNTOF(PrecisionBuf),
-                            pattern.bUpper
+                            pattern.IsUpper
                             );
                     
                     const SizeType length = CalculateConvertedStringLength(PrecisionText, PrecisionBuf);
@@ -403,8 +403,8 @@ namespace Formatting
                     CharType TempBuf[32];
 
                     const CharType* const Result = bHex ?
-                        IntegerToString<CharType, ParameterType, 16>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.bUpper) :
-                        IntegerToString<CharType, ParameterType, 10>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.bUpper);                    
+                        IntegerToString<CharType, ParameterType, 16>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.IsUpper) :
+                        IntegerToString<CharType, ParameterType, 10>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.IsUpper);
 
                     const SizeType length = CalculateConvertedStringLength(Result, TempBuf);
 
@@ -571,8 +571,8 @@ namespace Formatting
                 
                 CharType TempBuf[32];
                 const CharType* const Result = bHex ?
-                        IntegerToString<CharType, size_t, 16>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.bUpper) :
-                        IntegerToString<CharType, size_t, 10>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.bUpper);
+                        IntegerToString<CharType, size_t, 16>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.IsUpper) :
+                        IntegerToString<CharType, size_t, 10>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.IsUpper);
                 
                 const SizeType length = CalculateConvertedStringLength(Result, TempBuf);                
 

@@ -252,7 +252,7 @@ namespace Formatting
                     return false;
                 }
 
-                pattern.bUpper = TCharTraits<CharType>::IsUpper(*TestPtr);
+                pattern.IsUpper = TCharTraits<CharType>::IsUpper(*TestPtr);
 
                 ++TestPtr;
 
