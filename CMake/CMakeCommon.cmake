@@ -35,3 +35,7 @@ endif()
 # use unicode by default
 add_definitions(-DUNICODE -D_UNICODE)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DDEBUG)
+endif()
+

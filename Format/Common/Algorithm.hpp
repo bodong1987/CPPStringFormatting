@@ -23,6 +23,7 @@
 
     Project URL: https://github.com/bodong1987/CPPStringFormatting
 */
+// ReSharper disable CppRedundantInlineSpecifier
 #pragma once
 
 #include <Format/Common/Build.hpp>

@@ -23,6 +23,7 @@
 
     Project URL: https://github.com/bodong1987/CPPStringFormatting
 */
+// ReSharper disable CppRedundantInlineSpecifier
 // References
 // http://www.jb.man.ac.uk/~slowe/cpp/itoa.html
 // http://www.drdobbs.com/flexible-c-1-efficient-integer-to-string/184401596?pgno=6
@@ -412,7 +413,7 @@ namespace Formatting
         /// <param name="precision">The precision.</param>
         /// <returns>the formatted string.</returns>
         template < typename TCharType >
-        inline const TCharType* DoubleToStringMoved(double value, TCharType* buffer, const size_t length, int32_t precision)
+        inline const TCharType* DoubleToStringMoved(const double value, TCharType* buffer, const size_t length, const int32_t precision)
         {
             const TCharType* Result = DoubleToString<TCharType>(value, buffer, length, precision);
             const size_t ResultLength = CalculateConvertedStringLength(Result, buffer, length);

@@ -23,6 +23,7 @@
 
     Project URL: https://github.com/bodong1987/CPPStringFormatting
 */
+// ReSharper disable CppDFAUnreachableCode
 #pragma once
 
 #include <Format/Common/Build.hpp>
@@ -57,7 +58,7 @@ namespace Formatting
         public:
             typedef T       ValueType;
             
-            ConstIterator(const SelfType& referenceTarget) :
+            explicit ConstIterator(const SelfType& referenceTarget) :
                 Ref(referenceTarget),
                 Index(referenceTarget.GetLength() > 0 ? 0 : -1)
             {
@@ -218,11 +219,11 @@ namespace Formatting
 
         SelfType& operator = (SelfType&& other) noexcept
         {
-            return TakeFrom(other);
+		    TakeFrom(other);
+		    return *this;
         }
 #endif
-
-        inline bool  IsDataOnStack() const   // NOLINT(modernize-use-nodiscard)
+        bool  IsDataOnStack() const   // NOLINT(modernize-use-nodiscard)
         {
             return HeapValPtr == nullptr;
         }
@@ -404,6 +405,7 @@ namespace Formatting
             return new T[allocatedCount + ExtraLength];
         }
 
+        // ReSharper disable once CppRedundantAccessSpecifier
     protected:
         size_t        Count;
         size_t        AllocatedCount;

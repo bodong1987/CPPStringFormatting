@@ -23,6 +23,7 @@
 
     Project URL: https://github.com/bodong1987/CPPStringFormatting
 */
+// ReSharper disable CppRedundantInlineSpecifier
 #pragma once
 
 #include <Format/Details/Translators.hpp>
@@ -249,69 +250,69 @@ namespace Formatting
             return FormatTo<TCharType, typename TPatternStorageType::PatternListType, T...>(sink, Patterns, localFormatText, localLength, args...);
         }
 #else
-#define _FL_FORMAT_TO_INDEX_ 0
+#define FL_FORMAT_TO_INDEX 0
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 1
+#define FL_FORMAT_TO_INDEX 1
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 2
+#define FL_FORMAT_TO_INDEX 2
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 3
+#define FL_FORMAT_TO_INDEX 3
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 4
+#define FL_FORMAT_TO_INDEX 4
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 5
+#define FL_FORMAT_TO_INDEX 5
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 6
+#define FL_FORMAT_TO_INDEX 6
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 7
+#define FL_FORMAT_TO_INDEX 7
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 8
+#define FL_FORMAT_TO_INDEX 8
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 9
+#define FL_FORMAT_TO_INDEX 9
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 10
+#define FL_FORMAT_TO_INDEX 10
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 11
+#define FL_FORMAT_TO_INDEX 11
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 12
+#define FL_FORMAT_TO_INDEX 12
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 13
+#define FL_FORMAT_TO_INDEX 13
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 14
+#define FL_FORMAT_TO_INDEX 14
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 
-#define _FL_FORMAT_TO_INDEX_ 15
+#define FL_FORMAT_TO_INDEX 15
 #include <Format/Details/InlineFiles/FormatTo.inl>
-#undef _FL_FORMAT_TO_INDEX_
+#undef FL_FORMAT_TO_INDEX
 #endif
 
 //

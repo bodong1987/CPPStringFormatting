@@ -26,7 +26,7 @@
 
 // ReSharper disable All
 // Internal Use
-#ifndef _FL_FORMAT_TO_INDEX_
+#ifndef FL_FORMAT_TO_INDEX
 #error "This is an internally used file, please do not include this file directly" 
 #endif
 
@@ -34,19 +34,19 @@
 #error "This file is prepared to support versions of the C++ standard earlier than C++11. If your compiler already supports C++11 or newer, you should no longer use this set of code."
 #endif
 
-#define _FL_TEMPLATE_PARAMETERS_( d, i ) \
+#define FL_TEMPLATE_PARAMETERS_BODY( d, i ) \
     FL_PP_COMMA_IF(i) typename FL_PP_CAT( T, i )
 
-#define _FL_TEMPLATE_PARAMETER_TYPES( d, i ) \
+#define FL_TEMPLATE_PARAMETER_TYPE_BODY( d, i ) \
     FL_PP_COMMA_IF(i) FL_PP_CAT( T, i )
 
-#define _FL_REAL_AGUMENTS_( d, i ) \
+#define FL_REAL_ARGUMENT_BODY( d, i ) \
     FL_PP_COMMA_IF(i) const FL_PP_CAT(T,i)& FL_PP_CAT(arg,i)
 
-#define _FL_REAL_AGUMENT_ARGS_( d, i ) \
+#define FL_REAL_ARGUMENT_ARG_BODY( d, i ) \
     FL_PP_COMMA_IF(i) FL_PP_CAT(arg,i)
 
-#define _FL_TRANSFER_BODY_( d, i ) \
+#define FL_TRANSFER_BODY( d, i ) \
     case i: \
         { \
         typedef FL_PP_CAT(T, i) Type; \
@@ -61,10 +61,10 @@
         } \
         break;
 
-//#pragma message( FL_PP_TEXT(FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TEMPLATE_PARAMETERS_, )))
+//#pragma message( FL_PP_TEXT(FL_PP_REPEAT(FL_FORMAT_TO_INDEX, FL_TEMPLATE_PARAMETERS_BODY, )))
 
 // These two macros can reduce false positives during static code scanning
-#ifndef _FL_FORMAT_TO_INDEX_
+#ifndef FL_FORMAT_TO_INDEX
 #define FL_PP_COMMA_IF(...) 
 #define FL_PP_REPEAT(n,m,d)
 #endif
@@ -77,16 +77,16 @@
 template < 
     typename TCharType,
     typename TPatternStorageType
-    FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
-    FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TEMPLATE_PARAMETERS_, )
+    FL_PP_COMMA_IF(FL_FORMAT_TO_INDEX)
+    FL_PP_REPEAT(FL_FORMAT_TO_INDEX, FL_TEMPLATE_PARAMETERS_BODY, )
 >
 inline TAutoString<TCharType>& FormatTo( 
     TAutoString<TCharType>& sink, 
     const typename TPatternStorageType::PatternListType* patterns,
     const TCharType* format,
     const size_t length
-    FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
-    FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_REAL_AGUMENTS_, )
+    FL_PP_COMMA_IF(FL_FORMAT_TO_INDEX)
+    FL_PP_REPEAT(FL_FORMAT_TO_INDEX, FL_REAL_ARGUMENT_BODY, )
     )
 {
     if (patterns == nullptr)
@@ -117,7 +117,7 @@ inline TAutoString<TCharType>& FormatTo(
                 //    1. change your code, convert it to the support type
                 //    2. make a specialization of TTranslator for your type.
                 */
-                FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TRANSFER_BODY_, );
+                FL_PP_REPEAT(FL_FORMAT_TO_INDEX, FL_TRANSFER_BODY, );
             default:
                 TRawTranslator<TCharType>::Transfer(sink, Pattern, Shims::PtrOf(format));
                 break;
@@ -139,14 +139,14 @@ template <
     typename TCharType,
     typename TPatternStorageType,
     typename TFormatType
-    FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
-    FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TEMPLATE_PARAMETERS_, )
+    FL_PP_COMMA_IF(FL_FORMAT_TO_INDEX)
+    FL_PP_REPEAT(FL_FORMAT_TO_INDEX, FL_TEMPLATE_PARAMETERS_BODY, )
 >
 inline TAutoString<TCharType>& FormatTo( 
     TAutoString<TCharType>& sink, 
     const TFormatType& format
-    FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
-    FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_REAL_AGUMENTS_, )
+    FL_PP_COMMA_IF(FL_FORMAT_TO_INDEX)
+    FL_PP_REPEAT(FL_FORMAT_TO_INDEX, FL_REAL_ARGUMENT_BODY, )
     )
 {
     typedef typename TPatternStorageType::FormatPattern    FormatPatternType;
@@ -171,21 +171,21 @@ inline TAutoString<TCharType>& FormatTo(
     return FormatTo<
                 TCharType, 
                 TPatternStorageType
-                FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
-                FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_TEMPLATE_PARAMETER_TYPES, )
+                FL_PP_COMMA_IF(FL_FORMAT_TO_INDEX)
+                FL_PP_REPEAT(FL_FORMAT_TO_INDEX, FL_TEMPLATE_PARAMETER_TYPE_BODY, )
     >(
         sink, 
         Patterns, 
         localFormatText, 
         localLength
-        FL_PP_COMMA_IF(_FL_FORMAT_TO_INDEX_)
-        FL_PP_REPEAT(_FL_FORMAT_TO_INDEX_, _FL_REAL_AGUMENT_ARGS_, )
+        FL_PP_COMMA_IF(FL_FORMAT_TO_INDEX)
+        FL_PP_REPEAT(FL_FORMAT_TO_INDEX, FL_REAL_ARGUMENT_ARG_BODY, )
     );
 }
 
-#undef _FL_REAL_AGUMENT_ARGS_
-#undef _FL_TEMPLATE_PARAMETER_TYPES
-#undef _FL_TEMPLATE_PARAMETERS_
-#undef _FL_REAL_AGUMENTS_
-#undef _FL_TRANSFER_BODY_
+#undef FL_REAL_ARGUMENT_ARG_BODY
+#undef FL_TEMPLATE_PARAMETER_TYPE_BODY
+#undef FL_TEMPLATE_PARAMETERS_BODY
+#undef FL_REAL_ARGUMENT_BODY
+#undef FL_TRANSFER_BODY
 // ReSharper restore All

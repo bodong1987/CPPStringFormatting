@@ -32,9 +32,10 @@ add_executable(Benchmark ${TEST_SOURCE_FILES})
 
 # Set Celero library output directory
 set(CELERO_OUTPUT_DIR ${CMAKE_BINARY_DIR}/Benchmark/External/Celero/$<CONFIG>)
+set(CELERO_OUTPUT_DIR2 ${CMAKE_BINARY_DIR}/Benchmark/External/Celero)
 
 # Add Celero output directory to link search paths
-target_link_directories(Benchmark PRIVATE ${CELERO_OUTPUT_DIR})
+target_link_directories(Benchmark PRIVATE ${CELERO_OUTPUT_DIR} ${CELERO_OUTPUT_DIR2})
 
 # Select library name based on build type
 set(CELERO_LIB "$<IF:$<CONFIG:Debug>,celero-d,celero>")

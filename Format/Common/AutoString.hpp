@@ -67,7 +67,7 @@ namespace Formatting
             Super::StackVal[0] = 0;
         }
                 
-        TAutoString(const CharType* str)
+        explicit TAutoString(const CharType* str)
         {
             if (str)
             {

@@ -23,6 +23,7 @@
 
     Project URL: https://github.com/bodong1987/CPPStringFormatting
 */
+// ReSharper disable CppRedundantInlineSpecifier
 #pragma once
 
 #include <cstddef>
@@ -40,9 +41,9 @@ namespace Formatting
     {
     };
 
+    // ReSharper disable once CppRedundantAccessSpecifier
     template <>
-    class TCharTraits<char> :
-        public std::char_traits<char>
+    class TCharTraits<char> : public std::char_traits<char>
     {
     private:
         // NOLINTBEGIN
@@ -110,7 +111,7 @@ namespace Formatting
             va_list arglist; // NOLINT
             va_start(arglist, format);
 
-            int result = 0;
+            int result;
 #if FL_COMPILER_MSVC
             result = _vsprintf_s_l(string, sizeInBytes, format, nullptr, arglist);
 #else
@@ -140,7 +141,7 @@ namespace Formatting
             return strcmp(first, second);
         }
 
-        static int CompareN(const char* first, const char* second, std::size_t n)
+        static int CompareN(const char* first, const char* second, const size_t n)
         {
             return strncmp(first, second, n);
         }
@@ -154,7 +155,7 @@ namespace Formatting
 #endif
         }
 
-        static int iCompareN(const char* first, const char* second, std::size_t n)
+        static int iCompareN(const char* first, const char* second, const size_t n)
         {
 #if FL_COMPILER_MSVC
             return _strnicmp(first, second, n);
@@ -173,7 +174,7 @@ namespace Formatting
             return strcasestr(str, match);
         }
 
-        static const char* rFind(const char* str, char ch)
+        static const char* rFind(const char* str, const char ch)
         {
             return strrchr(str, ch);
         }
@@ -209,7 +210,7 @@ namespace Formatting
             return nullptr;
         }
 
-        static char* Fill(char* dest, char val, size_t length)
+        static char* Fill(char* dest, const char val, const size_t length)
         {
             return (char*)memset(dest, val, length); // NOLINT
         }
@@ -297,9 +298,9 @@ namespace Formatting
         }
     };
 
+    // ReSharper disable once CppRedundantAccessSpecifier
     template <>
-    class TCharTraits<wchar_t> :
-        public std::char_traits<wchar_t>
+    class TCharTraits<wchar_t> : public std::char_traits<wchar_t>
     {
     private:
         // NOLINTBEGIN
@@ -367,7 +368,7 @@ namespace Formatting
 
             va_start(arglist, format);
 
-            int result = 0;
+            int result;
 
 #if FL_COMPILER_MSVC
             result = _vswprintf_s_l(string, sizeInWords, format, nullptr, arglist);
@@ -400,7 +401,7 @@ namespace Formatting
             return wcscmp(first, second);
         }
 
-        static int CompareN(const wchar_t* first, const wchar_t* second, std::size_t n)
+        static int CompareN(const wchar_t* first, const wchar_t* second, const size_t n)
         {
             return wcsncmp(first, second, n);
         }
@@ -416,7 +417,7 @@ namespace Formatting
 #endif
         }
 
-        static int iCompareN(const wchar_t* first, const wchar_t* second, std::size_t n)
+        static int iCompareN(const wchar_t* first, const wchar_t* second, size_t n)
         {
 #if FL_COMPILER_MSVC
             return _wcsnicmp(first, second, n);
@@ -437,7 +438,7 @@ namespace Formatting
             return wcscasestr(str, match);
         }
 
-        static const wchar_t* rFind(const wchar_t* str, wchar_t ch)
+        static const wchar_t* rFind(const wchar_t* str, const wchar_t ch)
         {
             return wcsrchr(str, ch);
         }
@@ -473,72 +474,72 @@ namespace Formatting
             return nullptr;
         }
 
-        static wchar_t* Fill(wchar_t* dest, wchar_t val, size_t length)
+        static wchar_t* Fill(wchar_t* dest, const wchar_t val, const size_t length)
         {
             return wmemset(dest, val, length);
         }
 
-        static int IsAlnum(wchar_t ch) // NOLINT
+        static int IsAlnum(const wchar_t ch) // NOLINT
         {
             return iswalnum(ch);
         }
 
-        static int IsAlpha(wchar_t ch)
+        static int IsAlpha(const wchar_t ch)
         {
             return iswalpha(ch);
         }
 
-        static int IsLower(wchar_t ch)
+        static int IsLower(const wchar_t ch)
         {
             return iswlower(ch);
         }
 
-        static int IsUpper(wchar_t ch)
+        static int IsUpper(const wchar_t ch)
         {
             return iswupper(ch);
         }
 
-        static int IsDigit(wchar_t ch)
+        static int IsDigit(const wchar_t ch)
         {
             return iswdigit(ch);
         }
 
-        static int IsXDigit(wchar_t ch)
+        static int IsXDigit(const wchar_t ch)
         {
             return iswxdigit(ch);
         }
 
-        static int IsCntrl(wchar_t ch) // NOLINT
+        static int IsCntrl(const wchar_t ch) // NOLINT
         {
             return iswcntrl(ch);
         }
 
-        static int IsGraph(wchar_t ch)
+        static int IsGraph(const wchar_t ch)
         {
             return iswgraph(ch);
         }
 
-        static int IsPrint(wchar_t ch)
+        static int IsPrint(const wchar_t ch)
         {
             return iswprint(ch);
         }
 
-        static int IsPunct(wchar_t ch) // NOLINT
+        static int IsPunct(const wchar_t ch) // NOLINT
         {
             return iswpunct(ch);
         }
 
-        static int IsSpace(wchar_t ch)
+        static int IsSpace(const wchar_t ch)
         {
             return iswspace(ch);
         }
 
-        static wchar_t ToLower(wchar_t ch)
+        static wchar_t ToLower(const wchar_t ch)
         {
             return towlower(ch);
         }
 
-        static wchar_t ToUpper(wchar_t ch)
+        static wchar_t ToUpper(const wchar_t ch)
         {
             return towupper(ch);
         }

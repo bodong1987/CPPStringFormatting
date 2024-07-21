@@ -145,6 +145,7 @@ namespace Formatting
                 return Precision != static_cast<ByteType>(-1);
             }
 
+        	// ReSharper disable once CppRedundantAccessSpecifier
         public:            
             SizeType         Start;
             SizeType         Len;            

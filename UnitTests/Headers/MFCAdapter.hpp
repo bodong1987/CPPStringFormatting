@@ -175,53 +175,53 @@ namespace Formatting
             sink.Append(Sink.CStr(), Sink.GetLength());
         }
 #else
-#define _FL_TEMPLATE_PARAMETERS_( d, i ) \
+#define FL_TEMPLATE_PARAMETERS_BODY( d, i ) \
     FL_PP_COMMA_IF(i) typename FL_PP_CAT(T, i)
 
-#define _FL_TEMPLATE_AGUMENTS_( d, i ) \
+#define FL_TEMPLATE_AGUMENT_BODY( d, i ) \
     FL_PP_COMMA_IF(i) FL_PP_CAT(T, i)
 
-#define _FL_FORMAL_AGUMENTS_( d, i ) \
+#define FL_NORMAL_AGUMENT_BODY( d, i ) \
     FL_PP_COMMA_IF(i) const FL_PP_CAT(T, i)& FL_PP_CAT(arg, i)
 
-#define _FL_REAL_AGUMENTS_( d, i ) \
+#define FL_REAL_ARGUMENT_BODY( d, i ) \
     FL_PP_COMMA_IF(i) FL_PP_CAT(arg, i)
 
-#define _FL_EXPORT_FOR_STRING( i ) \
-    template <FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
-    CString Format(const TCHAR* format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
+#define FL_EXPORT_FOR_STRING( i ) \
+    template <FL_PP_REPEAT(i, FL_TEMPLATE_PARAMETERS_BODY, ) > \
+    CString Format(const TCHAR* format, FL_PP_REPEAT(i, FL_NORMAL_AGUMENT_BODY, )) \
     { \
         TAutoString<TCHAR> Results; \
-        Details::FormatTo<TCHAR, Details::MFC::MFCGlobalPatternStorage, const TCHAR*, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format, FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
+        Details::FormatTo<TCHAR, Details::MFC::MFCGlobalPatternStorage, const TCHAR*, FL_PP_REPEAT(i, FL_TEMPLATE_AGUMENT_BODY, )>(Results, format, FL_PP_REPEAT(i, FL_REAL_ARGUMENT_BODY, )); \
         return CString(Results.CStr(), Results.GetLength()); \
     } \
-    template <FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
-    CString Format(const CString& format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
+    template <FL_PP_REPEAT(i, FL_TEMPLATE_PARAMETERS_BODY, ) > \
+    CString Format(const CString& format, FL_PP_REPEAT(i, FL_NORMAL_AGUMENT_BODY, )) \
     { \
         TAutoString<TCHAR> Results; \
-        Details::FormatTo<TCHAR, Details::MFC::MFCGlobalPatternStorage, const TCHAR*, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, format.c_str(), FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
+        Details::FormatTo<TCHAR, Details::MFC::MFCGlobalPatternStorage, const TCHAR*, FL_PP_REPEAT(i, FL_TEMPLATE_AGUMENT_BODY, )>(Results, format.c_str(), FL_PP_REPEAT(i, FL_REAL_ARGUMENT_BODY, )); \
         return CString(Results.CStr(), Results.GetLength()); \
     } \
-    template < typename TFormatType, FL_PP_REPEAT(i, _FL_TEMPLATE_PARAMETERS_, ) > \
-    void FormatTo(CString& sink, const TFormatType& format, FL_PP_REPEAT(i, _FL_FORMAL_AGUMENTS_, )) \
+    template < typename TFormatType, FL_PP_REPEAT(i, FL_TEMPLATE_PARAMETERS_BODY, ) > \
+    void FormatTo(CString& sink, const TFormatType& format, FL_PP_REPEAT(i, FL_NORMAL_AGUMENT_BODY, )) \
     { \
         sink.Empty(); \
         TAutoString<TCHAR> Results; \
-        Details::FormatTo< TCHAR, Details::MFC::MFCGlobalPatternStorage, const TCHAR*, FL_PP_REPEAT(i, _FL_TEMPLATE_AGUMENTS_, )>(Results, Shims::PtrOf(format), FL_PP_REPEAT(i, _FL_REAL_AGUMENTS_, )); \
+        Details::FormatTo< TCHAR, Details::MFC::MFCGlobalPatternStorage, const TCHAR*, FL_PP_REPEAT(i, FL_TEMPLATE_AGUMENT_BODY, )>(Results, Shims::PtrOf(format), FL_PP_REPEAT(i, FL_REAL_ARGUMENT_BODY, )); \
         sink.Append(Results.CStr(), Results.GetLength()); \
     }
 
-        // #pragma message( FL_PP_TEXT((_FL_EXPORT_FOR_STRING(1))) )
+        // #pragma message( FL_PP_TEXT((FL_EXPORT_FOR_STRING(1))) )
 
-        //        _FL_EXPORT_FOR_STRING(1)
+        //        FL_EXPORT_FOR_STRING(1)
 
-        FL_ENUM_SCALARS(_FL_EXPORT_FOR_STRING);
+        FL_ENUM_SCALARS(FL_EXPORT_FOR_STRING);
 
-#undef _FL_TEMPLATE_PARAMETERS_
-#undef _FL_TEMPLATE_AGUMENTS_
-#undef _FL_REAL_AGUMENTS_
-#undef _FL_EXPORT_FOR_STRING
-#undef _FL_FORMAL_AGUMENTS_
+#undef FL_TEMPLATE_PARAMETERS_BODY
+#undef FL_TEMPLATE_AGUMENT_BODY
+#undef FL_REAL_ARGUMENT_BODY
+#undef FL_EXPORT_FOR_STRING
+#undef FL_NORMAL_AGUMENT_BODY
 #endif
     }
 }

@@ -28,15 +28,16 @@
 #include <Format/Common/Build.hpp>
 
 #if FL_COMPILER_GCC
+// ReSharper disable CppUnusedIncludeDirective
 #undef __STRICT_ANSI__
 #include <cstdio>
 #include <memory>
-#include <string.h>
+#include <cstring>
 #include <cwchar>
 #if FL_COMPILER_IS_GREATER_THAN_CXX11
 #include <type_traits>
 #endif
-
+// ReSharper restore CppUnusedIncludeDirective
 #endif // FL_COMPILER_GCC
 
 namespace Formatting

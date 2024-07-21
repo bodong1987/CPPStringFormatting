@@ -23,6 +23,8 @@
 
     Project URL: https://github.com/bodong1987/CPPStringFormatting
 */
+// ReSharper disable CppRedundantElseKeywordInsideCompoundStatement
+// ReSharper disable CppRedundantElseKeyword
 #pragma once
 
 #include <Format/Common/Build.hpp>
@@ -70,12 +72,12 @@ namespace Formatting
             typedef TCharTraits<CharType>                               CharTraits;
 
         protected:
-            static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, CharType fillChar = CharTraits::GetSpace())
+            static void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, CharType fillChar = CharTraits::GetSpace())
             {
                 strRef.AddAlignStr(start, length, pattern.HasWidth() ? pattern.Width : static_cast<int>(length), pattern.Align != EAlignFlag::Left, fillChar);
             }
 
-            static inline void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, const int alignSize, bool paddingLeft, CharType fillChar = CharTraits::GetSpace())
+            static void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, const int alignSize, bool paddingLeft, CharType fillChar = CharTraits::GetSpace())
             {
                 FL_UNREFERENCED_PARAMETER(pattern);
                 
@@ -237,7 +239,7 @@ namespace Formatting
                 DefaultMinExponentLength = FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH
             };
 
-            static bool TransferCore(StringType& strRef, const FormatPattern& pattern, FormatFlagType usedFlag, double arg)
+            static bool TransferCore(StringType& strRef, const FormatPattern& pattern, const FormatFlagType usedFlag, double arg)
             {
                 FL_UNREFERENCED_PARAMETER(usedFlag);
                 
@@ -326,7 +328,7 @@ namespace Formatting
             }
 
         public:
-            static bool Transfer(StringType& strRef, const FormatPattern& pattern, double arg)
+            static bool Transfer(StringType& strRef, const FormatPattern& pattern, const double arg)
             {
                 return TransferCore(strRef, pattern, pattern.Flag, arg);
             }

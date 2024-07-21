@@ -37,7 +37,6 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/syscall.h>
 #endif
 
 namespace Formatting
@@ -52,7 +51,7 @@ namespace Formatting
         class Mutex : Noncopyable /*NOLINT*/
         {
         public:
-            Mutex()
+            Mutex() // NOLINT(*-pro-type-member-init)
             {
 #if FL_PLATFORM_WINDOWS
                 InitializeCriticalSection(&CriticalSectionValue);
@@ -142,8 +141,8 @@ namespace Formatting
             /// Initializes a new instance of the <see cref="TScopedLocker"/> class.
             /// </summary>
             /// <param name="referenceTarget">The reference target.</param>
-            TScopedLocker(TReferenceType& referenceTarget) :
-            Reference(&referenceTarget)
+            explicit TScopedLocker(TReferenceType& referenceTarget) :
+                Reference(&referenceTarget)
             {
                 assert(Reference);
                 Reference->Lock();
@@ -153,8 +152,8 @@ namespace Formatting
             /// Initializes a new instance of the <see cref="TScopedLocker"/> class.
             /// </summary>
             /// <param name="referencePointer">The reference pointer.</param>
-            TScopedLocker(TReferenceType* referencePointer) :
-            Reference(referencePointer)
+            explicit TScopedLocker(TReferenceType* referencePointer) :
+                Reference(referencePointer)
             {
                 assert(Reference);
                 Reference->Lock();

@@ -145,6 +145,7 @@ namespace Formatting
 
                 static ManagedStorage StaticManager;
 
+                // ReSharper disable once CppRedundantStaticSpecifierOnThreadLocalLocalVariable
                 static FL_THREAD_LOCAL TGlobalPatternStorage* StaticStorage = nullptr;
 
                 if( !StaticStorage )
