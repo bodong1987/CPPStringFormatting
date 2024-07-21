@@ -43,6 +43,7 @@ namespace Formatting
             typedef typename TPolicy::PatternListType               PatternListType;
             typedef TFormatPattern<CharType>                        FormatPattern;
 
+            // ReSharper disable once CppDFAConstantFunctionResult
             bool operator ()(const CharType* const formatStart, const SizeType length, PatternListType& patterns)
             {
                 return ParsePatterns(formatStart, length, patterns);
@@ -92,7 +93,9 @@ namespace Formatting
                 assert(start && end && start < end && "invalid parameters!");
                 assert(end - start < 3 && "too large integer!!!");
 
+                // ReSharper disable CppDFAConstantConditions
                 if (!start || !end || start >= end)
+                // ReSharper restore CppDFAConstantConditions
                 {
                     return -1;
                 }
@@ -103,7 +106,8 @@ namespace Formatting
 
                 while (TestPtr < end)
                 {
-                    Value = Value * 10 + *TestPtr - '0';
+                    // ReSharper disable once CppDFANullDereference
+                    Value = Value * 10 + *TestPtr - TCharTraits<CharType>::GetZero();
 
                     ++TestPtr;
                 }
@@ -154,6 +158,7 @@ namespace Formatting
 
                 const CharType* TestPtr = start;
 
+                // ReSharper disable once CppDFANullDereference
                 ++TestPtr;
 
                 if (TestPtr >= end || (!TCharTraits<CharType>::IsDigit(*TestPtr) && *TestPtr != '-'))
@@ -207,6 +212,7 @@ namespace Formatting
 
                 const CharType* TestPtr = start;
 
+                // ReSharper disable once CppDFANullDereference
                 ++TestPtr;
 
                 if (TestPtr >= end)
@@ -283,6 +289,7 @@ namespace Formatting
 
                 const CharType* TestPtr = start;
 
+                // ReSharper disable once CppDFANullDereference
                 while (TestPtr < end && !TCharTraits<CharType>::IsDigit(*TestPtr))
                 {
                     ++TestPtr;
@@ -290,6 +297,7 @@ namespace Formatting
 
                 const CharType* TestPtr2 = TestPtr;
 
+                // ReSharper disable once CppDFANullDereference
                 while (TestPtr2 < end && TCharTraits<CharType>::IsDigit(*TestPtr2))
                 {
                     ++TestPtr2;
@@ -319,6 +327,7 @@ namespace Formatting
                     return true;
                 }
 
+                // ReSharper disable once CppDFANullDereference
                 if (*TestPtr == ',')
                 {
                     // let's find a align mode and width
