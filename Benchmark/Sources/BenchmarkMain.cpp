@@ -11,33 +11,33 @@ char GSprintfBuffer[1024];
 
 void test_c_sprintf()
 {
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%d %s %.2f %d %s %.2f", 123, "hello", 1.23, 456, "world", 4.56);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%d - %s - %.2f - %d - %s - %.2f", 789, "foo", 7.89, 101, "bar", 10.11);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%d + %s + %.2f + %d + %s + %.2f", 112, "baz", 11.12, 131, "qux", 13.14);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%d * %s * %.2f * %d * %s * %.2f", 215, "alpha", 21.52, 314, "beta", 31.45);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%d / %s / %.2f / %d / %s / %.2f", 516, "gamma", 51.67, 617, "delta", 61.78);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%d ^ %s ^ %.2f ^ %d ^ %s ^ %.2f", 718, "epsilon", 71.89, 819, "zeta", 81.90);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%d %% %s %% %.2f %% %d %% %s %% %.2f", 920, "eta", 92.01, 101, "theta", 10.12);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%d & %s & %.2f & %d & %s & %.2f", 122, "iota", 12.23, 233, "kappa", 23.34);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%d | %s | %.2f | %d | %s | %.2f", 344, "lambda", 34.45, 455, "mu", 45.56);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%d ~ %s ~ %.2f ~ %d ~ %s ~ %.2f", 566, "nu", 56.67, 677, "xi", 67.78);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%d %s %.2f %d %s %.2f", 123, "hello", 1.23, 456, "world", 4.56);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%d - %s - %.2f - %d - %s - %.2f", 789, "foo", 7.89, 101, "bar", 10.11);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%d + %s + %.2f + %d + %s + %.2f", 112, "baz", 11.12, 131, "qux", 13.14);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%d * %s * %.2f * %d * %s * %.2f", 215, "alpha", 21.52, 314, "beta", 31.45);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%d / %s / %.2f / %d / %s / %.2f", 516, "gamma", 51.67, 617, "delta", 61.78);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%d ^ %s ^ %.2f ^ %d ^ %s ^ %.2f", 718, "epsilon", 71.89, 819, "zeta", 81.90);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%d %% %s %% %.2f %% %d %% %s %% %.2f", 920, "eta", 92.01, 101, "theta", 10.12);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%d & %s & %.2f & %d & %s & %.2f", 122, "iota", 12.23, 233, "kappa", 23.34);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%d | %s | %.2f | %d | %s | %.2f", 344, "lambda", 34.45, 455, "mu", 45.56);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%d ~ %s ~ %.2f ~ %d ~ %s ~ %.2f", 566, "nu", 56.67, 677, "xi", 67.78);
 
     // Padding and alignment
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%5d", 123);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%-5d", 123);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%6d", -123);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%-6d", -123);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%s", "\n\t\"");
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%e", 123.456);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%E", 123.456);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%.3e", 123.456);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%.3E", 123.456);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%x", 123);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%X", 123);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%08x", 123);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%08X", 123);
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%5s", "hi");
-    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, FL_ARRAY_COUNTOF(GSprintfBuffer), "%-5s", "hi");
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%5d", 123);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%-5d", 123);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%6d", -123);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%-6d", -123);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%s", "\n\t\"");
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%e", 123.456);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%E", 123.456);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%.3e", 123.456);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%.3E", 123.456);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%x", 123);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%X", 123);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%08x", 123);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%08X", 123);
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%5s", "hi");
+    Formatting::TCharTraits<char>::StringPrintf(GSprintfBuffer, "%-5s", "hi");
 }
 
 #if FL_COMPILER_IS_GREATER_THAN_CXX20
@@ -182,9 +182,9 @@ void test_formatting_numeric_to_string()
 
 void test_c_sprintf_numeric_to_string()
 {
-    Formatting::TCharTraits<char>::StringPrintf(GCommonAlgorithmBuffer, FL_ARRAY_COUNTOF(GCommonAlgorithmBuffer), "%lld", -1234567890123456789LL);
-    Formatting::TCharTraits<char>::StringPrintf(GCommonAlgorithmBuffer, FL_ARRAY_COUNTOF(GCommonAlgorithmBuffer), "%llu", 1234567890123456789ULL);
-    Formatting::TCharTraits<char>::StringPrintf(GCommonAlgorithmBuffer, FL_ARRAY_COUNTOF(GCommonAlgorithmBuffer), "%.2f", 123.456);
+    Formatting::TCharTraits<char>::StringPrintf(GCommonAlgorithmBuffer, "%lld", -1234567890123456789LL);
+    Formatting::TCharTraits<char>::StringPrintf(GCommonAlgorithmBuffer, "%llu", 1234567890123456789ULL);
+    Formatting::TCharTraits<char>::StringPrintf(GCommonAlgorithmBuffer, "%.2f", 123.456);
 }
 
 BASELINE(Algorithm, StringPrintf, SamplesCount, IterationsCount)

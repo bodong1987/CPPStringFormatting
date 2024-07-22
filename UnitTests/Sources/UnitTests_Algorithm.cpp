@@ -158,7 +158,7 @@ TEST(Algorithm, TestDoubleToStringGreaterThanThresMax)
 TEST(TCharTraits, StringPrintf)
 {
     char buffer[100];
-    TCharTraits<char>::StringPrintf(buffer, FL_ARRAY_COUNTOF(buffer), "%s %d", "test", 123);
+    TCharTraits<char>::StringPrintf(buffer, "%s %d", "test", 123);
     EXPECT_STREQ(buffer, "test 123");
 
     wchar_t wbuffer[100];
@@ -169,7 +169,7 @@ TEST(TCharTraits, StringPrintf)
     const wchar_t* wFmt = L"%s %d";
 #endif
     
-    TCharTraits<wchar_t>::StringPrintf(wbuffer, FL_ARRAY_COUNTOF(wbuffer), wFmt, L"test", 123);
+    TCharTraits<wchar_t>::StringPrintf(wbuffer, wFmt, L"test", 123);
     EXPECT_EQ(std::wcscmp(wbuffer, L"test 123"), 0);
 }
 

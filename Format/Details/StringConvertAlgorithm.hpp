@@ -301,7 +301,6 @@ namespace Formatting
                 TCharType TempBuffer[64];
                 const int32_t Result = TCharTraits<TCharType>::StringPrintf(
                     TempBuffer,
-                    FL_ARRAY_COUNTOF(TempBuffer),
                     TCharTraits<TCharType>::StaticEFormat(),
                     IsNegativeValue ? -value : value
                     );

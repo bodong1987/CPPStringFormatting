@@ -32,6 +32,7 @@
 #include <Format/Details/Pattern.hpp>
 #include <Format/Common/AutoString.hpp>
 #include <Format/Common/Mpl.hpp>
+#include <Format/Common/Macros.hpp>
 
 namespace Formatting
 {
@@ -290,7 +291,7 @@ namespace Formatting
 
                     // format by sprintf
                     CharType TempBuf[64];
-                    size_t bufLength = CharTraits::StringPrintf(TempBuf, FL_ARRAY_COUNTOF(TempBuf), FmtBuf, arg);
+                    size_t bufLength = CharTraits::StringPrintf(TempBuf, FmtBuf, arg);
 
                     // process alignment.
                     const CharType* plusPos = CharTraits::rFind(TempBuf, eFlagChar);

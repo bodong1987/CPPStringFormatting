@@ -35,8 +35,6 @@
 #else
 // assume your platform support posix thread library
 #include <pthread.h>
-#include <unistd.h>
-#include <sys/types.h>
 #endif
 
 namespace Formatting

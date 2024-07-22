@@ -9,7 +9,6 @@
 #pragma warning(pop)
 #endif
 
-#include <Format/Format.hpp>
 #include <Format/StandardLibraryAdapter.hpp>
 
 using namespace Formatting;
@@ -386,9 +385,9 @@ TEST(Format, TestPointer)
         char szText[64] = {0};
 
 #if FL_COMPILER_GCC
-        TCharTraits<char>::StringPrintf(szText, FL_ARRAY_COUNTOF(szText), "0x%016lX", intPtr);
+        TCharTraits<char>::StringPrintf(szText,  "0x%016lX", intPtr);
 #else
-        TCharTraits<char>::StringPrintf(szText, FL_ARRAY_COUNTOF(szText), "0x%p", intPtr);
+        TCharTraits<char>::StringPrintf(szText, "0x%p", intPtr);
 #endif
     
         EXPECT_EQ(StandardLibrary::Format("0x{0:X}", intPtr), szText);
@@ -403,9 +402,9 @@ TEST(Format, TestPointer)
         wchar_t szText[64] = {0};
 
 #if FL_COMPILER_GCC
-        TCharTraits<wchar_t>::StringPrintf(szText, FL_ARRAY_COUNTOF(szText), L"0x%016lX", intPtr);
+        TCharTraits<wchar_t>::StringPrintf(szText, L"0x%016lX", intPtr);
 #else
-        TCharTraits<wchar_t>::StringPrintf(szText, FL_ARRAY_COUNTOF(szText), L"0x%p", intPtr);
+        TCharTraits<wchar_t>::StringPrintf(szText, L"0x%p", intPtr);
 #endif
     
         EXPECT_EQ(StandardLibrary::Format(L"0x{0:X}", intPtr), szText);

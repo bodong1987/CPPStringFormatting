@@ -42,6 +42,7 @@ namespace Formatting
     };
 
     // ReSharper disable once CppRedundantAccessSpecifier
+    // ReSharper disable once CppDeprecatedEntity
     template <>
     class TCharTraits<char> : public std::char_traits<char>
     {
@@ -116,6 +117,23 @@ namespace Formatting
             result = _vsprintf_s_l(string, sizeInBytes, format, nullptr, arglist);
 #else
             result = vsnprintf(string, sizeInBytes, format, arglist);
+#endif
+            va_end(arglist);
+
+            return result;
+        }
+
+        template <size_t N>
+        static int32_t StringPrintf(char (&string)[N], const char* format, ...)
+        {
+            va_list arglist; // NOLINT
+            va_start(arglist, format);
+
+            int result;
+#if FL_COMPILER_MSVC
+            result = _vsprintf_s_l(string, N, format, nullptr, arglist);
+#else
+            result = vsnprintf(string, N, format, arglist);
 #endif
             va_end(arglist);
 
@@ -299,6 +317,7 @@ namespace Formatting
     };
 
     // ReSharper disable once CppRedundantAccessSpecifier
+    // ReSharper disable once CppDeprecatedEntity
     template <>
     class TCharTraits<wchar_t> : public std::char_traits<wchar_t>
     {
@@ -376,6 +395,27 @@ namespace Formatting
             result = vswprintf(string, format, arglist);
 #else
             result = vswprintf(string, sizeInWords, format, arglist);
+#endif
+            va_end(arglist);
+
+            return result;
+        }
+
+        template <size_t N>
+        static int32_t StringPrintf(wchar_t (&string)[N], const wchar_t* format, ...)
+        {
+            va_list arglist; // NOLINT
+
+            va_start(arglist, format);
+
+            int result;
+
+#if FL_COMPILER_MSVC
+            result = _vswprintf_s_l(string, N, format, nullptr, arglist);
+#elif FL_COMPILER_GCC && FL_PLATFORM_WINDOWS
+            result = vswprintf(string, N, arglist);
+#else
+            result = vswprintf(string, N, format, arglist);
 #endif
             va_end(arglist);
 
@@ -574,11 +614,13 @@ namespace Formatting
 
         inline FL_CONSTEXPR17 size_t LengthOf(const wchar_t* rawString)
         {
+            // ReSharper disable once CppDeprecatedEntity
             return std::char_traits<wchar_t>::length(rawString);
         }
 
         inline FL_CONSTEXPR17 size_t LengthOf(const char* rawString)
         {
+            // ReSharper disable once CppDeprecatedEntity
             return std::char_traits<char>::length(rawString);
         }
 
@@ -610,6 +652,7 @@ namespace Formatting
 
         inline FL_CONSTEXPR17 size_t LengthOf(const char16_t* rawString)
         {
+            // ReSharper disable once CppDeprecatedEntity
             return std::char_traits<char16_t>::length(rawString);
         }
 
@@ -630,6 +673,7 @@ namespace Formatting
 
         inline FL_CONSTEXPR17 size_t LengthOf(const char32_t* rawString)
         {
+            // ReSharper disable once CppDeprecatedEntity
             return std::char_traits<char32_t>::length(rawString);
         }
 

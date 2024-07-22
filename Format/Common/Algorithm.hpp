@@ -32,6 +32,7 @@
 #include <Format/Common/Mpl.hpp>
 #endif
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <algorithm>
 
 namespace Formatting
