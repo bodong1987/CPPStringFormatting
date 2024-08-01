@@ -60,12 +60,6 @@
 
 //#pragma message( FL_PP_TEXT(FL_PP_REPEAT(FL_FORMAT_TO_INDEX, FL_TEMPLATE_PARAMETERS_BODY, )))
 
-// These two macros can reduce false positives during static code scanning
-#ifndef FL_FORMAT_TO_INDEX
-#define FL_PP_COMMA_IF(...) 
-#define FL_PP_REPEAT(n,m,d)
-#endif
-
 /*
 * base iterate function 
 * used to generate the real function for Format...
