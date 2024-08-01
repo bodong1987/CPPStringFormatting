@@ -26,14 +26,11 @@
 
 // ReSharper disable All
 // Internal Use
-#ifndef FL_FORMAT_TO_INDEX
-#error "This is an internally used file, please do not include this file directly" 
-#endif
-
 #if FL_COMPILER_IS_GREATER_THAN_CXX11
-#error "This file is prepared to support versions of the C++ standard earlier than C++11. If your compiler already supports C++11 or newer, you should no longer use this set of code."
+#error "This file is prepared to support the C++ standard versions which are earlier than C++11. If your compiler already supports C++11 or newer, you should no longer use this set of code."
 #endif
 
+#ifdef FL_FORMAT_TO_INDEX
 #define FL_TEMPLATE_PARAMETERS_BODY( d, i ) \
     FL_PP_COMMA_IF(i) typename FL_PP_CAT( T, i )
 
@@ -188,4 +185,7 @@ inline TAutoString<TCharType>& FormatTo(
 #undef FL_TEMPLATE_PARAMETERS_BODY
 #undef FL_REAL_ARGUMENT_BODY
 #undef FL_TRANSFER_BODY
+#else
+#pragma warning("This is an internally used file, please do not include this file directly")
+#endif
 // ReSharper restore All
