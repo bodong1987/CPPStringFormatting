@@ -186,6 +186,6 @@ inline TAutoString<TCharType>& FormatTo(
 #undef FL_REAL_ARGUMENT_BODY
 #undef FL_TRANSFER_BODY
 #else
-#pragma warning("This is an internally used file, please do not include this file directly")
+#pragma message("This is an internally used file, please do not include this file directly")
 #endif
 // ReSharper restore All
