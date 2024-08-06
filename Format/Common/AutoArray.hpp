@@ -388,20 +388,27 @@ namespace Formatting
 		    AllocatedCount = Count;
 		}
 
+        // ReSharper disable IdentifierTypo
+        // ReSharper disable CppInconsistentNaming
+        typedef T*                              iterator;
+        typedef const T*                        const_iterator;
+        typedef std::reverse_iterator<T*>       reverse_iterator;
+        typedef std::reverse_iterator<const T*> const_reverse_iterator;
+        
         // support range based for
         T* begin() { return GetDataPtr(); }
         const T* begin() const { return GetDataPtr(); }
 
         T* end() { return GetDataPtr() + GetLength(); }
         const T* end() const { return GetDataPtr() + GetLength(); }
-
-        // ReSharper disable once IdentifierTypo
-        std::reverse_iterator<T*> rbegin() { return std::reverse_iterator<T*>(end()); }
-        // ReSharper disable once IdentifierTypo
+        
+        std::reverse_iterator<T*> rbegin() { return std::reverse_iterator<T*>(end()); }        
         std::reverse_iterator<const T*> rbegin() const { return std::reverse_iterator<const T*>(end()); }
 
         std::reverse_iterator<T*> rend() { return std::reverse_iterator<T*>(begin()); }
         std::reverse_iterator<const T*> rend() const { return std::reverse_iterator<const T*>(begin()); }
+        // ReSharper restore IdentifierTypo
+        // ReSharper restore CppInconsistentNaming
 
     protected:
         void InitialMoveDataToHeap(const size_t initLength = DEFAULT_LENGTH * 2)

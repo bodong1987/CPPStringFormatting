@@ -176,7 +176,7 @@ TEST(TAutoArray, BeginEnd)
     }
 
     int index = 0;
-    for (auto it = array.begin(); it != array.end(); ++it)
+    for (TAutoArray<int, 0xF>::iterator it = array.begin(); it != array.end(); ++it)
     {
         EXPECT_EQ(*it, index);
         ++index;
@@ -193,7 +193,7 @@ TEST(TAutoArray, RBeginREnd)
     }
 
     int index = 99;
-    for (auto it = array.rbegin(); it != array.rend(); ++it)
+    for (TAutoArray<int, 0xF>::reverse_iterator it = array.rbegin(); it != array.rend(); ++it)
     {
         EXPECT_EQ(*it, index);
         --index;
@@ -332,7 +332,7 @@ TEST(TAutoString, BeginEnd)
     const char* expected = "Hello, World!";
     int index = 0;
 
-    for (auto it = str.begin(); it != str.end(); ++it)
+    for (TAutoString<char>::iterator it = str.begin(); it != str.end(); ++it)
     {
         EXPECT_EQ(*it, expected[index]);
         ++index;
@@ -346,7 +346,7 @@ TEST(TAutoString, RBeginREnd)
     const char* expected = "!dlroW ,olleH";
     int index = 0;
 
-    for (auto it = str.rbegin(); it != str.rend(); ++it)
+    for (TAutoString<char>::reverse_iterator it = str.rbegin(); it != str.rend(); ++it)
     {
         EXPECT_EQ(*it, expected[index]);
         ++index;
