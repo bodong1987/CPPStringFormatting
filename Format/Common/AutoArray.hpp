@@ -388,6 +388,21 @@ namespace Formatting
 		    AllocatedCount = Count;
 		}
 
+        // support range based for
+        T* begin() { return GetDataPtr(); }
+        const T* begin() const { return GetDataPtr(); }
+
+        T* end() { return GetDataPtr() + GetLength(); }
+        const T* end() const { return GetDataPtr() + GetLength(); }
+
+        // ReSharper disable once IdentifierTypo
+        std::reverse_iterator<T*> rbegin() { return std::reverse_iterator<T*>(end()); }
+        // ReSharper disable once IdentifierTypo
+        std::reverse_iterator<const T*> rbegin() const { return std::reverse_iterator<const T*>(end()); }
+
+        std::reverse_iterator<T*> rend() { return std::reverse_iterator<T*>(begin()); }
+        std::reverse_iterator<const T*> rend() const { return std::reverse_iterator<const T*>(begin()); }
+
     protected:
         void InitialMoveDataToHeap(const size_t initLength = DEFAULT_LENGTH * 2)
         {

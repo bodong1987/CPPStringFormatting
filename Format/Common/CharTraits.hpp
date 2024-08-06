@@ -413,7 +413,7 @@ namespace Formatting
 #if FL_COMPILER_MSVC
             result = _vswprintf_s_l(string, N, format, nullptr, arglist);
 #elif FL_COMPILER_GCC && FL_PLATFORM_WINDOWS
-            result = vswprintf(string, N, arglist);
+            result = vswprintf(string, format, arglist);
 #else
             result = vswprintf(string, N, format, arglist);
 #endif

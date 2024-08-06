@@ -167,6 +167,59 @@ TEST(TAutoArray, Shrink)
     }
 }
 
+TEST(TAutoArray, BeginEnd)
+{
+    TAutoArray<int, 0xF> array;
+    for (int i = 0; i < 100; ++i)
+    {
+        array.AddItem(i);
+    }
+
+    int index = 0;
+    for (auto it = array.begin(); it != array.end(); ++it)
+    {
+        EXPECT_EQ(*it, index);
+        ++index;
+    }
+    EXPECT_EQ(index, 100);
+}
+
+TEST(TAutoArray, RBeginREnd)
+{
+    TAutoArray<int, 0xF> array;
+    for (int i = 0; i < 100; ++i)
+    {
+        array.AddItem(i);
+    }
+
+    int index = 99;
+    for (auto it = array.rbegin(); it != array.rend(); ++it)
+    {
+        EXPECT_EQ(*it, index);
+        --index;
+    }
+    EXPECT_EQ(index, -1);
+}
+
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
+TEST(TAutoArray, RangeBasedFor)
+{
+    TAutoArray<int, 0xF> array;
+    for (int i = 0; i < 100; ++i)
+    {
+        array.AddItem(i);
+    }
+
+    int index = 0;
+    for (const auto& item : array)
+    {
+        EXPECT_EQ(item, index);
+        ++index;
+    }
+    EXPECT_EQ(index, 100);
+}
+#endif
+
 TEST(TAutoString, DefaultConstructor)
 {
     TAutoString<char> str;
@@ -272,3 +325,47 @@ TEST(TAutoString, Clear)
     EXPECT_TRUE(str.IsEmpty());
     EXPECT_STREQ(str.CStr(), L"");
 }
+
+TEST(TAutoString, BeginEnd)
+{
+    TAutoString<char> str("Hello, World!");
+    const char* expected = "Hello, World!";
+    int index = 0;
+
+    for (auto it = str.begin(); it != str.end(); ++it)
+    {
+        EXPECT_EQ(*it, expected[index]);
+        ++index;
+    }
+    EXPECT_EQ(index, strlen(expected));
+}
+
+TEST(TAutoString, RBeginREnd)
+{
+    TAutoString<char> str("Hello, World!");
+    const char* expected = "!dlroW ,olleH";
+    int index = 0;
+
+    for (auto it = str.rbegin(); it != str.rend(); ++it)
+    {
+        EXPECT_EQ(*it, expected[index]);
+        ++index;
+    }
+    EXPECT_EQ(index, strlen(expected));
+}
+
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
+TEST(TAutoString, RangeBasedFor)
+{
+    TAutoString<char> str("Hello, World!");
+    const char* expected = "Hello, World!";
+    int index = 0;
+
+    for (const auto& ch : str)
+    {
+        EXPECT_EQ(ch, expected[index]);
+        ++index;
+    }
+    EXPECT_EQ(index, strlen(expected));
+}
+#endif
