@@ -317,5 +317,10 @@ namespace Formatting
         {
             Super::AddItem(value);
         }
+
+        void AddItems(const TCharType* items, size_t length)
+        {
+            AddStr(items, length);
+        }
     };
 }

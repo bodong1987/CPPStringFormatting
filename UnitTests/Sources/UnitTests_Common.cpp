@@ -81,6 +81,71 @@ TEST(TAutoArray, ExpandHeapSpace)
     }
 }
 
+TEST(TAutoArray, AddItems)
+{
+    TAutoArray<int> array;
+    constexpr int itemCount = 1000;
+    int items[itemCount];
+
+    // Initialize items array
+    for (int i = 0; i < itemCount; ++i)
+    {
+        items[i] = i;
+    }
+
+    // Add range of items
+    array.AddItems(items, itemCount);
+
+    // Verify the length of the array
+    EXPECT_EQ(array.GetLength(), itemCount);
+
+    // Verify the contents of the array
+    for (int i = 0; i < itemCount; ++i)
+    {
+        EXPECT_EQ(array[i], items[i]);
+    }
+}
+
+TEST(TAutoArray, AddItemsMoreComplex)
+{
+    TAutoArray<int> array;
+    constexpr int itemCount0 = 128; 
+    constexpr int itemCount1 = 10000;
+    int items0[itemCount0];
+    int items1[itemCount1];
+
+    // Initialize items array
+    // ReSharper disable once CppUseStdSize
+    for (int i = 0; i < FL_ARRAY_COUNTOF(items0); ++i)  // NOLINT(clang-diagnostic-sign-compare)
+    {
+        items0[i] = i;
+    }
+
+    // ReSharper disable once CppUseStdSize
+    for (int i = 0; i < FL_ARRAY_COUNTOF(items1); ++i)  // NOLINT(clang-diagnostic-sign-compare)
+    {
+        items1[i] = i;
+    }
+
+    // Add range of items
+    array.AddItems(items0, itemCount0);
+    array.AddItems(items1, itemCount1);
+
+    // Verify the length of the array
+    EXPECT_EQ(array.GetLength(), itemCount0 + itemCount1);
+
+    // Verify the contents of the array
+    for (int i = 0; i < itemCount0; ++i)
+    {
+        EXPECT_EQ(array[i], items0[i]);
+    }
+
+    for (int i = itemCount0; i < itemCount0 + itemCount1; ++i)
+    {
+        EXPECT_EQ(array[i], items1[i - itemCount0]);
+    }
+}
+
 TEST(TAutoArray, Shrink)
 {
     TAutoArray<int, 0xF> array;

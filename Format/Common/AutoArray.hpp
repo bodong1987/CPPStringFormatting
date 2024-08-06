@@ -228,7 +228,7 @@ namespace Formatting
             return HeapValPtr == nullptr;
         }
                 
-        void  AddItem(const T& value)
+        void AddItem(const T& value)
         {
             if (IsDataOnStack())
             {
@@ -260,7 +260,7 @@ namespace Formatting
                 }
                 else
                 {
-                    ExpandHeapSpace();
+                    ExpandHeapSpace(AllocatedCount * 2);
 
                     assert(Count < AllocatedCount);
                     HeapValPtr[Count] = value;
@@ -268,6 +268,45 @@ namespace Formatting
                 }
             }
         }
+
+        void AddItems(const T* items, size_t length)
+		{
+		    assert(items != nullptr);
+
+		    const size_t TargetCount = Count + length;
+		    
+		    if(IsDataOnStack())
+		    {
+		        if(TargetCount < DEFAULT_LENGTH)
+		        {
+		            Algorithm::CopyArray(items, items + length, StackVal + Count);		            
+		        }
+                else
+                {
+                    InitialMoveDataToHeap(TargetCount);
+
+                    assert(HeapValPtr != nullptr);
+                    assert(TargetCount <= AllocatedCount);
+                    
+                    Algorithm::CopyArray(items, items + length, HeapValPtr + Count);
+                }
+		    }
+            else
+            {
+                if(TargetCount < AllocatedCount)
+                {
+                    Algorithm::CopyArray(items, items + length, HeapValPtr + Count);
+                }
+                else
+                {
+                    ExpandHeapSpace(TargetCount + 0xF);
+
+                    Algorithm::CopyArray(items, items + length, HeapValPtr + Count);
+                }
+            }
+
+		    Count = TargetCount;
+		}
 
         size_t GetLength() const
         {
@@ -350,11 +389,11 @@ namespace Formatting
 		}
 
     protected:
-        void  InitialMoveDataToHeap()
+        void InitialMoveDataToHeap(const size_t initLength = DEFAULT_LENGTH * 2)
         {
             assert(HeapValPtr == nullptr);
 
-            AllocatedCount = DEFAULT_LENGTH * 2;
+            AllocatedCount = initLength;
 
             HeapValPtr = Allocate(AllocatedCount);
 
@@ -365,9 +404,9 @@ namespace Formatting
 #endif
         }
 
-        void  ExpandHeapSpace()
+        void ExpandHeapSpace(const size_t newCount)
         {
-            const size_t NewCount = AllocatedCount * 2;
+            const size_t NewCount = newCount <= AllocatedCount ? AllocatedCount * 2 : newCount;
             assert(NewCount > AllocatedCount);
 
             T* DataPtr = Allocate(NewCount);
@@ -388,7 +427,7 @@ namespace Formatting
             AllocatedCount = NewCount;
         }
 
-        void  ReleaseHeapData()
+        void ReleaseHeapData()
         {
             if (HeapValPtr)
             {
