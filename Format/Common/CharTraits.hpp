@@ -47,6 +47,7 @@ namespace Formatting
     class TCharTraits<char> : public std::char_traits<char>
     {
     private:
+        // ReSharper disable once CommentTypo
         // NOLINTBEGIN
         static const char* strrstr(const char* haystack, const char* needle)
         {
@@ -99,6 +100,7 @@ namespace Formatting
             }
             return s;
         }
+        // ReSharper disable once CommentTypo
         // NOLINTEND
 
     public:
@@ -233,6 +235,7 @@ namespace Formatting
             return (char*)memset(dest, val, length); // NOLINT
         }
 
+        // ReSharper disable once CommentTypo
         // NOLINTBEGIN
         static int IsAlnum(char ch)
         {
@@ -298,6 +301,7 @@ namespace Formatting
         {
             return toupper(ch);
         }
+        // ReSharper disable once CommentTypo
         // NOLINTEND
 
         constexpr static char GetSpace()
@@ -322,6 +326,7 @@ namespace Formatting
     class TCharTraits<wchar_t> : public std::char_traits<wchar_t>
     {
     private:
+        // ReSharper disable once CommentTypo
         // NOLINTBEGIN
         static const wchar_t* wcsrstr(const wchar_t* haystack, const wchar_t* needle)
         {
@@ -374,6 +379,7 @@ namespace Formatting
             }
             return s;
         }
+        // ReSharper disable once CommentTypo
         // NOLINTEND
     public:
         static int32_t StringPrintf(
@@ -687,6 +693,49 @@ namespace Formatting
         {
             return str.size();
         }
+
+#if FL_COMPILER_IS_GREATER_THAN_CXX17
+        inline FL_CONSTEXPR20 const char* PtrOf(const std::basic_string_view<char>& str)
+        {
+            return str.data();
+        }
+
+        inline FL_CONSTEXPR17 size_t LengthOf(const std::basic_string_view<char>& str)
+        {
+            return str.size();
+        }
+
+        inline FL_CONSTEXPR20 const wchar_t* PtrOf(const std::basic_string_view<wchar_t>& str)
+        {
+            return str.data();
+        }
+
+        inline FL_CONSTEXPR17 size_t LengthOf(const std::basic_string_view<wchar_t>& str)
+        {
+            return str.size();
+        }
+
+        inline FL_CONSTEXPR20 const char16_t* PtrOf(const std::basic_string_view<char16_t>& str)
+        {
+            return str.data();
+        }
+
+        inline FL_CONSTEXPR17 size_t LengthOf(const std::basic_string_view<char16_t>& str)
+        {
+            return str.size();
+        }
+
+        inline FL_CONSTEXPR20 const char32_t* PtrOf(const std::basic_string_view<char32_t>& str)
+        {
+            return str.data();
+        }
+
+        inline FL_CONSTEXPR17 size_t LengthOf(const std::basic_string_view<char32_t>& str)
+        {
+            return str.size();
+        }
 #endif
+        
+#endif     
     }
 }

@@ -204,17 +204,12 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                 // ReSharper disable once CppTooWideScopeInitStatement
                 const typename TPatternListType::ConstIterator::ValueType& Pattern = *Iter;
 
-                if (Pattern.Flag == EFormatFlag::Raw)
+                if (Pattern.Flag == EFormatFlag::Raw ||
+                    !Utils::DoTransfer<TCharType, typename TPatternListType::ConstIterator::ValueType, 0, T...>(sink, Pattern, format, args...)
+                    )
                 {
                     TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
-                }
-                else
-                {
-                    if (!Utils::DoTransfer<TCharType, typename TPatternListType::ConstIterator::ValueType, 0, T...>(sink, Pattern, format, args...))
-                    {
-                        TRawTranslator<TCharType>::Transfer(sink, Pattern, format);
-                    }
-                }
+                }                
 
                 Iter.Next();
             }

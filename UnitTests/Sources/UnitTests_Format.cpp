@@ -38,6 +38,12 @@ TEST(Format, STL_Char_Format)
     const std::string r6 = StandardLibrary::Format("0x{0:x}", 100, (unsigned long)(100));
     EXPECT_EQ(r6, "0x64");
 
+#if FL_COMPILER_IS_GREATER_THAN_CXX17
+    std::string_view v0 = "2048";
+    std::string r7 = StandardLibrary::Format("Hello Formatting {0}", v0);
+    EXPECT_EQ(r7, "Hello Formatting 2048");
+#endif
+    
     // gen compile error
     //StandardLibrary::Format("{0}", std::wstring(L"x"));
 }
@@ -141,6 +147,12 @@ TEST(Format, STL_WChar_Format)
 
     const std::wstring r11 = StandardLibrary::Format(L"\u4F60\u597D : {0}", L"\u4E2D\u6587");
     EXPECT_EQ(r11, L"\u4F60\u597D : \u4E2D\u6587");
+
+#if FL_COMPILER_IS_GREATER_THAN_CXX17
+    constexpr std::wstring_view v0 = L"2048";
+    const std::wstring r12 = StandardLibrary::Format(L"Hello Formatting {0}", v0);
+    EXPECT_EQ(r12, L"Hello Formatting 2048");
+#endif
 }
 
 TEST(Format, STL_WChar_FormatTo)

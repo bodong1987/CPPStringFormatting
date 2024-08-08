@@ -32,6 +32,8 @@
 #include <Format/Details/Pattern.hpp>
 #include <Format/Common/AutoString.hpp>
 #include <Format/Common/Mpl.hpp>
+
+// ReSharper disable once CppUnusedIncludeDirective
 #include <Format/Common/Macros.hpp>
 
 // ReSharper disable once CppEnforceNestedNamespacesStyle

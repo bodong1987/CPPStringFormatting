@@ -41,11 +41,13 @@
     FL_PP_CAT(Prefix, FL_PP_CAT(_, __LINE__))
 
 // support not
+// ReSharper disable once CommentTypo
 // NOLINTBEGIN
 #define FL_PP_COMPL_0 1
 #define FL_PP_COMPL_1 0
 #define _FL_PP_NOT(Expr) FL_PP_CAT(FL_PP_COMPL_, FL_PP_BOOL(Expr))
 #define FL_PP_NOT(Expr) _FL_PP_NOT(Expr)
+// ReSharper disable once CommentTypo
 // NOLINTEND
 
 // Bool
@@ -53,6 +55,7 @@
 
 #define FL_PP_BOOL_I(x) FL_PP_BOOL_ ## x
 
+// ReSharper disable once CommentTypo
 // NOLINTBEGIN
 #define FL_PP_BOOL_0 0
 #define FL_PP_BOOL_1 1
@@ -71,6 +74,7 @@
 #define FL_PP_BOOL_14 1
 #define FL_PP_BOOL_15 1
 #define FL_PP_BOOL_16 1
+// ReSharper disable once CommentTypo
 // NOLINTEND
 
 // Simple If

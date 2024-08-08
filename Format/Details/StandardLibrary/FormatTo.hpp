@@ -49,6 +49,24 @@ namespace Formatting
                 return true;
             }
         };
+
+#if FL_COMPILER_IS_GREATER_THAN_CXX17
+        // make a specialization of std::basic_string_view
+        template < typename TCharType >
+        class TTranslator< TCharType, std::basic_string_view<TCharType> >
+            : public TTranslatorBase< TCharType, std::basic_string_view<TCharType> >
+        {
+        public:
+            typedef TTranslatorBase< TCharType, std::basic_string_view<TCharType> >      Super;
+
+            static bool Transfer(typename Super::StringType& s, const typename Super::FormatPattern& /*Pattern*/, const std::basic_string_view<TCharType>& arg)
+            {
+                s.AddStr(arg.data(), arg.size());
+
+                return true;
+            }
+        };
+#endif
     }
 
     namespace StandardLibrary
