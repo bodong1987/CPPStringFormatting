@@ -272,5 +272,12 @@ typedef unsigned int long long uint64_t;
 #define FL_NO_DISCARD
 #endif
 
+// unused parameter
+#if FL_COMPILER_MSVC
+#define FL_UNREFERENCED_PARAMETER(P) (void)(P)
+#else
+#define FL_UNREFERENCED_PARAMETER(p) (void)(p)
+#endif
+
 // ReSharper disable once CommentTypo
 // NOLINTEND
