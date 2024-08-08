@@ -18,7 +18,7 @@
 using namespace Formatting;
 using Clock = std::chrono::high_resolution_clock;
 
-//#define TEST_FORMAT_TO
+#define TEST_FORMAT_TO
 #define TEST_FORMAT_TO_MACROS
 //#define TEST_E_FORMAT
 
