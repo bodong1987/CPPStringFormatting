@@ -35,7 +35,8 @@
 // ReSharper disable once CppUnusedIncludeDirective
 #include <algorithm>
 
-namespace Formatting
+// ReSharper disable once CppEnforceNestedNamespacesStyle
+namespace Formatting // NOLINT(*-concat-nested-namespaces)
 {
     namespace Algorithm
     {

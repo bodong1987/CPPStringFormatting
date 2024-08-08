@@ -196,6 +196,8 @@ namespace Formatting
             const CharType fillChar
             )
         {
+            assert(bufferPtr != nullptr);
+
             const int PaddingCount = static_cast<int>(targetLength - length);
             CharType* const StartPos = bufferPtr + Count;
             
@@ -318,7 +320,7 @@ namespace Formatting
             Super::AddItem(value);
         }
 
-        void AddItems(const TCharType* items, size_t length)
+        void AddItems(const TCharType* items, const size_t length)
         {
             AddStr(items, length);
         }

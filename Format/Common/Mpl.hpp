@@ -40,7 +40,8 @@
 // ReSharper restore CppUnusedIncludeDirective
 #endif // FL_COMPILER_GCC
 
-namespace Formatting
+// ReSharper disable once CppEnforceNestedNamespacesStyle
+namespace Formatting // NOLINT(*-concat-nested-namespaces)
 {
     namespace Mpl
     {

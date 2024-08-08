@@ -29,7 +29,8 @@
 
 #include <Format/Details/Pattern.hpp>
 
-namespace Formatting
+// ReSharper disable once CppEnforceNestedNamespacesStyle
+namespace Formatting // NOLINT(*-concat-nested-namespaces)
 {
     namespace Details
     {
@@ -537,6 +538,7 @@ namespace Formatting
                 {
                     state = EParseState::Literal;
 
+                    // ReSharper disable once CppTooWideScopeInitStatement
                     FormatPattern pattern;
 
                     if (ParseParameter(p0, p1, pattern))
@@ -602,6 +604,7 @@ namespace Formatting
                         break;
                     default: 
                         assert(false && "unsupported state!");
+                    // ReSharper disable once CppDFAUnreachableCode
                         break;
                     }
                 }

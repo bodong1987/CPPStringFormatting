@@ -34,7 +34,8 @@
 #include <Format/Common/Mpl.hpp>
 #include <Format/Common/Macros.hpp>
 
-namespace Formatting
+// ReSharper disable once CppEnforceNestedNamespacesStyle
+namespace Formatting // NOLINT(*-concat-nested-namespaces)
 {
     namespace Details
     {
@@ -568,7 +569,7 @@ namespace Formatting
                 assert(pattern.Len > 0 && "invalid parameters!!!");
 
                 const bool bHex = pattern.Flag == EFormatFlag::Hex || pattern.Flag == EFormatFlag::None;
-                const size_t arg = reinterpret_cast<size_t>(ptr);
+                const size_t arg = reinterpret_cast<size_t>(ptr); // NOLINT(*-use-auto)
                 
                 CharType TempBuf[32];
                 const CharType* const Result = bHex ?

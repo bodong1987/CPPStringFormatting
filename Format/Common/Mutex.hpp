@@ -37,7 +37,8 @@
 #include <pthread.h>
 #endif
 
-namespace Formatting
+// ReSharper disable once CppEnforceNestedNamespacesStyle
+namespace Formatting // NOLINT(*-concat-nested-namespaces)
 {
     namespace Details
     {

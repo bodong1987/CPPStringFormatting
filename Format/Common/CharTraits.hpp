@@ -392,6 +392,7 @@ namespace Formatting
 #if FL_COMPILER_MSVC
             result = _vswprintf_s_l(string, sizeInWords, format, nullptr, arglist);
 #elif FL_COMPILER_GCC && FL_PLATFORM_WINDOWS
+            FL_UNREFERENCED_PARAMETER(sizeInWords);
             result = vswprintf(string, format, arglist);
 #else
             result = vswprintf(string, sizeInWords, format, arglist);

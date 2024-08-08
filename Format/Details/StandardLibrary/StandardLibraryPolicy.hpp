@@ -34,8 +34,10 @@
 #include <map>
 #endif
 
-namespace Formatting
+// ReSharper disable once CppEnforceNestedNamespacesStyle
+namespace Formatting // NOLINT(*-concat-nested-namespaces)
 {
+    // ReSharper disable once CppEnforceNestedNamespacesStyle
     namespace Details
     {
         namespace StandardLibrary

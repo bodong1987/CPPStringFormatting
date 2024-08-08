@@ -35,7 +35,8 @@
 #include <Format/Common/Mpl.hpp>
 #include "Format/Common/Algorithm.hpp"
 
-namespace Formatting
+// ReSharper disable once CppEnforceNestedNamespacesStyle
+namespace Formatting // NOLINT(*-concat-nested-namespaces)
 {
     namespace Details
     {
@@ -321,13 +322,13 @@ namespace Formatting
             *Str-- = TCharTraits<TCharType>::GetEndFlag();
 
             // Get the integer part
-            int32_t Whole = static_cast<int32_t>(value);
+            int32_t Whole = static_cast<int32_t>(value); // NOLINT(*-use-auto)
 
             // Calculate the fractional part
             const double tmp = (value - Whole) * Pow10[precision];
 
             // Get the fractional part
-            uint32_t Frace = static_cast<uint32_t>(tmp);
+            uint32_t Frace = static_cast<uint32_t>(tmp); // NOLINT(*-use-auto)
 
             // Calculate the difference
             double DiffValue = tmp - Frace;

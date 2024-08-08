@@ -29,7 +29,8 @@
 #include <Format/Details/Translators.hpp>
 #include <Format/Common/Mpl.hpp>
 
-namespace Formatting
+// ReSharper disable once CppEnforceNestedNamespacesStyle
+namespace Formatting // NOLINT(*-concat-nested-namespaces)
 {
     namespace Details
     {
@@ -200,6 +201,7 @@ namespace Formatting
 
             while (Iter.IsValid())
             {
+                // ReSharper disable once CppTooWideScopeInitStatement
                 const typename TPatternListType::ConstIterator::ValueType& Pattern = *Iter;
 
                 if (Pattern.Flag == EFormatFlag::Raw)

@@ -281,7 +281,7 @@ namespace Formatting
 		        {
 		            Algorithm::CopyArray(items, items + length, StackVal + Count);		            
 		        }
-                else
+		        else
                 {
                     InitialMoveDataToHeap(TargetCount);
 
@@ -291,7 +291,7 @@ namespace Formatting
                     Algorithm::CopyArray(items, items + length, HeapValPtr + Count);
                 }
 		    }
-            else
+		    else
             {
                 if(TargetCount < AllocatedCount)
                 {
@@ -308,12 +308,12 @@ namespace Formatting
 		    Count = TargetCount;
 		}
 
-        size_t GetLength() const
+        FL_NO_DISCARD size_t GetLength() const
         {
             return Count;
         }
 
-        size_t GetAllocatedCount() const
+        FL_NO_DISCARD size_t GetAllocatedCount() const
         {
             return AllocatedCount;
         }

@@ -28,7 +28,8 @@
 #include <Format/Details/PatternParser.hpp>
 #include <Format/Common/Mutex.hpp>
 
-namespace Formatting
+// ReSharper disable once CppEnforceNestedNamespacesStyle
+namespace Formatting // NOLINT(*-concat-nested-namespaces)
 {
     namespace Details
     {
@@ -82,6 +83,7 @@ namespace Formatting
 
                 assert(false && "invalid format expression!");
 
+                // ReSharper disable once CppDFAUnreachableCode
                 throw ExceptionType("invalid format expression!");
 
                 // return nullptr;

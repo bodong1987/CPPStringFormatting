@@ -31,7 +31,7 @@
 #include <Format/Common/Mpl.hpp>
 #endif
 
-namespace Formatting
+namespace Formatting // NOLINT(*-concat-nested-namespaces)
 {
     namespace Details
     {
@@ -113,7 +113,7 @@ namespace Formatting
             /// Gets the length.
             /// </summary>
             /// <returns>SizeType.</returns>
-            SizeType  GetLength() const
+            FL_NO_DISCARD SizeType  GetLength() const
             {
                 return Len;
             }
@@ -122,7 +122,7 @@ namespace Formatting
             /// Returns true if ... is valid.
             /// </summary>
             /// <returns>bool.</returns>
-            bool    IsValid() const
+            FL_NO_DISCARD bool    IsValid() const
             {
                 return Start != -1 && Len != -1 && Index != -1;
             }
@@ -131,7 +131,7 @@ namespace Formatting
             /// Determines whether this instance has width.
             /// </summary>
             /// <returns>bool.</returns>
-            bool    HasWidth() const
+            FL_NO_DISCARD bool    HasWidth() const
             {
                 return Width != static_cast<ByteType>(-1);
             }
@@ -140,7 +140,7 @@ namespace Formatting
             /// Determines whether this instance has precision.
             /// </summary>
             /// <returns>bool.</returns>
-            bool    HasPrecision() const
+            FL_NO_DISCARD bool    HasPrecision() const
             {
                 return Precision != static_cast<ByteType>(-1);
             }

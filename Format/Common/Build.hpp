@@ -266,5 +266,11 @@ typedef unsigned int long long uint64_t;
 #error "can't find C++ compiler version."
 #endif
 
+#if FL_COMPILER_IS_GREATER_THAN_CXX17
+#define FL_NO_DISCARD [[nodiscard]]
+#else
+#define FL_NO_DISCARD
+#endif
+
 // ReSharper disable once CommentTypo
 // NOLINTEND
