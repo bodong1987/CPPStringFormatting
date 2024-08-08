@@ -84,6 +84,32 @@ namespace Formatting
             return std::basic_string<TCharType>(Sink.CStr(), Sink.GetLength());
         }
 
+        template <typename TCharType>
+        inline std::basic_string<TCharType> Format(const std::basic_string<TCharType>& format)
+        {
+            typedef TAutoString<TCharType> SinkType;
+            typedef Details::TGlobalPatternStorage< Details::StandardLibrary::TStandardPolicy<TCharType, Details::StandardLibrary::DefaultMutexType> >    GlobalPatternStorageType;
+
+            SinkType Sink;
+            Details::FormatTo<TCharType, GlobalPatternStorageType, const TCharType*>(Sink, format.c_str());
+
+            return std::basic_string<TCharType>(Sink.CStr(), Sink.GetLength());
+        }
+
+#if FL_COMPILER_IS_GREATER_THAN_CXX17
+        template <typename TCharType>
+        inline std::basic_string<TCharType> Format(const std::basic_string_view<TCharType>& format)
+        {
+            typedef TAutoString<TCharType> SinkType;
+            typedef Details::TGlobalPatternStorage< Details::StandardLibrary::TStandardPolicy<TCharType, Details::StandardLibrary::DefaultMutexType> >    GlobalPatternStorageType;
+
+            SinkType Sink;
+            Details::FormatTo<TCharType, GlobalPatternStorageType, const TCharType*>(Sink, format.data());
+
+            return std::basic_string<TCharType>(Sink.CStr(), Sink.GetLength());
+        }
+#endif        
+
         // default FormatTo support Format with no arguments
         inline void FormatTo(std::string& sink, const char* format)
         {
@@ -121,6 +147,20 @@ namespace Formatting
             return std::basic_string<TCharType>(Sink.CStr(), Sink.GetLength());
         }
 
+#if FL_COMPILER_IS_GREATER_THAN_CXX17
+        template <typename TCharType, typename T0, typename... T>
+                inline std::basic_string<TCharType> Format(const std::basic_string_view<TCharType>& format, const T0& arg0, T... args)
+        {
+            typedef TAutoString<TCharType> SinkType;
+            typedef Details::TGlobalPatternStorage< Details::StandardLibrary::TStandardPolicy<TCharType, Details::StandardLibrary::DefaultMutexType> >    GlobalPatternStorageType;
+
+            SinkType Sink;
+            Details::FormatTo<TCharType, GlobalPatternStorageType, std::basic_string_view<TCharType>, T0, T...>(Sink, format, arg0, args...);
+
+            return std::basic_string<TCharType>(Sink.CStr(), Sink.GetLength());
+        }
+#endif
+        
         template <typename TCharType, typename TFormatType, typename T0, typename... T>
         inline void FormatTo(std::basic_string<TCharType>& sink, const TFormatType& format, const T0& arg0, T... args)
         {

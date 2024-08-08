@@ -42,7 +42,17 @@ TEST(Format, STL_Char_Format)
     std::string_view v0 = "2048";
     std::string r7 = StandardLibrary::Format("Hello Formatting {0}", v0);
     EXPECT_EQ(r7, "Hello Formatting 2048");
+
+    constexpr std::string_view sv = "Hello Formatting {0}";
+    std::string r8 = StandardLibrary::Format(sv, 2048);
+    EXPECT_EQ(r8, "Hello Formatting 2048");
+
+    const std::string r8_1 = StandardLibrary::Format(sv);
+    EXPECT_EQ(r8_1, sv);    
 #endif
+
+    const std::string r9 = StandardLibrary::Format(std::string("0x{0:x}"));
+    EXPECT_EQ(r9, "0x{0:x}");
     
     // gen compile error
     //StandardLibrary::Format("{0}", std::wstring(L"x"));
