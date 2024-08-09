@@ -122,7 +122,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
 
                         if (!TTranslator<TCharType, TransferType>::Transfer(sink, pattern, arg0))
                         {
-                            TTranslator<TCharType, const TCharType*>::Transfer(sink, pattern, format);
+                            TRawTranslator<TCharType>::Transfer(sink, pattern, format);
                         }
 
                         return true;
@@ -154,7 +154,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                         */
                         if (!TTranslator<TCharType, TransferType>::Transfer(sink, pattern, arg0))
                         {
-                            TTranslator<TCharType, const TCharType*>::Transfer(sink, pattern, format);
+                            TRawTranslator<TCharType>::Transfer(sink, pattern, format);
                         }
 
                         return true;
