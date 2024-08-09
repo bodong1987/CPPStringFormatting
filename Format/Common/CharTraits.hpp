@@ -55,7 +55,7 @@ namespace Formatting
 
             if (!needle[0])
             {
-                return haystack + strlen(haystack);
+                return haystack + length(haystack);
             }
 
             while (true)
@@ -84,8 +84,8 @@ namespace Formatting
 
             if ((c = *find++) != 0)
             {
-                c = (char)tolower(c);
-                len = strlen(find);
+                c = (char)ToLower(c);
+                len = length(find);
                 do
                 {
                     do
@@ -94,7 +94,7 @@ namespace Formatting
                         {
                             return nullptr;
                         }
-                    } while (tolower(sc) != c);
+                    } while (ToLower(sc) != c);
                 } while (iCompareN(s, find, len) != 0);
                 s--;
             }
@@ -334,7 +334,7 @@ namespace Formatting
 
             if (!needle[0])
             {
-                return haystack + wcslen(haystack);
+                return haystack + length(haystack);
             }
 
             while (true)
@@ -363,8 +363,8 @@ namespace Formatting
 
             if ((c = *find++) != 0)
             {
-                c = (wchar_t)tolower(c);
-                len = wcslen(find);
+                c = (wchar_t)ToLower(c);
+                len = length(find);
                 do
                 {
                     do
@@ -373,7 +373,7 @@ namespace Formatting
                         {
                             return nullptr;
                         }
-                    } while (tolower(sc) != c);
+                    } while (ToLower(sc) != c);
                 } while (iCompareN(s, find, len) != 0);
                 s--;
             }

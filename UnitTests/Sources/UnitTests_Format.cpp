@@ -1,3 +1,4 @@
+﻿// ReSharper disable CppCStyleCast
 #include <Format/Common/Build.hpp>
 
 #if FL_PLATFORM_WINDOWS
@@ -222,6 +223,36 @@ TEST(Format, STL_WChar_FormatTo_FL_STD_FORMAT_TO)
 
     FL_STD_FORMAT_TO(v, L"\u4F60\u597D : {0}", L"\u4E2D\u6587");
     EXPECT_EQ(v, L"\u4F60\u597D : \u4E2D\u6587");
+}
+#endif
+
+#if FL_COMPILER_IS_GREATER_THAN_CXX11
+TEST(Format, TestUTF_8)
+{
+    const std::string str = StandardLibrary::Format(
+        u8"目标地址可能位于线程{0}(0x{0:X}){1}的栈内存空间内(0x{2:X}-0x{3:X})",
+        100,
+        u8"主线程",
+        0,
+        10000);
+
+    EXPECT_EQ(str, u8"目标地址可能位于线程100(0x64)主线程的栈内存空间内(0x0-0x2710)");
+
+    const std::string str2 = StandardLibrary::Format(
+        u8"尝试对无效内存地址执行操作[{1}]. 错误地址: 0x{0:X}, 请结合异常上下文信息进行进一步分析.",
+        static_cast<void*>(nullptr),
+        u8"Write"
+        );
+
+    // ReSharper disable once CppIfCanBeReplacedByConstexprIf
+    if (sizeof(void*) == 8)
+    {
+        EXPECT_EQ(str2, u8"尝试对无效内存地址执行操作[Write]. 错误地址: 0x0000000000000000, 请结合异常上下文信息进行进一步分析.");
+    }
+    else
+    {
+        EXPECT_EQ(str2, u8"尝试对无效内存地址执行操作[Write]. 错误地址: 0x00000000, 请结合异常上下文信息进行进一步分析.");
+    }
 }
 #endif
 
