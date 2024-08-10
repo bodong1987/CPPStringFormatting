@@ -33,24 +33,150 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
 {
     namespace Details
     {
+        namespace Utils
+        {
+            template<typename TPolicy, bool bNeedLock>
+            class TPatternStorageBase
+            {
+            };
+
+            template<typename TPolicy>
+            class TPatternStorageBase<TPolicy, true>
+            {
+            public:
+                typedef typename TPolicy::CharType                      CharType;
+                typedef typename TPolicy::ByteType                      ByteType;
+                typedef typename TPolicy::SizeType                      SizeType;
+                typedef typename TPolicy::PatternListType               PatternListType;
+                typedef typename TPolicy::PatternIterator               PatternIterator;
+                typedef typename TPolicy::PatternMapType                PatternMapType;
+                typedef typename TPolicy::ExceptionType                 ExceptionType;
+                typedef typename TPolicy::MutexType                     MutexType;
+                typedef TFormatPattern<CharType>                        FormatPattern;
+                typedef TPatternParser<TPolicy>                         PatternParser;
+                typedef TSharedLocker<MutexType>                        SharedLockerType;
+                typedef TUniqueLocker<MutexType>                        UniqueLockerType;
+
+            protected:
+                /// <summary>
+                /// Lookups the patterns with lockers
+                /// </summary>
+                /// <param name="storageReference">storage</param>
+                /// <param name="formatStart">The format start.</param>
+                /// <param name="length">The length.</param>
+                /// <param name="hashKey">The hash key.</param>
+                /// <returns>const PatternListType *.</returns>
+                const PatternListType* LookupPatternsInternal(PatternMapType& storageReference, const CharType* const formatStart, const SizeType length, SizeType hashKey)
+                {
+                    // First, Find in the cache
+                    {
+                        SharedLockerType Locker(MutexValue);
+
+                        const PatternListType* PatternList = TPolicy::FindByHashKey(storageReference, hashKey);
+
+                        if (nullptr != PatternList)
+                        {
+                            return PatternList;
+                        }
+                    }
+
+
+                    PatternListType Patterns;
+                    TPolicy::ReserveList(Patterns, 8);
+
+                    PatternParser Parser;
+                    if (Parser(formatStart, length, Patterns))
+                    {
+                        UniqueLockerType Locker(MutexValue);
+
+                        return TPolicy::Emplace(storageReference, hashKey, FL_MOVE_SEMANTIC(Patterns));
+                    }
+
+                    assert(false && "invalid format expression!");
+
+                    // ReSharper disable once CppDFAUnreachableCode
+                    throw ExceptionType("invalid format expression!");
+
+                    // return nullptr;
+                }
+
+                MutexType                                               MutexValue;
+            };
+
+            template<typename TPolicy>
+            class TPatternStorageBase<TPolicy, false>
+            {
+            public:
+                typedef typename TPolicy::CharType                      CharType;
+                typedef typename TPolicy::ByteType                      ByteType;
+                typedef typename TPolicy::SizeType                      SizeType;
+                typedef typename TPolicy::PatternListType               PatternListType;
+                typedef typename TPolicy::PatternIterator               PatternIterator;
+                typedef typename TPolicy::PatternMapType                PatternMapType;
+                typedef typename TPolicy::ExceptionType                 ExceptionType;
+                typedef typename TPolicy::MutexType                     MutexType;
+                typedef TFormatPattern<CharType>                        FormatPattern;
+                typedef TPatternParser<TPolicy>                         PatternParser;
+                typedef TSharedLocker<MutexType>                        SharedLockerType;
+                typedef TUniqueLocker<MutexType>                        UniqueLockerType;
+
+            protected:
+                /// <summary>
+                /// Lookups the patterns without lockers
+                /// </summary>
+                /// <param name="storageReference">storage</param>
+                /// <param name="formatStart">The format start.</param>
+                /// <param name="length">The length.</param>
+                /// <param name="hashKey">The hash key.</param>
+                /// <returns>const PatternListType *.</returns>
+                const PatternListType* LookupPatternsInternal(PatternMapType& storageReference, const CharType* const formatStart, const SizeType length, SizeType hashKey)
+                {
+                    // First, Find in the cache
+                    const PatternListType* PatternList = TPolicy::FindByHashKey(storageReference, hashKey);
+
+                    if (nullptr != PatternList)
+                    {
+                        return PatternList;
+                    }
+
+                    PatternListType Patterns;
+                    TPolicy::ReserveList(Patterns, 8);
+
+                    if (Parser(formatStart, length, Patterns))
+                    {
+                        return TPolicy::Emplace(storageReference, hashKey, FL_MOVE_SEMANTIC(Patterns));
+                    }
+
+                    assert(false && "invalid format expression!");
+
+                    // ReSharper disable once CppDFAUnreachableCode
+                    throw ExceptionType("invalid format expression!");
+
+                    // return nullptr;
+                }
+            };
+        }
+
         template < typename TPolicy >
-        class TPatternStorage
+        class TPatternStorage :
+            public Utils::TPatternStorageBase<TPolicy, Mpl::IsSame<SharedMutexNone, typename TPolicy::MutexType>::Value>
         {
         public:
+            typedef Utils::TPatternStorageBase<
+                        TPolicy,
+                        Mpl::IsSame<
+                            SharedMutexNone,
+                            typename TPolicy::MutexType
+                        >::Value
+                    >                                               Super;
+
             typedef typename TPolicy::CharType                      CharType;
-            typedef typename TPolicy::ByteType                      ByteType;
             typedef typename TPolicy::SizeType                      SizeType;
             typedef typename TPolicy::PatternListType               PatternListType;
-            typedef typename TPolicy::PatternIterator               PatternIterator;
             typedef typename TPolicy::PatternMapType                PatternMapType;
-            typedef typename TPolicy::ExceptionType                 ExceptionType;
-            typedef typename TPolicy::MutexType                     MutexType;
-            typedef TScopedLocker<MutexType>                        ScopedLockerType;
-            typedef TFormatPattern<CharType>                        FormatPattern;
-            typedef TPatternParser<TPolicy>                         PatternParser;
-                        
+
             /// <summary>
-            /// Lookups the patterns.
+            /// Lookups the patterns without lockers
             /// </summary>
             /// <param name="formatStart">The format start.</param>
             /// <param name="length">The length.</param>
@@ -58,52 +184,13 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             /// <returns>const PatternListType *.</returns>
             const PatternListType* LookupPatterns(const CharType* const formatStart, const SizeType length, SizeType hashKey)
             {
-                // First, Find in the cache
-                {
-                    ScopedLockerType Locker(MutexValue);
-
-                    const PatternListType* PatternList = TPolicy::FindByHashKey(Storage, hashKey);
-
-                    if (nullptr != PatternList)
-                    {
-                        return PatternList;
-                    }
-                }
-                
-
-                PatternListType Patterns;
-                TPolicy::ReserveList(Patterns, 8);
-
-                if (Parser(formatStart, length, Patterns))
-                {
-                    ScopedLockerType Locker(MutexValue);
-
-                    return TPolicy::Emplace(Storage, hashKey, FL_MOVE_SEMANTIC(Patterns));
-                }
-
-                assert(false && "invalid format expression!");
-
-                // ReSharper disable once CppDFAUnreachableCode
-                throw ExceptionType("invalid format expression!");
-
-                // return nullptr;
+                return Super::LookupPatternsInternal(Storage, formatStart, length, hashKey);
             }
-
         protected:
-            /// <summary>
-            /// The critical section value
-            /// </summary>
-            MutexType                   MutexValue;
-            
             /// <summary>
             /// The storage
             /// </summary>
-            PatternMapType              Storage;
-            
-            /// <summary>
-            /// The parser
-            /// </summary>
-            PatternParser               Parser;
+            PatternMapType                              Storage;
         };
 
         template < typename TPolicy >
@@ -120,9 +207,9 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
 #if FL_WITH_THREAD_LOCAL
                 struct ManagedStorage : Noncopyable // NOLINT
                 {
-                    typedef TScopedLocker<Mutex>                             LockerType;
+                    typedef TUniqueLocker<SharedMutex>                       LockerType;
 
-                    Mutex                                                    MutexValue;
+                    SharedMutex                                              MutexValue;
                     TAutoArray<TGlobalPatternStorage*>                       Storages;
 
                     ~ManagedStorage()

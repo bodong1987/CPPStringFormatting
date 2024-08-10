@@ -104,9 +104,9 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             };
 
 #if FL_WITH_THREAD_LOCAL || !FL_WITH_MULTITHREAD_SUPPORT
-            typedef MutexNone                                                           DefaultMutexType;
+            typedef SharedMutexNone                                                     DefaultMutexType;
 #else
-            typedef Mutex                                                               DefaultMutexType;
+            typedef SharedMutex                                                         DefaultMutexType;
 #endif
 
             typedef TPatternStorage< TStandardPolicy<char, DefaultMutexType> >          STLPatternStorageA;         // NOLINT

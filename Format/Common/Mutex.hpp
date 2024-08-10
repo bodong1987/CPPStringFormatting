@@ -31,6 +31,11 @@
 #if FL_PLATFORM_WINDOWS
 #ifndef _WINDOWS_
 #include <windows.h>
+#if _WIN32_WINNT > 0x0600
+#define FL_WINDOWS_VISTAR_LATER 1
+#else
+#define FL_WINDOWS_VISTAR_LATER 0
+#endif
 #endif
 #else
 // assume your platform support posix thread library
@@ -43,136 +48,236 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
     namespace Details
     {
         /// <summary>
-        /// Class Mutex.
+        /// Class SharedMutex.
         /// Implements the <see cref="Noncopyable" />
         /// </summary>
         /// <seealso cref="Noncopyable" />
-        class Mutex : Noncopyable /*NOLINT*/
+        class SharedMutex : Noncopyable /*NOLINT*/
         {
         public:
-            Mutex() // NOLINT(*-pro-type-member-init)
+            SharedMutex() // NOLINT(*-pro-type-member-init)
             {
 #if FL_PLATFORM_WINDOWS
+#if FL_WINDOWS_VISTAR_LATER
+                InitializeSRWLock(&SRWLockValue);
+#else
                 InitializeCriticalSection(&CriticalSectionValue);
                 SetCriticalSectionSpinCount(&CriticalSectionValue, 4000);
+#endif
 #else
-                pthread_mutexattr_t MutexAtt;
+                // pthread_mutexattr_t MutexAtt;
+                // pthread_mutexattr_init(&MutexAtt);
+                // pthread_mutexattr_settype(&MutexAtt, PTHREAD_MUTEX_RECURSIVE);
+                // pthread_mutex_init(&Mutex_t, &MutexAtt);
 
-                pthread_mutexattr_init(&MutexAtt);
-                pthread_mutexattr_settype(&MutexAtt, PTHREAD_MUTEX_RECURSIVE);
-                pthread_mutex_init(&Mutex_t, &MutexAtt);
+                pthread_rwlock_init(&RWLock, nullptr);
 #endif
             }
 
-            ~Mutex()
+            ~SharedMutex()
             {
 #if FL_PLATFORM_WINDOWS
+#if FL_WINDOWS_VISTAR_LATER
+#else
                 DeleteCriticalSection(&CriticalSectionValue);
+#endif
 #else
-                pthread_mutex_destroy(&Mutex_t);
+                // pthread_mutex_destroy(&Mutex_t);
+                pthread_rwlock_destroy(&RWLock);
 #endif
             }
 
-            void Lock()
+            void LockUnique()
             {
 #if FL_PLATFORM_WINDOWS
+#if FL_WINDOWS_VISTAR_LATER
+                AcquireSRWLockExclusive(&SRWLockValue);
+#else
                 EnterCriticalSection(&CriticalSectionValue);
+#endif
 #else
-                pthread_mutex_lock(&Mutex_t);
+                // pthread_mutex_lock(&Mutex_t);
+                pthread_rwlock_wrlock(&RWLock);
 #endif
             }
 
-            void UnLock()
+            void UnLockUnique()
             {
 #if FL_PLATFORM_WINDOWS
-                LeaveCriticalSection(&CriticalSectionValue);
+#if FL_WINDOWS_VISTAR_LATER
+                ReleaseSRWLockExclusive(&SRWLockValue);
 #else
-                pthread_mutex_unlock(&Mutex_t);
+                LeaveCriticalSection(&CriticalSectionValue);
+#endif
+#else
+                // pthread_mutex_unlock(&Mutex_t);
+                pthread_rwlock_unlock(&RWLock);
+#endif
+            }
+
+            void LockShared()
+            {
+#if FL_PLATFORM_WINDOWS
+#if FL_WINDOWS_VISTAR_LATER
+                AcquireSRWLockShared(&SRWLockValue);
+#else
+                EnterCriticalSection(&CriticalSectionValue);
+#endif
+#else
+                // pthread_mutex_lock(&Mutex_t);
+                pthread_rwlock_rdlock(&RWLock);
+#endif
+            }
+
+            void UnLockShared()
+            {
+#if FL_PLATFORM_WINDOWS
+#if FL_WINDOWS_VISTAR_LATER
+                ReleaseSRWLockShared(&SRWLockValue);
+#else
+                LeaveCriticalSection(&CriticalSectionValue);
+#endif
+#else
+                // pthread_mutex_unlock(&Mutex_t);
+                pthread_rwlock_unlock(&RWLock);
 #endif
             }
 
         private:
 #if FL_PLATFORM_WINDOWS
-            /// <summary>
-            /// The critical section value
-            /// </summary>
-            CRITICAL_SECTION CriticalSectionValue;
+#if FL_WINDOWS_VISTAR_LATER
+            SRWLOCK          SRWLockValue;
 #else
-            /// <summary>
-            /// The mutex
-            /// </summary>
-            pthread_mutex_t Mutex_t;
+            CRITICAL_SECTION CriticalSectionValue;
+#endif
+#else
+            // pthread_mutex_t Mutex_t;
+            pthread_rwlock_t RWLock;
 #endif
         };
 
         /// <summary>
-        /// Class MutexNone.
+        /// Class SharedMutexNone.
         /// no operation mutex
         /// Implements the <see cref="Noncopyable" />
         /// </summary>
         /// <seealso cref="Noncopyable" />
-        class MutexNone : Noncopyable
+        class SharedMutexNone : Noncopyable
         {
         public:
             /// <summary>
-            /// Locks this instance.
+            /// unique lock this instance
             /// </summary>
-            void Lock() {} //NOLINT
+            void LockUnique() {} //NOLINT
             /// <summary>
-            /// Uns the lock.
+            /// unique unlock this instance
             /// </summary>
-            void UnLock() {} //NOLINT
+            void UnLockUnique() {} //NOLINT
+            /// <summary>
+            /// lock this instance in shared mode
+            /// </summary>
+            void LockShared() {} //NOLINT
+            /// <summary>
+            /// unlock shared
+            /// </summary>
+            void UnLockShared() {} //NOLINT
         };
 
         /// <summary>
-        /// Class TScopedLocker.
+        /// Class TUniqueLocker.
+        /// LockUnique and UnLockUnique with RAII
         /// Implements the <see cref="Noncopyable" />
         /// </summary>
         /// <seealso cref="Noncopyable" />
         template < typename TReferenceType >
-        class TScopedLocker : /*NOLINT*/
+        class TUniqueLocker : /*NOLINT*/
             Noncopyable
         {
         public:
             typedef TReferenceType        ReferenceType;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="TScopedLocker"/> class.
+            /// Initializes a new instance of the <see cref="TUniqueLocker"/> class.
             /// </summary>
             /// <param name="referenceTarget">The reference target.</param>
-            explicit TScopedLocker(TReferenceType& referenceTarget) :
+            explicit TUniqueLocker(TReferenceType& referenceTarget) :
                 Reference(&referenceTarget)
             {
                 assert(Reference);
-                Reference->Lock();
+                Reference->LockUnique();
             }
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="TScopedLocker"/> class.
+            /// Initializes a new instance of the <see cref="TUniqueLocker"/> class.
             /// </summary>
             /// <param name="referencePointer">The reference pointer.</param>
-            explicit TScopedLocker(TReferenceType* referencePointer) :
+            explicit TUniqueLocker(TReferenceType* referencePointer) :
                 Reference(referencePointer)
             {
                 assert(Reference);
-                Reference->Lock();
+                Reference->LockUnique();
             }
 
             /// <summary>
-            /// Finalizes an instance of the <see cref="TScopedLocker"/> class.
+            /// Finalizes an instance of the <see cref="TUniqueLocker"/> class.
             /// </summary>
-            ~TScopedLocker()
+            ~TUniqueLocker()
             {
-                Reference->UnLock();
+                Reference->UnLockUnique();
             }
 
         protected:
-            /// <summary>
-            /// The reference
-            /// </summary>
             TReferenceType* Reference;
         };
 
-        typedef TScopedLocker<Mutex>   ScopedLocker;
+        /// <summary>
+        /// Class TSharedLocker.
+        /// LockShared and UnLockShared with RAII
+        /// Implements the <see cref="Noncopyable" />
+        /// </summary>
+        /// <seealso cref="Noncopyable" />
+        template < typename TReferenceType >
+        class TSharedLocker : /*NOLINT*/
+            Noncopyable
+        {
+        public:
+            typedef TReferenceType        ReferenceType;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TSharedLocker"/> class.
+            /// </summary>
+            /// <param name="referenceTarget">The reference target.</param>
+            explicit TSharedLocker(TReferenceType& referenceTarget) :
+                Reference(&referenceTarget)
+            {
+                assert(Reference);
+                Reference->LockShared();
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TSharedLocker"/> class.
+            /// </summary>
+            /// <param name="referencePointer">The reference pointer.</param>
+            explicit TSharedLocker(TReferenceType* referencePointer) :
+                Reference(referencePointer)
+            {
+                assert(Reference);
+                Reference->LockShared();
+            }
+
+            /// <summary>
+            /// Finalizes an instance of the <see cref="TSharedLocker"/> class.
+            /// </summary>
+            ~TSharedLocker()
+            {
+                Reference->UnLockShared();
+            }
+
+        protected:
+            TReferenceType* Reference;
+        };
+
+        typedef TUniqueLocker<SharedMutex>          ScopedLocker;
+        typedef TSharedLocker<SharedMutex>          SharedLocker;
     }    
 }
