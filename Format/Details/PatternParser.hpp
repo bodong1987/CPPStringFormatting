@@ -265,7 +265,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                 if (TCharTraits<CharType>::IsDigit(*TestPtr))
                 {
                     // get Precision
-                    int32_t val = FindNextNumber(TestPtr, end, TestPtr);
+                    const int32_t val = FindNextNumber(TestPtr, end, TestPtr);
 
                     if (val != static_cast<ByteType>(-1))
                     {
@@ -310,7 +310,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                     return false;
                 }
 
-                int32_t idx = CastToSmallNumber(TestPtr, TestPtr2);
+                const int32_t idx = CastToSmallNumber(TestPtr, TestPtr2);
 
                 if (idx < 0)
                 {
