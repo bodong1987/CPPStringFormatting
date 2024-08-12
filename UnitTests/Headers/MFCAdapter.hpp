@@ -64,9 +64,9 @@ namespace Formatting
             };
 
 #if FL_WITH_THREAD_LOCAL || !FL_WITH_MULTITHREAD_SUPPORT
-            typedef MutexNone                                                           DefaultMutexType;
+            typedef SharedMutexNone                                                     DefaultMutexType;
 #else
-            typedef Mutex                                                               DefaultMutexType;
+            typedef SharedMutex                                                         DefaultMutexType;
 #endif
 
             typedef TPatternStorage< TMFCPolicy<char, DefaultMutexType> >               MFCPatternStorageA;
