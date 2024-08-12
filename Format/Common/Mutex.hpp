@@ -32,9 +32,9 @@
 #ifndef _WINDOWS_
 #include <windows.h>
 #if _WIN32_WINNT > 0x0600
-#define FL_WINDOWS_VISTAR_LATER 1
+#define FL_IS_WINDOWS_VISTA_OR_LATER 1
 #else
-#define FL_WINDOWS_VISTAR_LATER 0
+#define FL_IS_WINDOWS_VISTA_OR_LATER 0
 #endif
 #endif
 #else
@@ -58,7 +58,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             SharedMutex() // NOLINT(*-pro-type-member-init)
             {
 #if FL_PLATFORM_WINDOWS
-#if FL_WINDOWS_VISTAR_LATER
+#if FL_IS_WINDOWS_VISTA_OR_LATER
                 InitializeSRWLock(&SRWLockValue);
 #else
                 InitializeCriticalSection(&CriticalSectionValue);
@@ -77,7 +77,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             ~SharedMutex()
             {
 #if FL_PLATFORM_WINDOWS
-#if FL_WINDOWS_VISTAR_LATER
+#if FL_IS_WINDOWS_VISTA_OR_LATER
 #else
                 DeleteCriticalSection(&CriticalSectionValue);
 #endif
@@ -90,7 +90,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             void LockUnique()
             {
 #if FL_PLATFORM_WINDOWS
-#if FL_WINDOWS_VISTAR_LATER
+#if FL_IS_WINDOWS_VISTA_OR_LATER
                 AcquireSRWLockExclusive(&SRWLockValue);
 #else
                 EnterCriticalSection(&CriticalSectionValue);
@@ -104,7 +104,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             void UnLockUnique()
             {
 #if FL_PLATFORM_WINDOWS
-#if FL_WINDOWS_VISTAR_LATER
+#if FL_IS_WINDOWS_VISTA_OR_LATER
                 ReleaseSRWLockExclusive(&SRWLockValue);
 #else
                 LeaveCriticalSection(&CriticalSectionValue);
@@ -118,7 +118,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             void LockShared()
             {
 #if FL_PLATFORM_WINDOWS
-#if FL_WINDOWS_VISTAR_LATER
+#if FL_IS_WINDOWS_VISTA_OR_LATER
                 AcquireSRWLockShared(&SRWLockValue);
 #else
                 EnterCriticalSection(&CriticalSectionValue);
@@ -132,7 +132,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             void UnLockShared()
             {
 #if FL_PLATFORM_WINDOWS
-#if FL_WINDOWS_VISTAR_LATER
+#if FL_IS_WINDOWS_VISTA_OR_LATER
                 ReleaseSRWLockShared(&SRWLockValue);
 #else
                 LeaveCriticalSection(&CriticalSectionValue);
@@ -145,7 +145,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
 
         private:
 #if FL_PLATFORM_WINDOWS
-#if FL_WINDOWS_VISTAR_LATER
+#if FL_IS_WINDOWS_VISTA_OR_LATER
             SRWLOCK          SRWLockValue;
 #else
             CRITICAL_SECTION CriticalSectionValue;
