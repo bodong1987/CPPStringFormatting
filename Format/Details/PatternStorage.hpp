@@ -198,47 +198,14 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             static TGlobalPatternStorage* GetStorage()
             {
 #if FL_WITH_THREAD_LOCAL
-                struct ManagedStorage : Noncopyable // NOLINT
-                {
-                    typedef TUniqueLocker<SharedMutex>                       LockerType;
-
-                    SharedMutex                                              MutexValue;
-                    TAutoArray<TGlobalPatternStorage*>                       Storages;
-
-                    ~ManagedStorage()
-                    {
-                        LockerType Locker(MutexValue);
-
-                        for( size_t i=0; i<Storages.GetLength(); ++i )
-                        {
-                            delete Storages[i];
-                        }
-                    }
-
-                    void AddStorage( TGlobalPatternStorage* inputStorage )
-                    {
-                        assert(inputStorage);
-
-                        LockerType Locker(MutexValue);
-
-                        Storages.AddItem(inputStorage);
-                    }
-                };
-
-                static ManagedStorage StaticManager;
-
                 // ReSharper disable once CppRedundantStaticSpecifierOnThreadLocalLocalVariable
-                static FL_THREAD_LOCAL TGlobalPatternStorage* StaticStorage = nullptr;
-
-                if( !StaticStorage )
-                {
-                    StaticStorage = new TGlobalPatternStorage();
-
-                    StaticManager.AddStorage(StaticStorage);
-                }
-
-                return StaticStorage;
+                static FL_THREAD_LOCAL TGlobalPatternStorage StaticStorage;
+                return &StaticStorage;
 #else
+                #if !FL_WITH_MULTITHREAD_SUPPORT
+                #error "normal static storage need disable multi thread support"
+                #endif
+
                 static TGlobalPatternStorage StaticStorage;
                 return &StaticStorage;
 #endif
