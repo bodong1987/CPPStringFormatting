@@ -38,11 +38,6 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             template<typename TPolicy, bool bNeedLock>
             class TPatternStorageBase
             {
-            };
-
-            template<typename TPolicy>
-            class TPatternStorageBase<TPolicy, true>
-            {
             public:
                 typedef typename TPolicy::CharType                      CharType;
                 typedef typename TPolicy::ByteType                      ByteType;
@@ -61,18 +56,17 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                 /// <summary>
                 /// Lookups the patterns with lockers
                 /// </summary>
-                /// <param name="storageReference">storage</param>
                 /// <param name="formatStart">The format start.</param>
                 /// <param name="length">The length.</param>
                 /// <param name="hashKey">The hash key.</param>
                 /// <returns>const PatternListType *.</returns>
-                const PatternListType* LookupPatternsInternal(PatternMapType& storageReference, const CharType* const formatStart, const SizeType length, SizeType hashKey)
+                const PatternListType* LookupPatternsInternal(const CharType* const formatStart, const SizeType length, SizeType hashKey)
                 {
                     // First, Find in the cache
                     {
                         SharedLockerType Locker(MutexValue);
 
-                        const PatternListType* PatternList = TPolicy::FindByHashKey(storageReference, hashKey);
+                        const PatternListType* PatternList = TPolicy::FindByHashKey(Storage, hashKey);
 
                         if (nullptr != PatternList)
                         {
@@ -89,7 +83,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                     {
                         UniqueLockerType Locker(MutexValue);
 
-                        return TPolicy::Emplace(storageReference, hashKey, FL_MOVE_SEMANTIC(Patterns));
+                        return TPolicy::Emplace(Storage, hashKey, FL_MOVE_SEMANTIC(Patterns));
                     }
 
                     assert(false && "invalid format expression!");
@@ -101,6 +95,8 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                 }
 
                 MutexType                                               MutexValue;
+
+                PatternMapType                                          Storage;
             };
 
             template<typename TPolicy>
@@ -124,15 +120,14 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                 /// <summary>
                 /// Lookups the patterns without lockers
                 /// </summary>
-                /// <param name="storageReference">storage</param>
                 /// <param name="formatStart">The format start.</param>
                 /// <param name="length">The length.</param>
                 /// <param name="hashKey">The hash key.</param>
                 /// <returns>const PatternListType *.</returns>
-                const PatternListType* LookupPatternsInternal(PatternMapType& storageReference, const CharType* const formatStart, const SizeType length, SizeType hashKey)
+                const PatternListType* LookupPatternsInternal(const CharType* const formatStart, const SizeType length, SizeType hashKey)
                 {
                     // First, Find in the cache
-                    const PatternListType* PatternList = TPolicy::FindByHashKey(storageReference, hashKey);
+                    const PatternListType* PatternList = TPolicy::FindByHashKey(Storage, hashKey);
 
                     if (nullptr != PatternList)
                     {
@@ -142,9 +137,10 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                     PatternListType Patterns;
                     TPolicy::ReserveList(Patterns, 8);
 
+                    PatternParser Parser;
                     if (Parser(formatStart, length, Patterns))
                     {
-                        return TPolicy::Emplace(storageReference, hashKey, FL_MOVE_SEMANTIC(Patterns));
+                        return TPolicy::Emplace(Storage, hashKey, FL_MOVE_SEMANTIC(Patterns));
                     }
 
                     assert(false && "invalid format expression!");
@@ -154,6 +150,8 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
 
                     // return nullptr;
                 }
+
+                PatternMapType                                              Storage;
             };
         }
 
@@ -168,12 +166,12 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                             SharedMutexNone,
                             typename TPolicy::MutexType
                         >::Value
-                    >                                               Super;
+                    >                                                       Super;
 
-            typedef typename TPolicy::CharType                      CharType;
-            typedef typename TPolicy::SizeType                      SizeType;
-            typedef typename TPolicy::PatternListType               PatternListType;
-            typedef typename TPolicy::PatternMapType                PatternMapType;
+            typedef typename TPolicy::CharType                              CharType;
+            typedef typename TPolicy::SizeType                              SizeType;
+            typedef typename TPolicy::PatternListType                       PatternListType;
+            typedef typename TPolicy::PatternMapType                        PatternMapType;
 
             /// <summary>
             /// Lookups the patterns without lockers
@@ -184,13 +182,8 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             /// <returns>const PatternListType *.</returns>
             const PatternListType* LookupPatterns(const CharType* const formatStart, const SizeType length, SizeType hashKey)
             {
-                return Super::LookupPatternsInternal(Storage, formatStart, length, hashKey);
+                return Super::LookupPatternsInternal(formatStart, length, hashKey);
             }
-        protected:
-            /// <summary>
-            /// The storage
-            /// </summary>
-            PatternMapType                              Storage;
         };
 
         template < typename TPolicy >
