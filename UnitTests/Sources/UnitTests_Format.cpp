@@ -2,6 +2,7 @@
 // ReSharper disable CppUseAuto
 // ReSharper disable CppLocalVariableMayBeConst
 // ReSharper disable CppFunctionalStyleCast
+// ReSharper disable CppDFATimeOver
 #include <Format/Common/Build.hpp>
 
 #if FL_PLATFORM_WINDOWS

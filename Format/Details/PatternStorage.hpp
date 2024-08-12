@@ -35,7 +35,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
     {
         namespace Utils
         {
-            template<typename TPolicy, bool bNeedLock>
+            template<typename TPolicy, bool /*bNeedLock*/>
             class TPatternStorageBase
             {
             public:
