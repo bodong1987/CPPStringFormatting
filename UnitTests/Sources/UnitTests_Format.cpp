@@ -10,6 +10,7 @@
 #pragma warning(pop)
 #endif
 
+#include <iomanip>
 #include <Format/StandardLibraryAdapter.hpp>
 
 using namespace Formatting;
@@ -436,16 +437,13 @@ TEST(Format, TestPointer)
     {
         const int* intPtr = new int[12];
         char szText[64] = {0};
+        std::ostringstream oss;
+        oss << "0x" << std::setw(16) << std::setfill('0') << std::hex << std::uppercase << reinterpret_cast<uintptr_t>(intPtr);
+        strcpy(szText, oss.str().c_str());
 
-#if FL_COMPILER_GCC
-        TCharTraits<char>::StringPrintf(szText,  "0x%016lX", intPtr);
-#else
-        TCharTraits<char>::StringPrintf(szText, "0x%p", intPtr);
-#endif
-    
-        EXPECT_EQ(StandardLibrary::Format("0x{0:X}", intPtr), szText);
-        EXPECT_EQ(StandardLibrary::Format("0x{0:X}", (void*)intPtr), szText);
-        EXPECT_EQ(StandardLibrary::Format("0x{0:X}", (const void*)intPtr), szText);
+        EXPECT_STREQ(StandardLibrary::Format("0x{0:X}", intPtr).c_str(), szText);
+        EXPECT_STREQ(StandardLibrary::Format("0x{0:X}", (void*)intPtr).c_str(), szText);
+        EXPECT_STREQ(StandardLibrary::Format("0x{0:X}", (const void*)intPtr).c_str(), szText);
 
         delete []intPtr;    
     }
@@ -454,15 +452,13 @@ TEST(Format, TestPointer)
         const int* intPtr = new int[12];
         wchar_t szText[64] = {0};
 
-#if FL_COMPILER_GCC
-        TCharTraits<wchar_t>::StringPrintf(szText, L"0x%016lX", intPtr);
-#else
-        TCharTraits<wchar_t>::StringPrintf(szText, L"0x%p", intPtr);
-#endif
+        std::wostringstream woss;
+        woss << L"0x" << std::setw(16) << std::setfill(L'0') << std::hex << std::uppercase << reinterpret_cast<uintptr_t>(intPtr);
+        wcscpy(szText, woss.str().c_str());
     
-        EXPECT_EQ(StandardLibrary::Format(L"0x{0:X}", intPtr), szText);
-        EXPECT_EQ(StandardLibrary::Format(L"0x{0:X}", (void*)intPtr), szText);
-        EXPECT_EQ(StandardLibrary::Format(L"0x{0:X}", (const void*)intPtr), szText);
+        EXPECT_STREQ(StandardLibrary::Format(L"0x{0:X}", intPtr).c_str(), szText);
+        EXPECT_STREQ(StandardLibrary::Format(L"0x{0:X}", (void*)intPtr).c_str(), szText);
+        EXPECT_STREQ(StandardLibrary::Format(L"0x{0:X}", (const void*)intPtr).c_str(), szText);
 
         delete []intPtr;
     }
