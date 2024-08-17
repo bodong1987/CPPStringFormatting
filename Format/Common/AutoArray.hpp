@@ -293,6 +293,8 @@ namespace Formatting
 		    }
 		    else
             {
+		        assert(HeapValPtr);
+
                 if(TargetCount < AllocatedCount)
                 {
                     Algorithm::CopyArray(items, items + length, HeapValPtr + Count);

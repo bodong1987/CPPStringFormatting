@@ -263,7 +263,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             /* Hacky test for NaN
             * under -fast-math this won't work, but then you also won't
             * have correct nan values anyway.  The alternative is
-            * to link with libmath (bad) or hack IEEE double bits (bad)
+            * to link with lib-math (bad) or hack IEEE double bits (bad)
             */
             if (!(value == value)) // NOLINT
             {
@@ -286,7 +286,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                 value = -value;
             }
 
-            /* if input is larger than ThresMax, revert to exponential */
+            /* if input is larger than large value, revert to exponential */
             constexpr static double ThresMax = (double)(0x7FFFFFFF);  // NOLINT
 
             // ReSharper disable once CommentTypo
@@ -328,28 +328,28 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             const double tmp = (value - Whole) * Pow10[precision];
 
             // Get the fractional part
-            uint32_t Frace = static_cast<uint32_t>(tmp); // NOLINT(*-use-auto)
+            uint32_t FractionalPart = static_cast<uint32_t>(tmp); // NOLINT(*-use-auto)
 
             // Calculate the difference
-            double DiffValue = tmp - Frace;
+            double DiffValue = tmp - FractionalPart;
 
             // Handle rounding
             if (DiffValue > 0.5)
             {
-                ++Frace;
+                ++FractionalPart;
                 /* handle rollover, e.g.  case 0.99 with precision 1 is 1.0  */
-                if (Frace >= Pow10[precision])
+                if (FractionalPart >= Pow10[precision])
                 {
-                    Frace = 0;
+                    FractionalPart = 0;
                     ++Whole;
                 }
             }
             // If exactly halfway, round up according to the rules
-            else if (DiffValue == 0.5 && ((Frace == 0) || (Frace & 1))) // NOLINT
+            else if (DiffValue == 0.5 && ((FractionalPart == 0) || (FractionalPart & 1))) // NOLINT
             {
                 /* if halfway, round up if odd, OR
                 if last digit is 0.  That last part is strange */
-                ++Frace;
+                ++FractionalPart;
             }
 
             // Handle the case where precision is not 0
@@ -361,8 +361,8 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                 do
                 {
                     --Count;
-                    *Str-- = static_cast<TCharType>(TCharTraits<TCharType>::GetZero() + (Frace % 10)); // NOLINT
-                } while (Frace /= 10);
+                    *Str-- = static_cast<TCharType>(TCharTraits<TCharType>::GetZero() + (FractionalPart % 10)); // NOLINT
+                } while (FractionalPart /= 10);
 
                 // add extra 0s
                 while (Count-- > 0) *Str-- = TCharTraits<TCharType>::GetZero();
