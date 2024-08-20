@@ -76,16 +76,42 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             typedef TCharTraits<CharType>                               CharTraits;
 
         protected:
-            static void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, CharType fillChar = CharTraits::GetSpace())
+            static void AppendString(
+                StringType& strRef,
+                const FormatPattern& pattern,
+                const CharType* start,
+                const SizeType length,
+                CharType fillChar = CharTraits::GetSpace()
+                )
             {
-                strRef.AddAlignStr(start, length, pattern.HasWidth() ? pattern.Width : static_cast<int>(length), pattern.Align != EAlignFlag::Left, fillChar);
+                strRef.AddAlignStr(
+                    start,
+                    length,
+                    pattern.HasWidth() ? pattern.Width : static_cast<int>(length),
+                    pattern.Align != EAlignFlag::Left,
+                    fillChar
+                    );
             }
 
-            static void AppendString(StringType& strRef, const FormatPattern& pattern, const CharType* start, const SizeType length, const int alignSize, bool paddingLeft, CharType fillChar = CharTraits::GetSpace())
+            static void AppendString(
+                StringType& strRef,
+                const FormatPattern& pattern,
+                const CharType* start,
+                const SizeType length,
+                const int alignSize,
+                bool paddingLeft,
+                CharType fillChar = CharTraits::GetSpace()
+                )
             {
                 FL_UNREFERENCED_PARAMETER(pattern);
-                
-                strRef.AddAlignStr(start, length, alignSize, paddingLeft, fillChar);
+
+                strRef.AddAlignStr(
+                    start,
+                    length,
+                    alignSize,
+                    paddingLeft,
+                    fillChar
+                    );
             }
         };
 
@@ -145,10 +171,18 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             /// <returns>bool.</returns>
 
 #if FL_COMPILER_IS_GREATER_THAN_CXX11
-            static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg) = delete;
+            static bool Transfer(
+                typename Super::StringType& strRef,
+                const typename Super::FormatPattern& pattern,
+                const T& arg
+                ) = delete;
 #else
         private:
-            static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, const T& arg);
+            static bool Transfer(
+                typename Super::StringType& strRef,
+                const typename Super::FormatPattern& pattern,
+                const T& arg
+                );
 #endif
         };
 
@@ -243,98 +277,106 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                 DefaultMinExponentLength = FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH
             };
 
-            static bool TransferCore(StringType& strRef, const FormatPattern& pattern, const FormatFlagType usedFlag, double arg)
+            static bool TransferGeneral(StringType& strRef, const FormatPattern& pattern, const double arg)
             {
-                FL_UNREFERENCED_PARAMETER(usedFlag);
-                
-                if (pattern.Flag == EFormatFlag::None ||
-                    pattern.Flag == EFormatFlag::FixedPoint ||
-                    pattern.Flag == EFormatFlag::General
-                    )
+                CharType TempBuf[64];
+
+                const CharType* const Result = DoubleToString<CharType>(
+                    arg,
+                    TempBuf,
+                    FL_ARRAY_COUNTOF(TempBuf),
+                    pattern.HasPrecision() ?
+                        pattern.Precision :
+                        (
+                            pattern.Flag == EFormatFlag::FixedPoint ?
+                            DefaultFixedPointPrecision :
+                            DefaultPrecision
+                        ) // NOLINT
+                );
+
+                const SizeType length = CalculateConvertedStringLength(Result, TempBuf);
+
+                Super::AppendString(strRef, pattern, Result, length);
+
+                return true;
+            }
+
+            static bool TransferExponent(StringType& strRef, const FormatPattern& pattern, const double arg)
+            {
+                const CharType eFlagChar = pattern.IsUpper ? 'E' : 'e';
+
+                // add %.
+                CharType FmtBuf[16];
+                FmtBuf[0] = '%';
+                FmtBuf[1] = '.';
+                // calculate precision number, add append to FmtBuffer
+                CharType PrecisionBuf[16];
+                const CharType* const PrecisionText =
+                    IntegerToString<TCharType, int, 10>(
+                        pattern.HasPrecision() ? pattern.Precision : DefaultExponentPrecision, PrecisionBuf,
+                        FL_ARRAY_COUNTOF(PrecisionBuf),
+                        pattern.IsUpper
+                        );
+
+                const SizeType length = CalculateConvertedStringLength(PrecisionText, PrecisionBuf);
+
+                TCharTraits<CharType>::copy(FmtBuf + 2, PrecisionText, length);
+
+                // add e flag
+                FmtBuf[length + 2] = eFlagChar;
+                FmtBuf[length + 3] = CharTraits::GetEndFlag();
+
+                // format by sprintf
+                CharType TempBuf[64];
+                size_t bufLength = CharTraits::StringPrintf(TempBuf, FmtBuf, arg);
+
+                // process alignment.
+                const CharType* plusPos = CharTraits::rFind(TempBuf, eFlagChar);
+                if (plusPos != nullptr)
                 {
-                    CharType TempBuf[64];
+                    const CharType* endPos = TempBuf + bufLength;
+                    const int exponentLength = static_cast<int>(endPos - plusPos);
 
-                    const CharType* const Result = DoubleToString<CharType>(
-                        arg,
-                        TempBuf,
-                        FL_ARRAY_COUNTOF(TempBuf),
-                        pattern.HasPrecision() ? pattern.Precision : (pattern.Flag == EFormatFlag::FixedPoint ? DefaultFixedPointPrecision : DefaultPrecision) // NOLINT
-                    );
-
-                    const SizeType length = CalculateConvertedStringLength(Result, TempBuf);
-
-                    Super::AppendString(strRef, pattern, Result, length);
-
-                    return true;
-                }
-                else if (pattern.Flag == EFormatFlag::Exponent)
-                {
-                    const CharType eFlagChar = pattern.IsUpper ? 'E' : 'e';
-
-                    // add %.
-                    CharType FmtBuf[16];
-                    FmtBuf[0] = '%';
-                    FmtBuf[1] = '.';
-                    // calculate precision number, add append to FmtBuffer
-                    CharType PrecisionBuf[16];                    
-                    const CharType* const PrecisionText =
-                        IntegerToString<TCharType, int, 10>(
-                            pattern.HasPrecision() ? pattern.Precision : DefaultExponentPrecision, PrecisionBuf,
-                            FL_ARRAY_COUNTOF(PrecisionBuf),
-                            pattern.IsUpper
-                            );
-                    
-                    const SizeType length = CalculateConvertedStringLength(PrecisionText, PrecisionBuf);
-                    
-                    TCharTraits<CharType>::copy(FmtBuf + 2, PrecisionText, length);
-
-                    // add e flag
-                    FmtBuf[length + 2] = eFlagChar;
-                    FmtBuf[length + 3] = CharTraits::GetEndFlag();
-
-                    // format by sprintf
-                    CharType TempBuf[64];
-                    size_t bufLength = CharTraits::StringPrintf(TempBuf, FmtBuf, arg);
-
-                    // process alignment.
-                    const CharType* plusPos = CharTraits::rFind(TempBuf, eFlagChar);
-                    if (plusPos != nullptr)
+                    if (exponentLength < DefaultMinExponentLength)
                     {
-                        const CharType* endPos = TempBuf + bufLength;
-                        const int exponentLength = static_cast<int>(endPos - plusPos);
+                        const int padLength = DefaultMinExponentLength - exponentLength;
 
-                        if (exponentLength < DefaultMinExponentLength)
-                        {
-                            const int padLength = DefaultMinExponentLength - exponentLength;
+                        memmove(const_cast<CharType*>(plusPos + padLength + 2),
+                            plusPos + 2,
+                            exponentLength * sizeof(CharType)
+                            );
 
-                            memmove((void*)(plusPos + padLength + 2), plusPos + 2, exponentLength * sizeof(CharType)); // NOLINT
+                        CharTraits::Fill(const_cast<CharType*>(plusPos + 2), CharTraits::GetZero(), padLength);
 
-                            CharTraits::Fill(const_cast<CharType*>(plusPos + 2), CharTraits::GetZero(), padLength);
-
-                            bufLength += padLength;
-                        }
+                        bufLength += padLength;
                     }
-
-                    Super::AppendString(strRef, pattern, TempBuf, bufLength);
-
-                    return true;
-                }
-                else if (pattern.Flag == EFormatFlag::Decimal)
-                {
-                    return TTranslator<TCharType, int64_t>::Transfer(strRef, pattern, static_cast<int64_t>(arg));
-                }
-                else if (pattern.Flag == EFormatFlag::Binary)
-                {
-                    assert(false && "double to binary string is not supported.");
                 }
 
-                return false;
+                Super::AppendString(strRef, pattern, TempBuf, bufLength);
+
+                return true;
             }
 
         public:
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, const double arg)
             {
-                return TransferCore(strRef, pattern, pattern.Flag, arg);
+                switch (pattern.Flag)
+                {
+                case EFormatFlag::General:
+                case EFormatFlag::FixedPoint:
+                case EFormatFlag::None:
+                    return TransferGeneral(strRef, pattern, arg);
+                case EFormatFlag::Exponent:
+                    return TransferExponent(strRef, pattern, arg);
+                case EFormatFlag::Decimal:
+                    return TTranslator<TCharType, int64_t>::Transfer(strRef, pattern, static_cast<int64_t>(arg));
+                case EFormatFlag::Binary:
+                    assert(false && "double to binary string is not supported.");
+                default:
+                    break;
+                }
+
+                return false;
             }
         };
 
@@ -382,7 +424,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
         /// Class TIntegerTranslatorImpl.
         /// </summary>
         template < typename TCharType, typename TIntegerType >
-        class TIntegerTranslatorImpl : public TTranslatorBase<TCharType, TIntegerType> 
+        class TIntegerTranslatorImpl : public TTranslatorBase<TCharType, TIntegerType>
         {
         public:
             typedef TTranslatorBase< TCharType, TIntegerType>           Super;
@@ -394,61 +436,97 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             typedef typename Super::StringType                          StringType;
             typedef typename Super::CharTraits                          CharTraits;
 
+        private:
+            static bool TransferGeneral(StringType& strRef, const FormatPattern& pattern, ParameterType arg)
+            {
+                const bool bHex = pattern.Flag == EFormatFlag::Hex;
+
+                CharType TempBuf[32];
+
+                const CharType* const Result = bHex ?
+                    IntegerToString<CharType, ParameterType, 16>(
+                        arg,
+                        TempBuf,
+                        FL_ARRAY_COUNTOF(TempBuf),
+                        pattern.IsUpper
+                        ) :
+                    IntegerToString<CharType, ParameterType, 10>(
+                        arg,
+                        TempBuf,
+                        FL_ARRAY_COUNTOF(TempBuf),
+                        pattern.IsUpper
+                        );
+
+                const SizeType length = CalculateConvertedStringLength(Result, TempBuf);
+
+                if (pattern.HasPrecision() && pattern.Precision > length)
+                {
+                    Super::AppendString(
+                        strRef,
+                        pattern,
+                        Result,
+                        length,
+                        pattern.Precision,
+                        true,
+                        CharTraits::GetZero()
+                        );
+                }
+                else
+                {
+                    Super::AppendString(strRef, pattern, Result, length);
+                }
+
+                return true;
+            }
+
+            static bool TransferBinary(StringType& strRef, const FormatPattern& pattern, ParameterType arg)
+            {
+                constexpr int length = sizeof(ParameterType) * 8;
+                CharType TempBuf[length + 1];
+
+                const int usedLength =
+                    IntegerToBinaryString<TCharType, ParameterType>(static_cast<ParameterType>(arg), TempBuf);
+
+                const TCharType* const Result = TempBuf + (length - usedLength);
+
+                if (pattern.HasPrecision() && pattern.Precision > usedLength)
+                {
+                    Super::AppendString(
+                        strRef,
+                        pattern,
+                        Result,
+                        usedLength,
+                        pattern.Precision,
+                        true,
+                        CharTraits::GetZero()
+                        );
+                }
+                else
+                {
+                    Super::AppendString(strRef, pattern, Result, usedLength);
+                }
+
+                return true;
+            }
+
+        public:
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, ParameterType arg)
             {
-                if (pattern.Flag == EFormatFlag::None ||
-                    pattern.Flag == EFormatFlag::Decimal ||
-                    pattern.Flag == EFormatFlag::General ||
-                    pattern.Flag == EFormatFlag::Hex
-                    )
+                switch (pattern.Flag)
                 {
-                    const bool bHex = pattern.Flag == EFormatFlag::Hex;
-
-                    CharType TempBuf[32];
-
-                    const CharType* const Result = bHex ?
-                        IntegerToString<CharType, ParameterType, 16>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.IsUpper) :
-                        IntegerToString<CharType, ParameterType, 10>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.IsUpper);
-
-                    const SizeType length = CalculateConvertedStringLength(Result, TempBuf);
-
-                    if (pattern.HasPrecision() && pattern.Precision > length)
-                    {
-                        Super::AppendString(strRef, pattern, Result, length, pattern.Precision, true, CharTraits::GetZero());
-                    }
-                    else
-                    {
-                        Super::AppendString(strRef, pattern, Result, length);
-                    }
-
-                    return true;
-                }
-                else if (pattern.Flag == EFormatFlag::Exponent)
-                {
+                case EFormatFlag::General:
+                case EFormatFlag::Decimal:
+                case EFormatFlag::Hex:
+                case EFormatFlag::None:
+                    return TransferGeneral(strRef, pattern, arg);
+                case EFormatFlag::Exponent:
                     return TTranslator<TCharType, double>::Transfer(strRef, pattern, static_cast<double>(arg));
-                }
-                else if (pattern.Flag == EFormatFlag::FixedPoint)
-                {
+                case EFormatFlag::FixedPoint:
                     return TTranslator<TCharType, float>::Transfer(strRef, pattern, static_cast<float>(arg));
-                }
-                else if (pattern.Flag == EFormatFlag::Binary)
-                {
-                    constexpr int length = sizeof(ParameterType) * 8;
-                    CharType TempBuf[length + 1];
-
-                    int usedLength = IntegerToBinaryString<TCharType, ParameterType>(static_cast<ParameterType>(arg), TempBuf);
-                    const TCharType* const Result = TempBuf + (length - usedLength);
-
-                    if (pattern.HasPrecision() && pattern.Precision > usedLength)
-                    {
-                        Super::AppendString(strRef, pattern, Result, usedLength, pattern.Precision, true, CharTraits::GetZero());
-                    }
-                    else
-                    {
-                        Super::AppendString(strRef, pattern, Result, usedLength);
-                    }
-
-                    return true;
+                case EFormatFlag::Binary:
+                    return TransferBinary(strRef, pattern, arg);
+                default:
+                    break;
                 }
 
                 return false;
@@ -567,27 +645,54 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, T ptr)
             {
                 FL_STATIC_ASSERT(Mpl::IsPtr<T>::Value, "must be pointer type");
-                
+
                 assert(pattern.Len > 0 && "invalid parameters!!!");
 
                 const bool bHex = pattern.Flag == EFormatFlag::Hex || pattern.Flag == EFormatFlag::None;
                 const size_t arg = reinterpret_cast<size_t>(ptr); // NOLINT(*-use-auto)
-                
+
                 CharType TempBuf[32];
                 const CharType* const Result = bHex ?
-                        IntegerToString<CharType, size_t, 16>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.IsUpper) :
-                        IntegerToString<CharType, size_t, 10>(arg, TempBuf, FL_ARRAY_COUNTOF(TempBuf), pattern.IsUpper);
-                
-                const SizeType length = CalculateConvertedStringLength(Result, TempBuf);                
+                        IntegerToString<CharType, size_t, 16>(
+                            arg,
+                            TempBuf,
+                            FL_ARRAY_COUNTOF(TempBuf),
+                            pattern.IsUpper
+                            ) :
+                        IntegerToString<CharType, size_t, 10>(
+                            arg,
+                            TempBuf,
+                            FL_ARRAY_COUNTOF(TempBuf),
+                            pattern.IsUpper
+                            );
+
+                const SizeType length = CalculateConvertedStringLength(Result, TempBuf);
 
                 if (pattern.HasPrecision() && pattern.Precision > length)
                 {
-                    Super::AppendString(strRef, pattern, Result, length, pattern.Precision, true, CharTraits::GetZero());
+                    Super::AppendString(
+                        strRef,
+                        pattern,
+                        Result,
+                        length,
+                        pattern.Precision,
+                        true,
+                        CharTraits::GetZero()
+                        );
                 }
                 else
                 {
                     constexpr size_t defaultAlignedLength = sizeof(void*)*2;
-                    Super::AppendString(strRef, pattern, Result, length, defaultAlignedLength, true, CharTraits::GetZero());
+
+                    Super::AppendString(
+                        strRef,
+                        pattern,
+                        Result,
+                        length,
+                        defaultAlignedLength,
+                        true,
+                        CharTraits::GetZero()
+                        );
                 }
 
                 return true;
@@ -666,8 +771,8 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             }
         };
 
-        // convert small numeric type to big numeric type 
-        // and convert them to string     
+        // convert small numeric type to big numeric type
+        // and convert them to string
 #define FL_CONVERT_TRANSLATOR(Type, BaseType, baseTranslatorType, ImplType) \
     template < typename TCharType > \
     class TTranslator< TCharType, Type > : \
@@ -676,19 +781,22 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
     public: \
         typedef TTranslator< TCharType, BaseType >  Super; \
         \
-        static bool Transfer(typename Super::StringType& strRef, const typename Super::FormatPattern& pattern, Type arg) \
+        static bool Transfer(\
+            typename Super::StringType& strRef,\
+            const typename Super::FormatPattern& pattern,\
+            Type arg) \
         { \
             typedef ImplType<TCharType, Type> ImplementationType; /*NOLINT(bugprone-macro-parentheses)*/ \
             return ImplementationType::Transfer(strRef, pattern, arg); \
         } \
     }
-        
+
         FL_CONVERT_TRANSLATOR(int16_t, int16_t, TTranslatorBase, TIntegerTranslatorImpl);
-        FL_CONVERT_TRANSLATOR(int32_t, int32_t, TTranslatorBase, TIntegerTranslatorImpl);        
-        FL_CONVERT_TRANSLATOR(long, int64_t, TTranslatorBase, TIntegerTranslatorImpl);                
-        FL_CONVERT_TRANSLATOR(uint8_t, uint8_t, TTranslatorBase, TIntegerTranslatorImpl);        
+        FL_CONVERT_TRANSLATOR(int32_t, int32_t, TTranslatorBase, TIntegerTranslatorImpl);
+        FL_CONVERT_TRANSLATOR(long, int64_t, TTranslatorBase, TIntegerTranslatorImpl);
+        FL_CONVERT_TRANSLATOR(uint8_t, uint8_t, TTranslatorBase, TIntegerTranslatorImpl);
         FL_CONVERT_TRANSLATOR(uint16_t, uint16_t, TTranslatorBase, TIntegerTranslatorImpl);
-        FL_CONVERT_TRANSLATOR(uint32_t, uint32_t, TTranslatorBase, TIntegerTranslatorImpl);        
+        FL_CONVERT_TRANSLATOR(uint32_t, uint32_t, TTranslatorBase, TIntegerTranslatorImpl);
         FL_CONVERT_TRANSLATOR(unsigned long, uint64_t, TTranslatorBase, TIntegerTranslatorImpl);
 
         FL_CONVERT_TRANSLATOR(long double, double, TTranslator, TDoubleTranslatorImpl);

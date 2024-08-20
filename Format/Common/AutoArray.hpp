@@ -404,11 +404,25 @@ namespace Formatting
         FL_NO_DISCARD T* end() { return GetDataPtr() + GetLength(); }
         FL_NO_DISCARD const T* end() const { return GetDataPtr() + GetLength(); }
         
-        FL_NO_DISCARD std::reverse_iterator<T*> rbegin() { return std::reverse_iterator<T*>(end()); }        
-        FL_NO_DISCARD std::reverse_iterator<const T*> rbegin() const { return std::reverse_iterator<const T*>(end()); }
+        FL_NO_DISCARD std::reverse_iterator<T*> rbegin()
+        {
+            return std::reverse_iterator<T*>(end());
+        }
 
-        FL_NO_DISCARD std::reverse_iterator<T*> rend() { return std::reverse_iterator<T*>(begin()); }
-        FL_NO_DISCARD std::reverse_iterator<const T*> rend() const { return std::reverse_iterator<const T*>(begin()); }
+        FL_NO_DISCARD std::reverse_iterator<const T*> rbegin() const
+        {
+            return std::reverse_iterator<const T*>(end());
+        }
+
+        FL_NO_DISCARD std::reverse_iterator<T*> rend()
+        {
+            return std::reverse_iterator<T*>(begin());
+        }
+
+        FL_NO_DISCARD std::reverse_iterator<const T*> rend() const
+        {
+            return std::reverse_iterator<const T*>(begin());
+        }
         // ReSharper restore IdentifierTypo
         // ReSharper restore CppInconsistentNaming
 
