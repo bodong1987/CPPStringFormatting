@@ -60,7 +60,10 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                 /// <param name="length">The length.</param>
                 /// <param name="hashKey">The hash key.</param>
                 /// <returns>const PatternListType *.</returns>
-                const PatternListType* LookupPatternsInternal(const CharType* const formatStart, const SizeType length, SizeType hashKey)
+                const PatternListType* LookupPatternsInternal(
+                    const CharType* const formatStart,
+                    const SizeType length,
+                    SizeType hashKey)
                 {
                     // First, Find in the cache
                     {
@@ -124,7 +127,10 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                 /// <param name="length">The length.</param>
                 /// <param name="hashKey">The hash key.</param>
                 /// <returns>const PatternListType *.</returns>
-                const PatternListType* LookupPatternsInternal(const CharType* const formatStart, const SizeType length, SizeType hashKey)
+                const PatternListType* LookupPatternsInternal(
+                    const CharType* const formatStart,
+                    const SizeType length,
+                    SizeType hashKey)
                 {
                     // First, Find in the cache
                     const PatternListType* PatternList = TPolicy::FindByHashKey(Storage, hashKey);
@@ -157,7 +163,10 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
 
         template < typename TPolicy >
         class TPatternStorage :
-            public Utils::TPatternStorageBase<TPolicy, Mpl::IsSame<SharedMutexNone, typename TPolicy::MutexType>::Value>
+            public Utils::TPatternStorageBase<
+                TPolicy,
+                Mpl::IsSame<SharedMutexNone, typename TPolicy::MutexType>::Value
+            >
         {
         public:
             typedef Utils::TPatternStorageBase<
@@ -180,7 +189,10 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             /// <param name="length">The length.</param>
             /// <param name="hashKey">The hash key.</param>
             /// <returns>const PatternListType *.</returns>
-            const PatternListType* LookupPatterns(const CharType* const formatStart, const SizeType length, SizeType hashKey)
+            const PatternListType* LookupPatterns(
+                const CharType* const formatStart,
+                const SizeType length,
+                SizeType hashKey)
             {
                 return Super::LookupPatternsInternal(formatStart, length, hashKey);
             }

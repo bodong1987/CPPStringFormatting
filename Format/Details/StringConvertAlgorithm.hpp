@@ -96,7 +96,11 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             class IntegerToStringHelper<TCharType, TIntegerType, Base, true>
             {
             public:
-                inline static const TCharType* Convert(TIntegerType value, TCharType* const buffer, const size_t length, const bool upper)
+                inline static const TCharType* Convert(
+                    TIntegerType value,
+                    TCharType* const buffer,
+                    const size_t length,
+                    const bool upper)
                 {
                     constexpr static char DigitMapUpper[] =
                     {
@@ -112,7 +116,10 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                         'e', 'f'
                     };
 
-                    FL_STATIC_ASSERT(Base > 0 && static_cast<size_t>(Base) <= FL_ARRAY_COUNTOF(DigitMapUpper), "Invalid operation");
+                    FL_STATIC_ASSERT(
+                        Base > 0 && static_cast<size_t>(Base) <= FL_ARRAY_COUNTOF(DigitMapUpper),
+                        "Invalid operation"
+                        );
 
                     const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;
                     const bool IsNegativeNumber = value < 0;
@@ -143,7 +150,11 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             class IntegerToStringHelper<TCharType, TIntegerType, Base, false>
             {
             public:
-                inline static const TCharType* Convert(TIntegerType value, TCharType* const buffer, const size_t length, const bool upper)
+                inline static const TCharType* Convert(
+                    TIntegerType value,
+                    TCharType* const buffer,
+                    const size_t length,
+                    const bool upper)
                 {
                     constexpr static char DigitMapUpper[] =
                     {
@@ -159,7 +170,10 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                         'e', 'f'
                     };
 
-                    FL_STATIC_ASSERT(Base > 0 && static_cast<size_t>(Base) <= FL_ARRAY_COUNTOF(DigitMapUpper), "Invalid operation");
+                    FL_STATIC_ASSERT(
+                        Base > 0 && static_cast<size_t>(Base) <= FL_ARRAY_COUNTOF(DigitMapUpper),
+                        "Invalid operation"
+                        );
 
                     const char* DigitMap = upper ? DigitMapUpper : DigitMapLower;
 
@@ -186,7 +200,10 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
         /// <param name="length">buffer length</param>
         /// <returns>return the result string start position</returns>
         template <typename TCharType>
-        constexpr inline size_t CalculateConvertedStringLength(const TCharType* const result, const TCharType* const buffer, const size_t length)
+        constexpr inline size_t CalculateConvertedStringLength(
+            const TCharType* const result,
+            const TCharType* const buffer,
+            const size_t length)
         {
             return buffer + length - result - 1;
         }
@@ -198,7 +215,9 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
         /// <param name="buffer">The buffer.</param>
         /// <returns>return the result string start position</returns>
         template <typename TCharType, int32_t N>
-        constexpr inline size_t CalculateConvertedStringLength(const TCharType* const result, const TCharType (&buffer)[N])
+        constexpr inline size_t CalculateConvertedStringLength(
+            const TCharType* const result,
+            const TCharType (&buffer)[N])
         {
             return buffer + N - result - 1;
         }
@@ -212,9 +231,18 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
         /// <param name="upper">The upper.</param>
         /// <returns>return the result string start position</returns>
         template < typename TCharType, typename TIntegerType, int32_t Base>
-        inline const TCharType* IntegerToString(TIntegerType value, TCharType* const buffer, const size_t length, const bool upper)
+        inline const TCharType* IntegerToString(
+            TIntegerType value,
+            TCharType* const buffer,
+            const size_t length,
+            const bool upper)
         {
-            return Utils::IntegerToStringHelper<TCharType, TIntegerType, Base, Mpl::IsSigned<TIntegerType>::Value>::Convert(
+            return Utils::IntegerToStringHelper<
+                    TCharType,
+                    TIntegerType,
+                    Base,
+                    Mpl::IsSigned<TIntegerType>::Value
+                >::Convert(
                     value,
                     buffer,
                     length,
@@ -232,7 +260,11 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
         /// <param name="upper">The upper.</param>
         /// <returns>return the result string start position</returns>
         template < typename TCharType, typename TIntegerType, int32_t Base>
-        inline const TCharType* IntegerToStringMoved(TIntegerType value, TCharType* const buffer, const size_t length, const bool upper)
+        inline const TCharType* IntegerToStringMoved(
+            TIntegerType value,
+            TCharType* const buffer,
+            const size_t length,
+            const bool upper)
         {
             const TCharType* Result = IntegerToString<TCharType, TIntegerType, Base>(value, buffer, length, upper);
             const size_t ResultLength = CalculateConvertedStringLength(Result, buffer, length);
@@ -252,7 +284,11 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
         /// <param name="precision">The precision.</param>
         /// <returns>the formatted string.</returns>
         template < typename TCharType >
-        inline const TCharType* DoubleToString(double value, TCharType* buffer, const size_t length, int32_t precision)
+        inline const TCharType* DoubleToString(
+            double value,
+            TCharType* buffer,
+            const size_t length,
+            int32_t precision)
         {
             constexpr static double Pow10[] =
             {
@@ -361,7 +397,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                 do
                 {
                     --Count;
-                    *Str-- = static_cast<TCharType>(TCharTraits<TCharType>::GetZero() + (FractionalPart % 10)); // NOLINT
+                    *Str-- = static_cast<TCharType>(TCharTraits<TCharType>::GetZero() + FractionalPart % 10);
                 } while (FractionalPart /= 10);
 
                 // add extra 0s
@@ -391,7 +427,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             // Conversion. Number is reversed.
             do
             {
-                *Str-- = static_cast<TCharType>(TCharTraits<TCharType>::GetZero() + (Whole % 10)); // NOLINT
+                *Str-- = static_cast<TCharType>(TCharTraits<TCharType>::GetZero() + Whole % 10);
             } while (Whole /= 10);
 
             if (IsNegativeValue)
@@ -413,7 +449,11 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
         /// <param name="precision">The precision.</param>
         /// <returns>the formatted string.</returns>
         template < typename TCharType >
-        inline const TCharType* DoubleToStringMoved(const double value, TCharType* buffer, const size_t length, const int32_t precision)
+        inline const TCharType* DoubleToStringMoved(
+            const double value,
+            TCharType* buffer,
+            const size_t length,
+            const int32_t precision)
         {
             const TCharType* Result = DoubleToString<TCharType>(value, buffer, length, precision);
             const size_t ResultLength = CalculateConvertedStringLength(Result, buffer, length);

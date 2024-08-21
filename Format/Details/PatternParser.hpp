@@ -125,7 +125,11 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
             /// <param name="end">The end.</param>
             /// <param name="endPoint">The end point.</param>
             /// <returns>int32_t.</returns>
-            static int32_t FindNextNumber(const CharType* const start, const CharType* const end, const CharType*& endPoint)
+            static int32_t FindNextNumber(
+                const CharType* const start,
+                const CharType* const end,
+                const CharType*& endPoint
+                )
             {
                 const CharType* TestPtr = start;
 
