@@ -65,12 +65,12 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
 
         struct TrueType
         {
-            enum { Value = 1 };
+            enum { Value = 1 };  // NOLINT(performance-enum-size)
         };
 
         struct FalseType
         {
-            enum { Value = 0 };
+            enum { Value = 0 };  // NOLINT(performance-enum-size)
         };
 
         template < bool, typename T1, typename T2 > // NOLINT

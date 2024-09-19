@@ -48,7 +48,7 @@ namespace Formatting
         typedef TAutoArray<T, DefaultLength, ExtraLength>   SelfType; // NOLINT
         typedef T                                           ValueType; // NOLINT
 
-        enum
+        enum  // NOLINT(performance-enum-size)
         {            
             DEFAULT_LENGTH = DefaultLength // NOLINT
         };
@@ -172,7 +172,7 @@ namespace Formatting
         }
 
 #if FL_COMPILER_IS_GREATER_THAN_CXX11
-        SelfType& TakeFrom(SelfType&& other) noexcept
+        SelfType& TakeFrom(SelfType&& other) noexcept  // NOLINT(cppcoreguidelines-rvalue-reference-param-not-moved)
         {
             if (this == &other)
             {

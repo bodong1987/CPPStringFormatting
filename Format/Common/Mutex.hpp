@@ -146,6 +146,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
         private:
 #if FL_PLATFORM_WINDOWS
 #if FL_IS_WINDOWS_VISTA_OR_LATER
+            // ReSharper disable once CppInconsistentNaming
             SRWLOCK          SRWLockValue;
 #else
             CRITICAL_SECTION CriticalSectionValue;

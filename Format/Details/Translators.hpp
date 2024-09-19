@@ -44,7 +44,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
         template <uint64_t MaxValue>
         struct TMaxLength
         {
-            enum
+            enum  // NOLINT(performance-enum-size)
             {
                 Value = TMaxLength<MaxValue / 10>::Value + 1
             };
@@ -53,7 +53,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
         template <>
         struct TMaxLength<0>
         {
-            enum
+            enum  // NOLINT(performance-enum-size)
             {
                 Value = 1
             };
@@ -269,7 +269,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
 #define FL_DOUBLE_TRANSLATOR_DEFAULT_MIN_EXPONENT_LENGTH 5
 #endif
 
-            enum
+            enum  // NOLINT(performance-enum-size)
             {
                 DefaultPrecision = FL_DOUBLE_TRANSLATOR_DEFAULT_PRECISION,
                 DefaultFixedPointPrecision = FL_DOUBLE_TRANSLATOR_DEFAULT_FIXED_POINT_PRECISION,
@@ -360,7 +360,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
         public:
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, const double arg)
             {
-                switch (pattern.Flag)
+                switch (pattern.Flag)  // NOLINT(clang-diagnostic-switch-enum)
                 {
                 case EFormatFlag::General:
                 case EFormatFlag::FixedPoint:
@@ -372,7 +372,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
                     return TTranslator<TCharType, int64_t>::Transfer(strRef, pattern, static_cast<int64_t>(arg));
                 case EFormatFlag::Binary:
                     assert(false && "double to binary string is not supported.");
-                default:
+                default:  // NOLINT(clang-diagnostic-implicit-fallthrough)
                     break;
                 }
 
@@ -512,7 +512,7 @@ namespace Formatting // NOLINT(*-concat-nested-namespaces)
         public:
             static bool Transfer(StringType& strRef, const FormatPattern& pattern, ParameterType arg)
             {
-                switch (pattern.Flag)
+                switch (pattern.Flag)  // NOLINT(clang-diagnostic-switch-enum)
                 {
                 case EFormatFlag::General:
                 case EFormatFlag::Decimal:
